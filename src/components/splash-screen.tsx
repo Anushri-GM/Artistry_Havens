@@ -16,7 +16,7 @@ export function SplashScreen() {
   }, [router]);
 
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center bg-[#FDFBF4] animate-in fade-in-0 duration-1000">
+    <div className="relative flex h-screen w-screen items-center justify-center bg-[#F9F5F0] animate-in fade-in-0 duration-1000">
       <Image
         src="/splash-logo.png"
         alt="Artistry Havens Logo"
