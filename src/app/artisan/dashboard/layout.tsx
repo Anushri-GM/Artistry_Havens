@@ -109,7 +109,7 @@ function PageHeader() {
                     <Label htmlFor="name" className="text-right">
                     Subject
                     </Label>
-                    <Input id="name" value="Issue with payment" className="col-span-3" />
+                    <Input id="name" defaultValue="Issue with payment" className="col-span-3" />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="username" className="text-right">
