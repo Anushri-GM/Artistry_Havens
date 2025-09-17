@@ -59,6 +59,54 @@
       "description": "Hero image for the sponsor page.",
       "imageUrl": "https://picsum.photos/seed/sponsorhero/1600/900",
       "imageHint": "handshake business"
+    },
+    {
+      "id": "hero-1",
+      "description": "An artisan weaving a colorful textile.",
+      "imageUrl": "https://picsum.photos/seed/hero1/1600/900",
+      "imageHint": "artisan weaving"
+    },
+    {
+      "id": "hero-2",
+      "description": "A potter shaping clay on a wheel.",
+      "imageUrl": "https://picsum.photos/seed/hero2/1600/900",
+      "imageHint": "potter hands"
+    },
+    {
+      "id": "hero-3",
+      "description": "A painter working on a canvas.",
+      "imageUrl": "https://picsum.photos/seed/hero3/1600/900",
+      "imageHint": "artist painting"
+    },
+     {
+      "id": "category-pottery",
+      "description": "Pottery category image",
+      "imageUrl": "https://picsum.photos/seed/catpottery/400/400",
+      "imageHint": "pottery"
+    },
+    {
+      "id": "category-sculpture",
+      "description": "Sculpture category image",
+      "imageUrl": "https://picsum.photos/seed/catsculpture/400/400",
+      "imageHint": "sculpture"
+    },
+    {
+      "id": "category-paintings",
+      "description": "Paintings category image",
+      "imageUrl": "https://picsum.photos/seed/catpaintings/400/400",
+      "imageHint": "painting canvas"
+    },
+    {
+      "id": "category-crafts",
+      "description": "Crafts category image",
+      "imageUrl": "https://picsum.photos/seed/catcrafts/400/400",
+      "imageHint": "handmade craft"
+    },
+    {
+      "id": "category-textiles",
+      "description": "Textiles category image",
+      "imageUrl": "https://picsum.photos/seed/cattextiles/400/400",
+      "imageHint": "fabric textile"
     }
   ]
 }
