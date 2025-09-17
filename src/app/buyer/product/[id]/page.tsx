@@ -1,6 +1,7 @@
 
 'use client';
 import Image from "next/image";
+import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { mockProducts, mockReviews } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
@@ -85,12 +86,21 @@ export default function ProductDetailPage() {
         <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
             <div className="container mx-auto flex h-20 items-center justify-between p-4">
             <div className="flex items-center gap-2">
-                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-                <h1 className="font-headline text-2xl font-bold">Artistry Havens</h1>
+                <Link href="/buyer">
+                    <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+                </Link>
+                <Link href="/buyer">
+                    <h1 className="font-headline text-2xl font-bold">Artistry Havens</h1>
+                </Link>
             </div>
-            <Button variant="ghost" size="icon">
-                <ShoppingBag />
-            </Button>
+            <div className="flex items-center gap-2">
+                <Button variant="outline" asChild>
+                    <Link href="/buyer/login">Login</Link>
+                </Button>
+                <Button variant="ghost" size="icon">
+                    <ShoppingBag />
+                </Button>
+            </div>
             </div>
         </header>
         <main className="container mx-auto p-4 md:p-8">

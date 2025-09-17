@@ -251,6 +251,9 @@ export default function BuyerPage() {
                     <CustomizationDialog />
                 </DialogContent>
             </Dialog>
+            <Button variant="outline" asChild>
+                <Link href="/buyer/login">Login</Link>
+            </Button>
             <Button variant="ghost" size="icon">
                 <ShoppingBag />
             </Button>
