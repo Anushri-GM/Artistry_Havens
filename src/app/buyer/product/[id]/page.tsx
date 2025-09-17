@@ -1,4 +1,5 @@
 
+
 'use client';
 import Image from "next/image";
 import Link from "next/link";
@@ -63,6 +64,10 @@ export default function ProductDetailPage() {
     toast({ title: `You liked ${product.name}!` });
   };
   
+  const handleAddToCart = () => {
+    toast({ title: `${product.name} added to cart!` });
+  }
+
   const handleReviewSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if(rating > 0 && reviewText.trim() !== '') {
@@ -159,7 +164,7 @@ export default function ProductDetailPage() {
                     </Card>
 
                     <div className="flex flex-col sm:flex-row gap-4">
-                        <Button size="lg" className="flex-1">
+                        <Button size="lg" className="flex-1" onClick={handleAddToCart}>
                             <ShoppingBag className="mr-2 h-5 w-5" /> Add to Cart
                         </Button>
                          <Button size="lg" variant="outline" className="flex-1" onClick={handleLike}>

@@ -46,6 +46,10 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
       toast({ title: `You liked ${product.name}!` });
   };
   
+  const handleAddToCart = () => {
+      toast({ title: `${product.name} added to cart!` });
+  }
+
   return (
     <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl group">
       <Link href={`/buyer/product/${product.id}`}>
@@ -75,7 +79,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
         </div>
       </Link>
       <CardFooter className="flex gap-2">
-        <Button className="w-full">
+        <Button className="w-full" onClick={handleAddToCart}>
           <ShoppingBag className="mr-2 h-4 w-4" />
           Add to Cart
         </Button>
