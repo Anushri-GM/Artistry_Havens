@@ -1,13 +1,23 @@
 
+'use client';
+
 import Image from "next/image";
 import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Star, ThumbsUp, Palette, Axe, SprayCan, Drill, Tent } from "lucide-react";
+import { ShoppingBag, Star, ThumbsUp, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2 } from "lucide-react";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import React, { useState } from "react";
+import { generateCustomDesign } from "@/ai/flows/generate-custom-design";
+import { useToast } from "@/hooks/use-toast";
 
 const heroImages = [
   PlaceHolderImages.find(img => img.id === 'hero-1'),
@@ -69,6 +79,138 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
   );
 }
 
+function CustomizationDialog() {
+    const { toast } = useToast();
+    const [prompt, setPrompt] = useState("");
+    const [category, setCategory] = useState("");
+    const [referenceImage, setReferenceImage] = useState<File | null>(null);
+    const [referenceImageUrl, setReferenceImageUrl] = useState<string | null>(null);
+    const [generatedMockup, setGeneratedMockup] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
+    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const file = e.target.files[0];
+            setReferenceImage(file);
+            setReferenceImageUrl(URL.createObjectURL(file));
+        }
+    };
+
+    const handleGenerate = async () => {
+        if (!prompt || !category) {
+            toast({
+                variant: "destructive",
+                title: "Missing Information",
+                description: "Please provide a description and select a category.",
+            });
+            return;
+        }
+        setIsLoading(true);
+        setGeneratedMockup(null);
+
+        try {
+            let referenceImageDataUri: string | undefined = undefined;
+            if (referenceImage) {
+                const reader = new FileReader();
+                referenceImageDataUri = await new Promise((resolve, reject) => {
+                    reader.onload = () => resolve(reader.result as string);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(referenceImage);
+                });
+            }
+
+            const result = await generateCustomDesign({ prompt, category, referenceImageDataUri });
+            setGeneratedMockup(result.designDataUri);
+        } catch (error) {
+            console.error("Failed to generate custom design:", error);
+            toast({
+                variant: "destructive",
+                title: "Generation Failed",
+                description: "Could not generate a mockup. Please try again.",
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSubmitRequest = () => {
+        setIsSubmitted(true);
+    };
+
+    if (isSubmitted) {
+        return (
+            <div className="text-center py-12">
+                <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold font-headline">Request Sent!</h3>
+                <p className="text-muted-foreground mt-2">An artisan from the {category} category has been notified. They will review your request and get in touch soon.</p>
+            </div>
+        )
+    }
+
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
+            <div className="space-y-6">
+                <div>
+                    <Label htmlFor="description">Describe your vision</Label>
+                    <Textarea 
+                        id="description" 
+                        placeholder="e.g., 'A wooden chess set with intricate Rajasthani carvings...'" 
+                        rows={5}
+                        value={prompt}
+                        onChange={e => setPrompt(e.target.value)}
+                    />
+                </div>
+                 <div>
+                    <Label htmlFor="category">Choose a category</Label>
+                    <Select onValueChange={setCategory} value={category}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Select an artisan category..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                </div>
+                 <div>
+                    <Label htmlFor="reference-image">Upload a reference image (optional)</Label>
+                    <div className="mt-2 flex items-center gap-4">
+                        <Input id="reference-image" type="file" className="hidden" onChange={handleImageUpload} accept="image/*"/>
+                        <Button asChild variant="outline">
+                            <label htmlFor="reference-image" className="cursor-pointer">
+                                <Upload className="mr-2 h-4 w-4" /> Choose File
+                            </label>
+                        </Button>
+                        {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={40} height={40} className="rounded-md object-cover" />}
+                    </div>
+                </div>
+                <Button onClick={handleGenerate} disabled={isLoading || !prompt || !category} className="w-full">
+                    {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
+                    Generate Mockup
+                </Button>
+            </div>
+             <div className="space-y-4">
+                <Label>AI-Generated Mockup</Label>
+                <div className="relative aspect-square w-full rounded-lg bg-muted flex items-center justify-center border border-dashed">
+                    {isLoading ? (
+                        <div className="text-center text-muted-foreground">
+                            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
+                            <p>Generating your vision...</p>
+                        </div>
+                    ) : generatedMockup ? (
+                        <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg" />
+                    ) : (
+                         <div className="text-center text-muted-foreground p-4">
+                            <Wand2 className="h-8 w-8 mx-auto mb-2" />
+                            <p>Your generated mockup will appear here.</p>
+                        </div>
+                    )}
+                </div>
+                <Button onClick={handleSubmitRequest} disabled={!generatedMockup} className="w-full">Send Request to Artisan</Button>
+             </div>
+        </div>
+    );
+}
 
 export default function BuyerPage() {
   return (
@@ -79,9 +221,27 @@ export default function BuyerPage() {
             <ArtistryHavensLogo className="h-8 w-8 text-primary" />
             <h1 className="font-headline text-2xl font-bold">Artistry Havens</h1>
           </div>
-          <Button variant="ghost" size="icon">
-            <ShoppingBag />
-          </Button>
+          <div className="flex items-center gap-2">
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button>
+                        <Wand2 className="mr-2 h-5 w-5"/> Create Your Own
+                    </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-4xl">
+                    <DialogHeader>
+                        <DialogTitle className="font-headline text-2xl">Design Your Custom Craft</DialogTitle>
+                        <DialogDescription>
+                            Use the power of AI to bring your unique idea to life. Describe your vision, and we'll generate a mockup for an artisan to create.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <CustomizationDialog />
+                </DialogContent>
+            </Dialog>
+            <Button variant="ghost" size="icon">
+                <ShoppingBag />
+            </Button>
+          </div>
         </div>
       </header>
 
