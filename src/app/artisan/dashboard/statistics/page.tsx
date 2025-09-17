@@ -12,7 +12,7 @@ import {
 import { mockProducts, mockStatsData } from '@/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
+import { Heart, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -179,7 +179,7 @@ export default function StatisticsPage() {
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">
-                    <ThumbsUp className="h-4 w-4 text-muted-foreground" />
+                    <Heart className="h-4 w-4 text-muted-foreground" />
                     {product.likes.toLocaleString()}
                   </div>
                 </TableCell>
@@ -205,3 +205,5 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+    

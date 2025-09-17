@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, Share2, MoreHorizontal } from "lucide-react";
 
 type Product = {
   id: string;
@@ -40,7 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <CardContent>
         <div className="flex items-center justify-between text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
-            <ThumbsUp className="h-4 w-4" />
+            <Heart className="h-4 w-4" />
             <span>{product.likes?.toLocaleString() ?? 0}</span>
           </div>
           <div className="flex items-center gap-1">
@@ -56,3 +56,5 @@ export function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
+
+    

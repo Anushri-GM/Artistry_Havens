@@ -6,7 +6,7 @@ import { mockProducts, mockReviews } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingBag, Star, MessageSquare, ThumbsUp } from "lucide-react";
+import { ShoppingBag, Star, MessageSquare, Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
                             <span className="text-muted-foreground">({product.reviews} reviews)</span>
                         </div>
                         <div className="flex items-center gap-1 text-muted-foreground">
-                            <ThumbsUp className="h-4 w-4" />
+                            <Heart className="h-4 w-4" />
                             <span>{product.likes?.toLocaleString()} likes</span>
                         </div>
                     </div>
@@ -153,7 +153,7 @@ export default function ProductDetailPage() {
                             <ShoppingBag className="mr-2 h-5 w-5" /> Add to Cart
                         </Button>
                          <Button size="lg" variant="outline" className="flex-1" onClick={handleLike}>
-                            <ThumbsUp className="mr-2 h-5 w-5" /> Like Product
+                            <Heart className="mr-2 h-5 w-5" /> Like Product
                         </Button>
                     </div>
                      <div className="flex flex-col sm:flex-row gap-4">
@@ -222,3 +222,5 @@ export default function ProductDetailPage() {
     </div>
   )
 }
+
+    

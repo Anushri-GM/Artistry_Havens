@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Star, ThumbsUp, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2, CheckCircle } from "lucide-react";
+import { ShoppingBag, Star, Heart, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2, CheckCircle } from "lucide-react";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
@@ -80,7 +80,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
           Add to Cart
         </Button>
         <Button variant="outline" size="icon" onClick={handleLike}>
-          <ThumbsUp className="h-4 w-4" />
+          <Heart className="h-4 w-4" />
         </Button>
       </CardFooter>
     </Card>
@@ -337,3 +337,5 @@ export default function BuyerPage() {
     </div>
   );
 }
+
+    
