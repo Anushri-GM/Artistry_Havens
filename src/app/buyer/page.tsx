@@ -40,6 +40,12 @@ const trendingProducts = [...mockProducts].sort((a, b) => (b.likes || 0) - (a.li
 
 function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
   const image = PlaceHolderImages.find(img => img.id === product.id);
+  const { toast } = useToast();
+  
+  const handleLike = () => {
+      toast({ title: `You liked ${product.name}!` });
+  };
+  
   return (
     <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl group">
       <Link href={`/buyer/product/${product.id}`}>
@@ -73,7 +79,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
           <ShoppingBag className="mr-2 h-4 w-4" />
           Add to Cart
         </Button>
-        <Button variant="outline" size="icon">
+        <Button variant="outline" size="icon" onClick={handleLike}>
           <ThumbsUp className="h-4 w-4" />
         </Button>
       </CardFooter>

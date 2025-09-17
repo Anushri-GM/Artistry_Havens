@@ -57,3 +57,9 @@ export const mockSponsorRequests = [
     message: 'We love your woodwork and would like to sponsor your next collection.',
   }
 ]
+
+export const mockReviews = [
+    { id: 'review-1', productId: 'pottery-1', author: 'Aisha K.', rating: 5, comment: 'Absolutely stunning vase! The color is even more beautiful in person. It was packed so carefully and arrived in perfect condition.', avatarUrl: 'https://picsum.photos/seed/rev-aisha/100/100' },
+    { id: 'review-2', productId: 'pottery-1', author: 'Raj S.', rating: 4, comment: 'Great craftsmanship. A bit smaller than I expected, but it\'s a beautiful decorative piece. Happy with my purchase.', avatarUrl: 'https://picsum.photos/seed/rev-raj/100/100' },
+    { id: 'review-3', productId: 'woodwork-1', author: 'Priya D.', rating: 5, comment: 'The detail on this sculpture is incredible. It\'s the centerpiece of my living room now. Worth every penny!', avatarUrl: 'https://picsum.photos/seed/rev-priya/100/100' },
+];
