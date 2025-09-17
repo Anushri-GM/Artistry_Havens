@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from "next/image";
@@ -6,7 +7,7 @@ import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Star, ThumbsUp, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2 } from "lucide-react";
+import { ShoppingBag, Star, ThumbsUp, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2, CheckCircle } from "lucide-react";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
@@ -18,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import React, { useState } from "react";
 import { generateCustomDesign } from "@/ai/flows/generate-custom-design";
 import { useToast } from "@/hooks/use-toast";
+import type { GenerateCustomDesignInput } from "@/ai/types/generate-custom-design-types";
 
 const heroImages = [
   PlaceHolderImages.find(img => img.id === 'hero-1'),
@@ -120,7 +122,12 @@ function CustomizationDialog() {
                 });
             }
 
-            const result = await generateCustomDesign({ prompt, category, referenceImageDataUri });
+            const input: GenerateCustomDesignInput = { prompt, category };
+            if (referenceImageDataUri) {
+                input.referenceImageDataUri = referenceImageDataUri;
+            }
+
+            const result = await generateCustomDesign(input);
             setGeneratedMockup(result.designDataUri);
         } catch (error) {
             console.error("Failed to generate custom design:", error);
