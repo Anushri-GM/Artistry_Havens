@@ -8,19 +8,19 @@ body {
 
 @layer base {
   :root {
-    --background: 24 60% 98%;
-    --foreground: 24 60% 10%;
+    --background: 24 60% 98%; /* Almost white */
+    --foreground: 24 60% 10%; /* Dark brown */
     --card: 24 60% 100%;
     --card-foreground: 24 60% 10%;
     --popover: 24 60% 100%;
     --popover-foreground: 24 60% 10%;
-    --primary: 14 80% 45%;
-    --primary-foreground: 24 60% 98%;
-    --secondary: 24 60% 92%;
-    --secondary-foreground: 14 80% 45%;
+    --primary: 14 80% 45%; /* Terracotta Orange */
+    --primary-foreground: 24 60% 98%; /* Almost white */
+    --secondary: 24 60% 92%; /* Light tan */
+    --secondary-foreground: 14 80% 45%; /* Terracotta Orange */
     --muted: 24 60% 90%;
     --muted-foreground: 24 10% 45%;
-    --accent: 38 92% 50%;
+    --accent: 38 92% 50%; /* Amber */
     --accent-foreground: 24 60% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
