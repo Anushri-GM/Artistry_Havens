@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { BadgeIndianRupee, Users, Percent } from "lucide-react";
 import { mockProducts } from "@/lib/mock-data";
+import Image from "next/image";
 
 const myProfitProducts = mockProducts.slice(0, 3);
 const sharedProfitProducts = mockProducts.slice(3, 6);
@@ -62,49 +63,56 @@ export default function RevenuePage() {
                         <CardTitle>Shared Profit</CardTitle>
                         <CardDescription>Profit gained from selling sponsored products.</CardDescription>
                     </CardHeader>
-                    <CardContent className="space-y-4">
-                         <div className="grid grid-cols-1 gap-4">
-                             <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg">
-                                <BadgeIndianRupee className="h-8 w-8 text-primary" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Total Shared Revenue</p>
+                    <CardContent className="space-y-6">
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                             <Card className="bg-primary/5">
+                                 <CardHeader className="pb-2">
+                                     <CardTitle className="text-sm font-medium flex items-center gap-2 text-primary">
+                                        <BadgeIndianRupee className="h-5 w-5" /> Total Shared Revenue
+                                     </CardTitle>
+                                 </CardHeader>
+                                <CardContent>
                                     <p className="text-2xl font-bold">${totalSharedProfit.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
-                                </div>
-                            </div>
-                             <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg">
-                                <Users className="h-8 w-8 text-primary" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Your Share (Artisan)</p>
-                                    <p className="text-2xl font-bold">${(totalSharedProfit * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
-                                </div>
-                            </div>
-                             <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg">
-                                <Percent className="h-8 w-8 text-primary" />
-                                <div>
-                                    <p className="text-sm text-muted-foreground">Sponsor's Share</p>
-                                    <p className="text-2xl font-bold">${(totalSharedProfit * 0.2).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
-                                </div>
-                            </div>
+                                </CardContent>
+                            </Card>
+                             <Card className="bg-primary/5">
+                                 <CardHeader className="pb-2">
+                                     <CardTitle className="text-sm font-medium flex items-center gap-2 text-primary">
+                                        <Users className="h-5 w-5" /> Your Share (80%)
+                                     </CardTitle>
+                                 </CardHeader>
+                                <CardContent>
+                                     <p className="text-2xl font-bold">${(totalSharedProfit * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                </CardContent>
+                            </Card>
                          </div>
                         
-                        <div className="space-y-4 pt-4">
+                        <div className="space-y-4">
                             <h3 className="font-headline text-lg font-semibold">Product Breakdown</h3>
                             {sharedProfitProducts.map(product => (
-                                <Card key={product.id} className="bg-card">
-                                    <CardHeader className="pb-2">
-                                        <CardTitle className="text-base font-headline">{product.name}</CardTitle>
-                                        <CardDescription>Sponsored by Craft Ventures</CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="space-y-2">
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-muted-foreground text-sm">Total Revenue:</span>
-                                            <span className="font-semibold">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                <Card key={product.id} className="bg-card overflow-hidden">
+                                    <div className="flex gap-4">
+                                        {product.image && (
+                                            <div className="relative w-1/3 aspect-square">
+                                                <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover" />
+                                            </div>
+                                        )}
+                                        <div className="flex-1 py-4 pr-4">
+                                            <p className="font-bold font-headline">{product.name}</p>
+                                            <p className="text-xs text-muted-foreground mb-2">Sponsored by Craft Ventures</p>
+                                            
+                                            <div className="space-y-2 mt-3">
+                                                 <div className="flex justify-between items-baseline">
+                                                    <span className="text-muted-foreground text-xs">Total Revenue:</span>
+                                                    <span className="font-semibold text-sm">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                </div>
+                                                 <div className="flex justify-between items-baseline text-primary">
+                                                    <span className="text-xs font-medium">Your Profit (80%):</span>
+                                                    <span className="font-bold text-base">${(product.revenue * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                         <div className="flex justify-between items-center text-primary">
-                                            <span className="text-sm">Your Profit (80%):</span>
-                                            <span className="font-bold text-lg">${(product.revenue * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
-                                        </div>
-                                    </CardContent>
+                                    </div>
                                 </Card>
                             ))}
                         </div>
