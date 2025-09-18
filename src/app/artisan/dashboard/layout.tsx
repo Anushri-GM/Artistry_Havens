@@ -68,11 +68,22 @@ const navItems = [
 ];
 
 function PageHeader() {
-  const { isMobile } = useSidebar();
+  const { isMobile, open } = useSidebar();
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
         <SidebarTrigger className="md:hidden" />
-        {isMobile && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
+        {isMobile && (
+          <div className="flex items-center gap-2">
+            <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+             <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
+          </div>
+        )}
+         {!isMobile && (
+          <div className="flex items-center gap-4">
+              <SidebarTrigger />
+              {!open && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
+          </div>
+        )}
         <div className="flex w-full items-center justify-end gap-1">
 
         <DropdownMenu>
@@ -152,7 +163,7 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
                 <SidebarMenu>
                   {navItems.map((item, index) =>
                     item.type === 'divider' ? (
-                      <div key={index} className="my-2 h-px bg-border mx-3" />
+                      <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
                     ) : (
                       <SidebarMenuItem key={item.label}>
                         <Link href={item.href!}>
