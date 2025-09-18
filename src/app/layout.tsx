@@ -20,7 +20,11 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Literata:ital,opsz,wght@0,7..72,200..900;1,7..72,200..900&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased">
-        {children}
+        <div className="flex justify-center bg-gray-200">
+            <div className="w-full max-w-md bg-background min-h-screen shadow-2xl">
+                {children}
+            </div>
+        </div>
         <Toaster />
       </body>
     </html>
