@@ -19,21 +19,6 @@ export default function ArtisanDashboardPage() {
                     <p className="text-muted-foreground mt-2 text-md">What would you like to do today?</p>
                 </div>
                 <div className="grid grid-cols-1 gap-6 w-full">
-                    <Link href="/artisan/dashboard/home">
-                        <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-primary/10 via-background to-background">
-                            <CardHeader>
-                                <div className="flex justify-center">
-                                    <Palette className="w-12 h-12 text-primary" />
-                                </div>
-                            </CardHeader>
-                            <CardContent className="p-4">
-                                <CardTitle className="font-headline text-xl">Visit My Page</CardTitle>
-                                <CardDescription className="mt-1 text-sm">
-                                    See stats, manage products, and view your profile.
-                                </CardDescription>
-                            </CardContent>
-                        </Card>
-                    </Link>
                     <Link href="/artisan/upload">
                         <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-accent/10 via-background to-background">
                             <CardHeader>
@@ -45,6 +30,21 @@ export default function ArtisanDashboardPage() {
                                 <CardTitle className="font-headline text-xl">Upload a Product</CardTitle>
                                 <CardDescription className="mt-1 text-sm">
                                     Add a new creation to your collection.
+                                </CardDescription>
+                            </CardContent>
+                        </Card>
+                    </Link>
+                    <Link href="/artisan/dashboard/home">
+                        <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-primary/10 via-background to-background">
+                            <CardHeader>
+                                <div className="flex justify-center">
+                                    <Palette className="w-12 h-12 text-primary" />
+                                </div>
+                            </CardHeader>
+                            <CardContent className="p-4">
+                                <CardTitle className="font-headline text-xl">Visit My Page</CardTitle>
+                                <CardDescription className="mt-1 text-sm">
+                                    See stats, manage products, and view your profile.
                                 </CardDescription>
                             </CardContent>
                         </Card>
