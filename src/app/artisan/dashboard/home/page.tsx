@@ -28,7 +28,7 @@ export default function ArtisanHomePage() {
         <div>
             <h1 className="text-3xl font-bold font-headline mb-2">My Bestsellers</h1>
             <p className="text-muted-foreground mb-6">Your top-performing products by revenue.</p>
-             <Carousel opts={{ align: "start", loop: true }}>
+             <Carousel opts={{ align: "start", loop: true, direction: "rtl" }}>
                 <CarouselContent>
                     {bestsellers.slice(0,3).map((product) => (
                         <CarouselItem key={product.id} className="basis-1/2">
