@@ -62,7 +62,7 @@ export default function RevenuePage() {
                         <CardDescription>Profit gained from selling sponsored products.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
-                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                         <div className="grid grid-cols-1 gap-4">
                              <div className="flex items-center gap-4 p-4 bg-primary/5 rounded-lg">
                                 <BadgeIndianRupee className="h-8 w-8 text-primary" />
                                 <div>
@@ -88,10 +88,10 @@ export default function RevenuePage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Product</TableHead>
+                                    <TableHead className="whitespace-nowrap">Product</TableHead>
                                     <TableHead>Sponsor</TableHead>
-                                    <TableHead className="text-right">Total Revenue</TableHead>
-                                    <TableHead className="text-right">Your Profit (80%)</TableHead>
+                                    <TableHead className="text-right whitespace-nowrap">Total Revenue</TableHead>
+                                    <TableHead className="text-right whitespace-nowrap">Your Profit (80%)</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
