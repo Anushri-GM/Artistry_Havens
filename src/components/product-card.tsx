@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="overflow-hidden">
       {product.image && (
-        <div className="relative h-64 w-full">
+        <div className="relative h-48 w-full">
           <Image
             src={product.image.imageUrl}
             alt={product.image.description}
@@ -56,5 +57,3 @@ export function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
-
-    
