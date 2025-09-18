@@ -41,7 +41,7 @@ export default function RevenuePage() {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>Product</TableHead>
+                                    <TableHead className="whitespace-normal">Product</TableHead>
                                     <TableHead className="text-right">Revenue</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -99,11 +99,11 @@ export default function RevenuePage() {
                                                 <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover" />
                                             </div>
                                         )}
-                                        <div className="flex-1 p-4">
-                                            <p className="font-bold font-headline">{product.name}</p>
-                                            <p className="text-xs text-muted-foreground mb-2">Sponsored by Craft Ventures</p>
+                                        <div className="flex-1 p-4 flex flex-col justify-center">
+                                            <p className="font-bold font-headline leading-tight">{product.name}</p>
+                                            <p className="text-xs text-muted-foreground mt-1 mb-3">Sponsored by Craft Ventures</p>
                                             
-                                            <div className="space-y-2 mt-3">
+                                            <div className="space-y-2 mt-auto">
                                                  <div className="flex justify-between items-baseline">
                                                     <span className="text-muted-foreground text-xs">Total Revenue:</span>
                                                     <span className="font-semibold text-sm">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
