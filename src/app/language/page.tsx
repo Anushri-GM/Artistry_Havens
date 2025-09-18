@@ -26,7 +26,7 @@ export default function LanguageSelectionPage() {
             To Choose a Language
           </p>
         </div>
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 md:gap-6">
+        <div className="grid grid-cols-2 gap-4">
           {languages.map((lang, index) => (
             <Link key={lang.code} href={`/role-selection?lang=${lang.code}`} passHref>
               <Card className="transform-gpu cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-xl">

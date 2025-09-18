@@ -31,7 +31,7 @@ export default function SponsorPage() {
           <div className="container mx-auto flex h-24 items-center justify-between p-4">
             <div className="flex items-center gap-2 text-white">
               <ArtistryHavensLogo className="h-8 w-8" />
-              <h1 className="font-headline text-2xl font-bold">Artistry Havens</h1>
+              <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
             </div>
             <Button variant="secondary">Login</Button>
           </div>
@@ -51,7 +51,7 @@ export default function SponsorPage() {
             )}
             <div className="absolute inset-0 bg-primary/70" />
             <div className="relative z-10 max-w-4xl px-4">
-              <h1 className="font-headline text-4xl font-extrabold tracking-tight md:text-5xl">
+              <h1 className="font-headline text-3xl font-extrabold tracking-tight">
                 Become a Patron of the Arts
               </h1>
               <p className="mt-6 text-lg text-primary-foreground/80">
@@ -63,31 +63,31 @@ export default function SponsorPage() {
             </div>
           </section>
 
-          <section className="py-20 md:py-32">
+          <section className="py-12">
               <div className="container mx-auto">
-                  <div className="mb-16 text-center">
-                      <h2 className="font-headline text-4xl font-bold">Why Sponsor Through Artistry Havens?</h2>
-                      <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                  <div className="mb-12 text-center">
+                      <h2 className="font-headline text-2xl font-bold">Why Sponsor Through Artistry Havens?</h2>
+                      <p className="mt-4 max-w-2xl mx-auto text-muted-foreground">
                           We bridge the gap between tradition and modern patronage, creating opportunities for growth and cultural preservation.
                       </p>
                   </div>
-                  <div className="grid grid-cols-1 gap-12 md:grid-cols-3">
+                  <div className="grid grid-cols-1 gap-12">
                       {benefits.map(benefit => (
                           <div key={benefit.title} className="text-center">
                               <div className="flex justify-center mb-6">
                                   {benefit.icon}
                               </div>
-                              <h3 className="font-headline text-2xl font-semibold">{benefit.title}</h3>
-                              <p className="mt-2 text-muted-foreground">{benefit.description}</p>
+                              <h3 className="font-headline text-xl font-semibold">{benefit.title}</h3>
+                              <p className="mt-2 text-muted-foreground px-4">{benefit.description}</p>
                           </div>
                       ))}
                   </div>
               </div>
           </section>
 
-          <section className="bg-primary/5 py-20 md:py-32">
+          <section className="bg-primary/5 py-20">
               <div className="container mx-auto text-center">
-                  <h2 className="font-headline text-4xl font-bold">Ready to Make an Impact?</h2>
+                  <h2 className="font-headline text-3xl font-bold">Ready to Make an Impact?</h2>
                   <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
                     Join our exclusive network of sponsors and start your journey of patronage.
                   </p>
