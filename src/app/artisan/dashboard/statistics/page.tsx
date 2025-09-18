@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import { useState } from 'react';
@@ -161,8 +160,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={20} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={20} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={30} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={30} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -180,8 +179,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={10} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={10} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={20} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={20} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -199,8 +198,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={60} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={60} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -262,3 +261,5 @@ export default function StatisticsPage() {
   );
 }
 
+
+    
