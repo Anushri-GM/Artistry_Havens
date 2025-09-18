@@ -28,11 +28,11 @@ const heroImages = [
 ].filter(Boolean);
 
 const categories = [
-  { name: "Pottery", icon: <Palette className="h-8 w-8" />, imageId: 'category-pottery' },
-  { name: "Sculpture", icon: <Axe className="h-8 w-8" />, imageId: 'category-sculpture' },
-  { name: "Paintings", icon: <SprayCan className="h-8 w-8" />, imageId: 'category-paintings' },
-  { name: "Crafts", icon: <Drill className="h-8 w-8" />, imageId: 'category-crafts' },
-  { name: "Textiles", icon: <Tent className="h-8 w-8" />, imageId: 'category-textiles' },
+  { name: "Pottery", icon: <Palette className="h-6 w-6" />, imageId: 'category-pottery' },
+  { name: "Sculpture", icon: <Axe className="h-6 w-6" />, imageId: 'category-sculpture' },
+  { name: "Paintings", icon: <SprayCan className="h-6 w-6" />, imageId: 'category-paintings' },
+  { name: "Crafts", icon: <Drill className="h-6 w-6" />, imageId: 'category-crafts' },
+  { name: "Textiles", icon: <Tent className="h-6 w-6" />, imageId: 'category-textiles' },
 ];
 
 const bestSellers = [...mockProducts].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 4);
@@ -55,7 +55,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
       <Link href={`/buyer/product/${product.id}`}>
         <div className="block">
           {image && (
-            <div className="relative h-64 w-full">
+            <div className="relative h-48 w-full">
               <Image
                 src={image.imageUrl}
                 alt={image.description}
@@ -69,21 +69,21 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
               </div>
             </div>
           )}
-          <CardHeader>
-            <CardTitle className="font-headline text-lg">{product.name}</CardTitle>
-            <p className="text-sm text-muted-foreground">by {product.artisan}</p>
+          <CardHeader className="p-4">
+            <CardTitle className="font-headline text-base">{product.name}</CardTitle>
+            <p className="text-xs text-muted-foreground">by {product.artisan}</p>
           </CardHeader>
-          <CardContent>
-            <p className="text-xl font-semibold text-primary">${product.price}</p>
+          <CardContent className="p-4 pt-0">
+            <p className="text-lg font-semibold text-primary">${product.price}</p>
           </CardContent>
         </div>
       </Link>
-      <CardFooter className="flex gap-2">
-        <Button className="w-full" onClick={handleAddToCart}>
+      <CardFooter className="flex gap-2 p-2">
+        <Button className="w-full h-9" onClick={handleAddToCart}>
           <ShoppingBag className="mr-2 h-4 w-4" />
           Add to Cart
         </Button>
-        <Button variant="outline" size="icon" onClick={handleLike}>
+        <Button variant="outline" size="icon" className="h-9 w-9" onClick={handleLike}>
           <Heart className="h-4 w-4" />
         </Button>
       </CardFooter>
@@ -157,23 +157,23 @@ function CustomizationDialog() {
 
     if (isSubmitted) {
         return (
-            <div className="text-center py-12">
-                <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold font-headline">Request Sent!</h3>
-                <p className="text-muted-foreground mt-2">An artisan from the {category} category has been notified. They will review your request and get in touch soon.</p>
+            <div className="text-center py-8">
+                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+                <h3 className="text-lg font-semibold font-headline">Request Sent!</h3>
+                <p className="text-muted-foreground mt-2 text-sm">An artisan from the {category} category has been notified. They will review your request and get in touch soon.</p>
             </div>
         )
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
-            <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-6 py-4">
+            <div className="space-y-4">
                 <div>
                     <Label htmlFor="description">Describe your vision</Label>
                     <Textarea 
                         id="description" 
-                        placeholder="e.g., 'A wooden chess set with intricate Rajasthani carvings...'" 
-                        rows={5}
+                        placeholder="e.g., 'A wooden chess set...'" 
+                        rows={3}
                         value={prompt}
                         onChange={e => setPrompt(e.target.value)}
                     />
@@ -193,12 +193,12 @@ function CustomizationDialog() {
                     <Label htmlFor="reference-image">Upload a reference image (optional)</Label>
                     <div className="mt-2 flex items-center gap-4">
                         <Input id="reference-image" type="file" className="hidden" onChange={handleImageUpload} accept="image/*"/>
-                        <Button asChild variant="outline">
+                        <Button asChild variant="outline" size="sm">
                             <label htmlFor="reference-image" className="cursor-pointer">
                                 <Upload className="mr-2 h-4 w-4" /> Choose File
                             </label>
                         </Button>
-                        {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={40} height={40} className="rounded-md object-cover" />}
+                        {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={32} height={32} className="rounded-md object-cover" />}
                     </div>
                 </div>
                 <Button onClick={handleGenerate} disabled={isLoading || !prompt || !category} className="w-full">
@@ -206,20 +206,20 @@ function CustomizationDialog() {
                     Generate Mockup
                 </Button>
             </div>
-             <div className="space-y-4">
+             <div className="space-y-2">
                 <Label>AI-Generated Mockup</Label>
                 <div className="relative aspect-square w-full rounded-lg bg-muted flex items-center justify-center border border-dashed">
                     {isLoading ? (
-                        <div className="text-center text-muted-foreground">
-                            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-2" />
-                            <p>Generating your vision...</p>
+                        <div className="text-center text-muted-foreground p-4">
+                            <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                            <p className="text-sm">Generating your vision...</p>
                         </div>
                     ) : generatedMockup ? (
-                        <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg" />
+                        <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg p-2" />
                     ) : (
                          <div className="text-center text-muted-foreground p-4">
-                            <Wand2 className="h-8 w-8 mx-auto mb-2" />
-                            <p>Your generated mockup will appear here.</p>
+                            <Wand2 className="h-6 w-6 mx-auto mb-2" />
+                            <p className="text-sm">Your generated mockup will appear here.</p>
                         </div>
                     )}
                 </div>
@@ -233,29 +233,29 @@ export default function BuyerPage() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-20 items-center justify-between p-4">
+        <div className="container mx-auto flex h-16 items-center justify-between p-4">
           <div className="flex items-center gap-2">
-            <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-            <h1 className="font-headline text-2xl font-bold">Artistry Havens</h1>
+            <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+            <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
           </div>
           <div className="flex items-center gap-2">
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button>
-                        <Wand2 className="mr-2 h-5 w-5"/> Create Your Own
+                    <Button size="sm">
+                        <Wand2 className="mr-2 h-4 w-4"/> Create
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-4xl">
+                <DialogContent className="max-w-md">
                     <DialogHeader>
-                        <DialogTitle className="font-headline text-2xl">Design Your Custom Craft</DialogTitle>
+                        <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
                         <DialogDescription>
-                            Use the power of AI to bring your unique idea to life. Describe your vision, and we'll generate a mockup for an artisan to create.
+                           Describe your vision, and we'll generate a mockup for an artisan to create.
                         </DialogDescription>
                     </DialogHeader>
                     <CustomizationDialog />
                 </DialogContent>
             </Dialog>
-            <Button variant="outline" asChild>
+            <Button variant="outline" size="sm" asChild>
                 <Link href="/buyer/login">Login</Link>
             </Button>
             <Button variant="ghost" size="icon">
@@ -265,13 +265,13 @@ export default function BuyerPage() {
         </div>
       </header>
 
-      <main className="container mx-auto p-4 md:p-8">
-        <section className="mb-16">
-          <Carousel opts={{ loop: true }} className="w-full">
+      <main className="container mx-auto p-4">
+        <section className="mb-8">
+          <Carousel opts={{ loop: true }} className="w-full -mx-4">
             <CarouselContent>
               {heroImages.map((image, index) => image && (
                 <CarouselItem key={index}>
-                  <div className="relative h-[60vh] min-h-[400px] w-full rounded-lg overflow-hidden">
+                  <div className="relative h-64 w-full">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
@@ -282,33 +282,31 @@ export default function BuyerPage() {
                     />
                      <div className="absolute inset-0 bg-black/40" />
                      <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                        <h2 className="font-headline text-5xl font-extrabold tracking-tight">The Hands Behind the Art</h2>
-                        <p className="mt-4 text-xl max-w-2xl">Discover the stories, traditions, and passion woven into every piece.</p>
+                        <h2 className="font-headline text-3xl font-extrabold">The Hands Behind the Art</h2>
+                        <p className="mt-2 text-sm max-w-xs">Discover the stories and passion woven into every piece.</p>
                      </div>
                   </div>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-4" />
-            <CarouselNext className="right-4" />
           </Carousel>
         </section>
         
-        <section className="mb-16">
-            <div className="mb-8 text-center">
-                <h2 className="font-headline text-3xl font-bold">Explore Our Crafts</h2>
-                <p className="mt-2 text-lg text-muted-foreground">Find handmade treasures from across India.</p>
+        <section className="mb-8">
+            <div className="mb-4 text-center">
+                <h2 className="font-headline text-xl font-bold">Explore Our Crafts</h2>
+                <p className="mt-1 text-sm text-muted-foreground">Find handmade treasures.</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-3 gap-2">
                 {categories.map(category => {
                   const image = PlaceHolderImages.find(img => img.id === category.imageId);
                   return (
                     <Link href="#" key={category.name}>
                         <div className="group relative block overflow-hidden rounded-lg text-center">
-                            {image && <Image src={image.imageUrl} alt={category.name} width={400} height={400} className="object-cover w-full h-40 transition-transform duration-300 group-hover:scale-110" data-ai-hint={image.imageHint}/>}
-                            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center p-2">
+                            {image && <Image src={image.imageUrl} alt={category.name} width={200} height={200} className="object-cover w-full h-24" data-ai-hint={image.imageHint}/>}
+                            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center p-1">
                                 <div className="text-white">{category.icon}</div>
-                                <p className="mt-2 font-headline text-lg font-semibold text-white">{category.name}</p>
+                                <p className="mt-1 font-headline text-sm font-semibold text-white">{category.name}</p>
                             </div>
                         </div>
                     </Link>
@@ -317,12 +315,12 @@ export default function BuyerPage() {
             </div>
         </section>
 
-        <section className="mb-16">
-            <div className="mb-8 text-center">
-                <h2 className="font-headline text-3xl font-bold">Top Picks / Best Sellers</h2>
-                 <p className="mt-2 text-lg text-muted-foreground">Join others in loving these popular creations.</p>
+        <section className="mb-8">
+            <div className="mb-4 text-center">
+                <h2 className="font-headline text-xl font-bold">Top Picks</h2>
+                 <p className="mt-1 text-sm text-muted-foreground">Join others in loving these popular creations.</p>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4">
                 {bestSellers.map(product => (
                     <ProductCard key={product.id} product={product} />
                 ))}
@@ -330,11 +328,11 @@ export default function BuyerPage() {
         </section>
 
         <section>
-            <div className="mb-8 text-center">
-                <h2 className="font-headline text-3xl font-bold">Trending Now</h2>
-                <p className="mt-2 text-lg text-muted-foreground">See what's capturing everyone's attention.</p>
+            <div className="mb-4 text-center">
+                <h2 className="font-headline text-xl font-bold">Trending Now</h2>
+                <p className="mt-1 text-sm text-muted-foreground">See what's capturing attention.</p>
             </div>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4">
                 {trendingProducts.map(product => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -344,5 +342,3 @@ export default function BuyerPage() {
     </div>
   );
 }
-
-    

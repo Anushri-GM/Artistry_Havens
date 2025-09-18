@@ -1,3 +1,4 @@
+
 'use client';
 import {
   SidebarProvider,
@@ -69,10 +70,10 @@ const navItems = [
 function PageHeader() {
   const { isMobile } = useSidebar();
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-4 border-b bg-background/80 px-4 backdrop-blur-sm md:px-6">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
         <SidebarTrigger className="md:hidden" />
         {isMobile && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
-        <div className="flex w-full items-center justify-end gap-4">
+        <div className="flex w-full items-center justify-end gap-1">
 
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -177,7 +178,7 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
         </Sidebar>
         <SidebarInset className="flex-1">
           <PageHeader />
-          <main className="flex-1 p-4 md:p-6">{children}</main>
+          <main className="flex-1 p-4">{children}</main>
         </SidebarInset>
       </div>
     </SidebarProvider>
