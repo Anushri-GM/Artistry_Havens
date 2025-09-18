@@ -89,7 +89,8 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex justify-center">
+      <div className="w-full max-w-md bg-background">
         <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
             <div className="container mx-auto flex h-16 items-center justify-between p-4">
             <div className="flex items-center gap-4">
@@ -162,7 +163,7 @@ export default function ProductDetailPage() {
                     <p className="text-sm text-muted-foreground italic">{product.story}</p>
                 </div>
                 
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2">
+                <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2 w-full max-w-md mx-auto">
                     <Button size="lg" variant="outline" className="flex-1">
                         <MessageSquare className="mr-2 h-4 w-4" /> Message
                     </Button>
@@ -228,6 +229,9 @@ export default function ProductDetailPage() {
                 </div>
             </div>
         </main>
+      </div>
     </div>
   )
 }
+
+    

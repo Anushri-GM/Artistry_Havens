@@ -234,116 +234,120 @@ function CustomizationDialog() {
 
 export default function BuyerPage() {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between p-4">
-          <div className="flex items-center gap-2">
-            <ArtistryHavensLogo className="h-6 w-6 text-primary" />
-            <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <Dialog>
-                <DialogTrigger asChild>
-                    <Button size="sm">
-                        <Wand2 className="mr-2 h-4 w-4"/> Create
+    <div className="min-h-screen bg-background flex justify-center">
+        <div className="w-full max-w-md bg-background">
+            <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
+                <div className="container mx-auto flex h-16 items-center justify-between p-4">
+                <div className="flex items-center gap-2">
+                    <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+                    <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
+                </div>
+                <div className="flex items-center gap-2">
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="sm">
+                                <Wand2 className="mr-2 h-4 w-4"/> Create
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-md p-0 overflow-hidden h-[90vh] flex flex-col">
+                            <DialogHeader className="p-6 pb-4">
+                                <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
+                                <DialogDescription>
+                                Describe your vision, and we'll generate a mockup for an artisan to create.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex-1 overflow-auto">
+                                <CustomizationDialog />
+                            </div>
+                        </DialogContent>
+                    </Dialog>
+                    <Button variant="outline" size="sm" asChild>
+                        <Link href="/buyer/login">Login</Link>
                     </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-md p-0 overflow-hidden h-[90vh] flex flex-col">
-                    <DialogHeader className="p-6 pb-4">
-                        <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
-                        <DialogDescription>
-                           Describe your vision, and we'll generate a mockup for an artisan to create.
-                        </DialogDescription>
-                    </DialogHeader>
-                    <div className="flex-1 overflow-auto">
-                        <CustomizationDialog />
-                    </div>
-                </DialogContent>
-            </Dialog>
-            <Button variant="outline" size="sm" asChild>
-                <Link href="/buyer/login">Login</Link>
-            </Button>
-            <Button variant="ghost" size="icon">
-                <ShoppingBag />
-            </Button>
-          </div>
-        </div>
-      </header>
+                    <Button variant="ghost" size="icon">
+                        <ShoppingBag />
+                    </Button>
+                </div>
+                </div>
+            </header>
 
-      <main className="flex flex-col items-center p-4">
-        <section className="mb-8 w-full">
-          <Carousel opts={{ loop: true }} className="w-full -mx-4">
-            <CarouselContent>
-              {heroImages.map((image, index) => image && (
-                <CarouselItem key={index}>
-                  <div className="relative h-[60vh] w-full">
-                    <Image
-                      src={image.imageUrl}
-                      alt={image.description}
-                      fill
-                      priority={index === 0}
-                      className="object-cover"
-                      data-ai-hint={image.imageHint}
-                    />
-                     <div className="absolute inset-0 bg-black/40" />
-                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                        <h2 className="font-headline text-3xl font-extrabold drop-shadow-md">The Hands Behind the Art</h2>
-                        <p className="mt-2 text-sm max-w-xs drop-shadow-sm">Discover the stories and passion woven into every piece.</p>
-                     </div>
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        </section>
-        
-        <section className="mb-8 w-full max-w-md">
-            <div className="mb-4 text-center">
-                <h2 className="font-headline text-xl font-bold">Explore Our Crafts</h2>
-                <p className="mt-1 text-sm text-muted-foreground">Find handmade treasures.</p>
-            </div>
-            <div className="grid grid-cols-3 gap-2">
-                {categories.map(category => {
-                  const image = PlaceHolderImages.find(img => img.id === category.imageId);
-                  return (
-                    <Link href="#" key={category.name}>
-                        <div className="group relative block overflow-hidden rounded-lg text-center">
-                            {image && <Image src={image.imageUrl} alt={category.name} width={200} height={200} className="object-cover w-full h-24" data-ai-hint={image.imageHint}/>}
-                            <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center p-1">
-                                <div className="text-white">{category.icon}</div>
-                                <p className="mt-1 font-headline text-sm font-semibold text-white">{category.name}</p>
+            <main className="flex flex-col items-center p-4">
+                <section className="mb-8 w-full">
+                <Carousel opts={{ loop: true }} className="w-full">
+                    <CarouselContent>
+                    {heroImages.map((image, index) => image && (
+                        <CarouselItem key={index}>
+                        <div className="relative h-[60vh] w-full">
+                            <Image
+                            src={image.imageUrl}
+                            alt={image.description}
+                            fill
+                            priority={index === 0}
+                            className="object-cover"
+                            data-ai-hint={image.imageHint}
+                            />
+                            <div className="absolute inset-0 bg-black/40" />
+                            <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
+                                <h2 className="font-headline text-3xl font-extrabold drop-shadow-md">The Hands Behind the Art</h2>
+                                <p className="mt-2 text-sm max-w-xs drop-shadow-sm">Discover the stories and passion woven into every piece.</p>
                             </div>
                         </div>
-                    </Link>
-                  )
-                })}
-            </div>
-        </section>
+                        </CarouselItem>
+                    ))}
+                    </CarouselContent>
+                </Carousel>
+                </section>
+                
+                <section className="mb-8 w-full">
+                    <div className="mb-4 text-center">
+                        <h2 className="font-headline text-xl font-bold">Explore Our Crafts</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">Find handmade treasures.</p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2">
+                        {categories.map(category => {
+                        const image = PlaceHolderImages.find(img => img.id === category.imageId);
+                        return (
+                            <Link href="#" key={category.name}>
+                                <div className="group relative block overflow-hidden rounded-lg text-center">
+                                    {image && <Image src={image.imageUrl} alt={category.name} width={200} height={200} className="object-cover w-full h-24" data-ai-hint={image.imageHint}/>}
+                                    <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center p-1">
+                                        <div className="text-white">{category.icon}</div>
+                                        <p className="mt-1 font-headline text-sm font-semibold text-white">{category.name}</p>
+                                    </div>
+                                </div>
+                            </Link>
+                        )
+                        })}
+                    </div>
+                </section>
 
-        <section className="mb-8 w-full max-w-md">
-            <div className="mb-4 text-center">
-                <h2 className="font-headline text-xl font-bold">Top Picks</h2>
-                 <p className="mt-1 text-sm text-muted-foreground">Join others in loving these popular creations.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-                {bestSellers.map(product => (
-                    <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
-        </section>
+                <section className="mb-8 w-full">
+                    <div className="mb-4 text-center">
+                        <h2 className="font-headline text-xl font-bold">Top Picks</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">Join others in loving these popular creations.</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        {bestSellers.map(product => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                </section>
 
-        <section className="w-full max-w-md">
-            <div className="mb-4 text-center">
-                <h2 className="font-headline text-xl font-bold">Trending Now</h2>
-                <p className="mt-1 text-sm text-muted-foreground">See what's capturing attention.</p>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-                {trendingProducts.map(product => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
-            </div>
-        </section>
-      </main>
+                <section className="w-full">
+                    <div className="mb-4 text-center">
+                        <h2 className="font-headline text-xl font-bold">Trending Now</h2>
+                        <p className="mt-1 text-sm text-muted-foreground">See what's capturing attention.</p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                        {trendingProducts.map(product => (
+                        <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                </section>
+            </main>
+        </div>
     </div>
   );
 }
+
+    
