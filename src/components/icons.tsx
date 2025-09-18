@@ -12,9 +12,9 @@ export function ArtistryHavensLogo(props: SVGProps<SVGSVGElement>) {
             strokeLinejoin="round"
             {...props}
         >
-            <path d="M12 2L2 7l10 5 10-5-10-5z" />
-            <path d="M2 17l10 5 10-5" />
-            <path d="M2 12l10 5 10-5" />
+            <path d="M12 2 7.34 4.9a2 2 0 0 0-1.34 1.83v9.54a2 2 0 0 0 1.34 1.83L12 22l4.66-2.9a2 2 0 0 0 1.34-1.83V6.73a2 2 0 0 0-1.34-1.83L12 2z" />
+            <path d="m7 5 5 3 5-3" />
+            <path d="m7 19 5-3 5 3" />
         </svg>
     );
 }
