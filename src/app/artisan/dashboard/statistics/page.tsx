@@ -153,8 +153,8 @@ export default function StatisticsPage() {
         </TabsList>
         <TabsContent value="weekly">
           <Card>
-            <CardContent className="pt-6 px-0">
-              <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
+            <CardContent className="pt-6 overflow-x-auto">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
                 <ResponsiveContainer>
                   <LineChart data={mockWeeklyStatsData}>
                     <CartesianGrid vertical={false} />
@@ -172,8 +172,8 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="monthly">
           <Card>
-            <CardContent className="pt-6 px-0">
-              <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
+            <CardContent className="pt-6 overflow-x-auto">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[600px]">
                 <ResponsiveContainer>
                    <LineChart data={mockStatsData}>
                     <CartesianGrid vertical={false} />
@@ -191,8 +191,8 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="yearly">
           <Card>
-            <CardContent className="pt-6 px-0">
-              <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
+            <CardContent className="pt-6 overflow-x-auto">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
                 <ResponsiveContainer>
                   <LineChart data={mockYearlyStatsData}>
                     <CartesianGrid vertical={false} />
