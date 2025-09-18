@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Heart, Share2, Bot, Loader2, Sparkles, ShoppingCart } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -215,50 +215,39 @@ export default function StatisticsPage() {
         <p className="text-muted-foreground">Individual performance metrics for each product.</p>
       </div>
 
-      <Card>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Product</TableHead>
-                <TableHead className="text-center">Likes</TableHead>
-                <TableHead className="text-center">Shares</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {mockProducts.map((product) => (
-                <TableRow key={product.id}>
-                  <TableCell className="font-medium whitespace-nowrap">{product.name}</TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Heart className="h-4 w-4 text-muted-foreground" />
-                      {product.likes.toLocaleString()}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <Share2 className="h-4 w-4 text-muted-foreground" />
-                      {product.shares.toLocaleString()}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
-                      <Bot className="mr-2 h-4 w-4" />
-                      Review
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      </Card>
+      <div className="space-y-4">
+        {mockProducts.map((product) => (
+          <Card key={product.id}>
+            <CardContent className="p-4 flex flex-col gap-4">
+              <div className="flex justify-between items-start">
+                  <h3 className="font-headline font-semibold">{product.name}</h3>
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-center">
+                  <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground">Likes</p>
+                      <div className="flex items-center justify-center gap-1 font-bold">
+                          <Heart className="h-4 w-4 text-pink-500" />
+                          {product.likes.toLocaleString()}
+                      </div>
+                  </div>
+                   <div className="space-y-1">
+                      <p className="text-xs text-muted-foreground">Shares</p>
+                      <div className="flex items-center justify-center gap-1 font-bold">
+                          <Share2 className="h-4 w-4 text-blue-500" />
+                          {product.shares.toLocaleString()}
+                      </div>
+                  </div>
+              </div>
+               <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
+                <Bot className="mr-2 h-4 w-4" />
+                Review
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
       <AiReviewDialog product={selectedProduct} open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }
-
-
-
