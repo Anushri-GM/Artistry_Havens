@@ -1,9 +1,12 @@
 
+'use client';
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Check, ThumbsDown, Wand2 } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 
 const requests = [
   {
@@ -63,12 +66,21 @@ export default function OrderRequestsPage() {
               </div>
               
               {request.image && (
-                <div className="w-1/3 p-4">
-                    <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-                        <Image src={request.image.imageUrl} alt="Request reference" fill className="object-cover" />
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <div className="w-1/3 p-4 cursor-pointer">
+                        <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
+                            <Image src={request.image.imageUrl} alt="Request reference" fill className="object-cover" />
+                        </div>
+                         <p className="text-xs text-center font-semibold mt-2 text-muted-foreground">{request.isAiRequest ? "AI Mockup" : "Reference"}</p>
                     </div>
-                     <p className="text-xs text-center font-semibold mt-2 text-muted-foreground">{request.isAiRequest ? "AI Mockup" : "Reference"}</p>
-                </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-3xl p-2">
+                    <div className="relative aspect-square w-full">
+                        <Image src={request.image.imageUrl} alt="Request reference" fill className="object-contain rounded-lg" />
+                    </div>
+                  </DialogContent>
+                </Dialog>
               )}
             </div>
           </Card>
