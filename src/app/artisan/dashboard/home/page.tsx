@@ -10,8 +10,12 @@ import { mockProducts } from "@/lib/mock-data";
 export default function ArtisanHomePage() {
     const frequentlyBought = [...mockProducts].sort((a, b) => b.reviews - a.reviews);
     const bestsellers = [...mockProducts].sort((a, b) => b.revenue - a.revenue);
-    const autoplayPlugin = React.useRef(
-        Autoplay({ delay: 5000, stopOnInteraction: true })
+    
+    const autoplayPluginLTR = React.useRef(
+        Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: true })
+    );
+    const autoplayPluginRTL = React.useRef(
+        Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: true })
     );
 
   return (
@@ -21,9 +25,9 @@ export default function ArtisanHomePage() {
             <p className="text-muted-foreground mb-6">Your products that buyers are loving right now.</p>
             <Carousel 
                 opts={{ align: "start", loop: true }}
-                plugins={[autoplayPlugin.current]}
-                onMouseEnter={autoplayPlugin.current.stop}
-                onMouseLeave={autoplayPlugin.current.reset}
+                plugins={[autoplayPluginLTR.current]}
+                onMouseEnter={autoplayPluginLTR.current.stop}
+                onMouseLeave={autoplayPluginLTR.current.play}
             >
                 <CarouselContent>
                     {frequentlyBought.slice(0,3).map((product) => (
@@ -42,9 +46,9 @@ export default function ArtisanHomePage() {
             <p className="text-muted-foreground mb-6">Your top-performing products by revenue.</p>
              <Carousel 
                 opts={{ align: "start", loop: true, direction: "rtl" }}
-                plugins={[autoplayPlugin.current]}
-                onMouseEnter={autoplayPlugin.current.stop}
-                onMouseLeave={autoplayPlugin.current.reset}
+                plugins={[autoplayPluginRTL.current]}
+                onMouseEnter={autoplayPluginRTL.current.stop}
+                onMouseLeave={autoplayPluginRTL.current.play}
             >
                 <CarouselContent>
                     {bestsellers.slice(0,3).map((product) => (
