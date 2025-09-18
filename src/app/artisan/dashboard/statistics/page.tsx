@@ -15,7 +15,7 @@ import {
 import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Heart, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
+import { Heart, Share2, Bot, Loader2, Sparkles, ShoppingCart } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -27,8 +27,8 @@ const chartConfig = {
     label: 'Likes',
     color: 'hsl(var(--chart-1))',
   },
-  shares: {
-    label: 'Shares',
+  bought: {
+    label: 'Bought',
     color: 'hsl(var(--chart-2))',
   },
 } satisfies ChartConfig;
@@ -142,7 +142,7 @@ export default function StatisticsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline">Performance Overview</h1>
-        <p className="text-muted-foreground">Likes and shares for all your products.</p>
+        <p className="text-muted-foreground">Likes and sales for all your products.</p>
       </div>
 
       <Tabs defaultValue="monthly">
@@ -163,7 +163,7 @@ export default function StatisticsPage() {
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <ChartLegend content={<ChartLegendContent />} />
                     <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line dataKey="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -182,7 +182,7 @@ export default function StatisticsPage() {
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
                     <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line data-key="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -201,7 +201,7 @@ export default function StatisticsPage() {
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
                     <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line dataKey="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
                   </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
