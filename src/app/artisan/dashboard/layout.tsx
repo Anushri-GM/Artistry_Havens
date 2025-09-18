@@ -135,7 +135,7 @@ function PageHeader() {
             </SheetContent>
         </Sheet>
         
-        <Button variant="ghost" size="icon">
+        <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
             <Mic className="h-5 w-5" />
             <span className="sr-only">Voice Command</span>
         </Button>
