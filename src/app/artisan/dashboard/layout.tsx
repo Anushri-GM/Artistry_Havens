@@ -154,7 +154,7 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
     <div className="flex justify-center">
       <div className="w-full">
         <SidebarProvider>
-          <div className="flex min-h-screen">
+          <div className="flex h-[100svh] overflow-hidden">
             <Sidebar collapsible="icon" className="border-r">
               <SidebarHeader className="flex items-center gap-2 p-2">
                 <ArtistryHavensLogo className="h-8 w-8 text-primary" />
@@ -192,10 +192,10 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
                 </Link>
               </SidebarFooter>
             </Sidebar>
-            <SidebarInset className="flex-1">
+            <div className="flex flex-1 flex-col overflow-hidden">
               <PageHeader />
-              <main className="flex-1 p-4">{children}</main>
-            </SidebarInset>
+              <main className="flex-1 overflow-y-auto p-4">{children}</main>
+            </div>
           </div>
         </SidebarProvider>
       </div>
