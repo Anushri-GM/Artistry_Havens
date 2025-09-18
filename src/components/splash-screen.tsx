@@ -19,7 +19,7 @@ export function SplashScreen() {
   return (
     <div className="relative flex h-screen w-screen items-center justify-center bg-background animate-in fade-in-0 duration-1000">
         <Image 
-            src="https://image2url.com/images/1758187635882-4ed559ce-8eb3-4f40-9fa3-068a6dc1e242.jpg"
+            src="https://image2url.com/images/1758193888034-dbd65cc5-da9e-49fd-8766-4f0a1903d5f0.jpg"
             alt="Artisan hands working on a craft"
             fill
             className="object-cover"
