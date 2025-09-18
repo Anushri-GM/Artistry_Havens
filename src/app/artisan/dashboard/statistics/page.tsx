@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { useState } from 'react';
@@ -62,39 +63,39 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle className="font-headline text-2xl">AI Review for: {product.name}</DialogTitle>
+          <DialogTitle className="font-headline text-xl">AI Review for: {product.name}</DialogTitle>
           <DialogDescription>
             An AI-powered analysis of your product's performance with suggestions for improvement.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+        <div className="grid grid-cols-1 gap-6 mt-4">
             <div className='space-y-4'>
                 {product.image && (
-                <div className="relative h-64 w-full rounded-lg overflow-hidden">
+                <div className="relative h-56 w-full rounded-lg overflow-hidden">
                     <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover" />
                 </div>
                 )}
                 <div className='grid grid-cols-2 gap-4'>
                     <Card>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Likes</CardTitle></CardHeader>
-                        <CardContent><div className="text-2xl font-bold">{product.likes.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">{product.likes.toLocaleString()}</div></CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Shares</CardTitle></CardHeader>
-                        <CardContent><div className="text-2xl font-bold">{product.shares.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">{product.shares.toLocaleString()}</div></CardContent>
                     </Card>
                     <Card className='col-span-2'>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Revenue</CardTitle></CardHeader>
-                        <CardContent><div className="text-2xl font-bold">${product.revenue.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">${product.revenue.toLocaleString()}</div></CardContent>
                     </Card>
                 </div>
 
             </div>
             <div className="space-y-4">
                 <h3 className='font-semibold font-headline'>Generated AI Review</h3>
-                <Card className="min-h-[200px] bg-primary/5">
+                <Card className="min-h-[180px] bg-primary/5">
                     <CardContent className="p-4">
                         {isLoading ? (
                             <div className="flex items-center justify-center h-full">
@@ -105,7 +106,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                                 <p>{review}</p>
                              </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-center">
+                            <div className="flex flex-col items-center justify-center h-full text-center p-4">
                                 <Sparkles className="h-8 w-8 text-primary/50 mb-2"/>
                                 <p className="text-sm text-muted-foreground">Click the button to generate an AI performance review.</p>
                             </div>
@@ -114,7 +115,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                 </Card>
                 <Button onClick={handleGenerateReview} disabled={isLoading} className="w-full">
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Bot className="mr-2 h-4 w-4" />}
-                    {review ? 'Regenerate Review' : 'Show AI Review'}
+                    {review ? 'Regenerate' : 'Show AI Review'}
                 </Button>
             </div>
         </div>
@@ -168,23 +169,23 @@ export default function StatisticsPage() {
           <TableHeader>
             <TableRow>
               <TableHead>Product</TableHead>
-              <TableHead className="text-right">Likes</TableHead>
-              <TableHead className="text-right">Shares</TableHead>
+              <TableHead className="text-center">Likes</TableHead>
+              <TableHead className="text-center">Shares</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {mockProducts.map((product) => (
               <TableRow key={product.id}>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
+                <TableCell className="font-medium whitespace-normal">{product.name}</TableCell>
+                <TableCell className="text-center">
+                  <div className="flex items-center justify-center gap-2">
                     <Heart className="h-4 w-4 text-muted-foreground" />
                     {product.likes.toLocaleString()}
                   </div>
                 </TableCell>
-                <TableCell className="text-right">
-                  <div className="flex items-center justify-end gap-2">
+                <TableCell className="text-center">
+                  <div className="flex items-center justify-center gap-2">
                     <Share2 className="h-4 w-4 text-muted-foreground" />
                     {product.shares.toLocaleString()}
                   </div>
@@ -192,7 +193,7 @@ export default function StatisticsPage() {
                 <TableCell className="text-right">
                   <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
                     <Bot className="mr-2 h-4 w-4" />
-                    Show AI Review
+                    Review
                   </Button>
                 </TableCell>
               </TableRow>
@@ -205,5 +206,3 @@ export default function StatisticsPage() {
     </div>
   );
 }
-
-    
