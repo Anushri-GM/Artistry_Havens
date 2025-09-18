@@ -3,12 +3,14 @@
 'use client';
 
 import { useState } from 'react';
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis, ResponsiveContainer } from 'recharts';
+import { CartesianGrid, XAxis, YAxis, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartConfig,
+  ChartLegend,
+  ChartLegendContent,
 } from '@/components/ui/chart';
 import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -18,7 +20,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/componentsui/tabs';
 
 const chartConfig = {
   likes: {
@@ -154,14 +156,15 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                  <BarChart data={mockWeeklyStatsData}>
+                  <LineChart data={mockWeeklyStatsData}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
-                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
-                  </BarChart>
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
+                    <Line dataKey="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                  </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -172,14 +175,15 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                  <BarChart data={mockStatsData}>
+                   <LineChart data={mockStatsData}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
-                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
-                  </BarChart>
+                     <ChartLegend content={<ChartLegendContent />} />
+                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
+                    <Line data-key="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                  </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -190,14 +194,15 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                  <BarChart data={mockYearlyStatsData}>
+                  <LineChart data={mockYearlyStatsData}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
-                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
-                  </BarChart>
+                     <ChartLegend content={<ChartLegendContent />} />
+                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
+                    <Line dataKey="shares" type="monotone" stroke="var(--color-shares)" strokeWidth={2} dot={true} />
+                  </LineChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
