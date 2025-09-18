@@ -216,46 +216,49 @@ export default function StatisticsPage() {
       </div>
 
       <Card>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead className="text-center">Likes</TableHead>
-              <TableHead className="text-center">Shares</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {mockProducts.map((product) => (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium whitespace-normal">{product.name}</TableCell>
-                <TableCell className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Heart className="h-4 w-4 text-muted-foreground" />
-                    {product.likes.toLocaleString()}
-                  </div>
-                </TableCell>
-                <TableCell className="text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Share2 className="h-4 w-4 text-muted-foreground" />
-                    {product.shares.toLocaleString()}
-                  </div>
-                </TableCell>
-                <TableCell className="text-right">
-                  <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
-                    <Bot className="mr-2 h-4 w-4" />
-                    Review
-                  </Button>
-                </TableCell>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Product</TableHead>
+                <TableHead className="text-center">Likes</TableHead>
+                <TableHead className="text-center">Shares</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {mockProducts.map((product) => (
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium whitespace-nowrap">{product.name}</TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <Heart className="h-4 w-4 text-muted-foreground" />
+                      {product.likes.toLocaleString()}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                      <Share2 className="h-4 w-4 text-muted-foreground" />
+                      {product.shares.toLocaleString()}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
+                      <Bot className="mr-2 h-4 w-4" />
+                      Review
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </Card>
 
       <AiReviewDialog product={selectedProduct} open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }
+
 
 
