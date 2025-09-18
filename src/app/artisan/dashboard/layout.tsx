@@ -137,50 +137,54 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
   const pathname = usePathname();
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen">
-        <Sidebar collapsible="icon" className="border-r">
-          <SidebarHeader className="flex items-center gap-2 p-2">
-            <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-            <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
-              Artistry Havens
-            </h1>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
-              {navItems.map((item, index) =>
-                item.type === 'divider' ? (
-                  <div key={index} className="my-2 h-px bg-border mx-3" />
-                ) : (
-                  <SidebarMenuItem key={item.label}>
-                    <Link href={item.href!}>
-                      <SidebarMenuButton
-                        isActive={pathname === item.href}
-                        tooltip={{ children: item.label, side: 'right' }}
-                      >
-                        <item.icon />
-                        <span>{item.label}</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                )
-              )}
-            </SidebarMenu>
-          </SidebarContent>
-          <SidebarFooter className="flex flex-col gap-2 p-2">
-             <Link href="/artisan/login">
-                <SidebarMenuButton>
-                    <LogOut />
-                    <span>Logout</span>
-                </SidebarMenuButton>
-            </Link>
-          </SidebarFooter>
-        </Sidebar>
-        <SidebarInset className="flex-1">
-          <PageHeader />
-          <main className="flex-1 p-4">{children}</main>
-        </SidebarInset>
+    <div className="flex justify-center">
+      <div className="w-full max-w-md">
+        <SidebarProvider>
+          <div className="flex min-h-screen">
+            <Sidebar collapsible="icon" className="border-r">
+              <SidebarHeader className="flex items-center gap-2 p-2">
+                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+                <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
+                  Artistry Havens
+                </h1>
+              </SidebarHeader>
+              <SidebarContent>
+                <SidebarMenu>
+                  {navItems.map((item, index) =>
+                    item.type === 'divider' ? (
+                      <div key={index} className="my-2 h-px bg-border mx-3" />
+                    ) : (
+                      <SidebarMenuItem key={item.label}>
+                        <Link href={item.href!}>
+                          <SidebarMenuButton
+                            isActive={pathname === item.href}
+                            tooltip={{ children: item.label, side: 'right' }}
+                          >
+                            <item.icon />
+                            <span>{item.label}</span>
+                          </SidebarMenuButton>
+                        </Link>
+                      </SidebarMenuItem>
+                    )
+                  )}
+                </SidebarMenu>
+              </SidebarContent>
+              <SidebarFooter className="flex flex-col gap-2 p-2">
+                <Link href="/artisan/login">
+                    <SidebarMenuButton>
+                        <LogOut />
+                        <span>Logout</span>
+                    </SidebarMenuButton>
+                </Link>
+              </SidebarFooter>
+            </Sidebar>
+            <SidebarInset className="flex-1">
+              <PageHeader />
+              <main className="flex-1 p-4">{children}</main>
+            </SidebarInset>
+          </div>
+        </SidebarProvider>
       </div>
-    </SidebarProvider>
+    </div>
   );
 }

@@ -30,7 +30,7 @@ const roles = [
 function RoleSelection() {
     return (
         <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <div className="w-full max-w-4xl">
+        <div className="w-full max-w-md">
             <div className="mb-12 text-center">
             <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground">Welcome!</h1>
             <p className="mt-2 text-lg text-muted-foreground">Please select your role to continue.</p>
