@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -36,37 +37,40 @@ export default function OrderRequestsPage() {
         <p className="text-muted-foreground">Review custom requests from potential buyers.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-6">
         {requests.map(request => (
           <Card key={request.id}>
-            <CardHeader>
-              <div className="flex justify-between items-start">
-                <div>
-                    <CardTitle>Request from {request.buyer}</CardTitle>
-                    <CardDescription className="pt-2 italic">"{request.description}"</CardDescription>
-                </div>
-                {request.isAiRequest && (
-                    <div className="flex items-center gap-2 text-primary bg-primary/10 px-3 py-1.5 rounded-full text-sm font-medium">
-                        <Wand2 className="h-4 w-4"/>
-                        <span>AI Generated</span>
+            <div className="flex gap-4">
+              <div className="flex flex-col flex-1">
+                <CardHeader>
+                  <div className="flex justify-between items-start">
+                    <div>
+                        <CardTitle>Request from {request.buyer}</CardTitle>
+                        <CardDescription className="pt-2 italic">"{request.description}"</CardDescription>
                     </div>
-                )}
+                    {request.isAiRequest && (
+                        <div className="flex items-center gap-2 text-primary bg-primary/10 px-3 py-1.5 rounded-full text-sm font-medium">
+                            <Wand2 className="h-4 w-4"/>
+                            <span>AI</span>
+                        </div>
+                    )}
+                  </div>
+                </CardHeader>
+                <CardFooter className="flex justify-end gap-2 mt-auto">
+                    <Button variant="outline" size="sm"><ThumbsDown className="mr-2 h-4 w-4" /> Deny</Button>
+                    <Button size="sm"><Check className="mr-2 h-4 w-4" /> Accept</Button>
+                </CardFooter>
               </div>
-            </CardHeader>
-            <CardContent>
+              
               {request.image && (
-                <div>
-                    <p className="text-sm font-semibold mb-2">{request.isAiRequest ? "AI-Generated Mockup" : "Reference Image:"}</p>
-                    <div className="relative h-64 w-full rounded-lg overflow-hidden border">
+                <div className="w-1/3 p-4">
+                    <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
                         <Image src={request.image.imageUrl} alt="Request reference" fill className="object-cover" />
                     </div>
+                     <p className="text-xs text-center font-semibold mt-2 text-muted-foreground">{request.isAiRequest ? "AI Mockup" : "Reference"}</p>
                 </div>
               )}
-            </CardContent>
-            <CardFooter className="flex justify-end gap-2">
-                <Button variant="outline"><ThumbsDown className="mr-2 h-4 w-4" /> Deny</Button>
-                <Button><Check className="mr-2 h-4 w-4" /> Accept</Button>
-            </CardFooter>
+            </div>
           </Card>
         ))}
       </div>
