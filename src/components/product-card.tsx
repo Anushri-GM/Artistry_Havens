@@ -25,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="overflow-hidden">
       {product.image && (
-        <div className="relative h-48 w-full">
+        <div className="relative h-32 w-full">
           <Image
             src={product.image.imageUrl}
             alt={product.image.description}
@@ -35,24 +35,24 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         </div>
       )}
-      <CardHeader>
-        <CardTitle className="font-headline text-lg">{product.name}</CardTitle>
+      <CardHeader className="p-2">
+        <CardTitle className="font-headline text-sm leading-tight">{product.name}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="flex items-center justify-between text-sm text-muted-foreground">
+      <CardContent className="p-2 pt-0">
+        <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Heart className="h-4 w-4" />
+            <Heart className="h-3 w-3" />
             <span>{product.likes?.toLocaleString() ?? 0}</span>
           </div>
           <div className="flex items-center gap-1">
-            <Share2 className="h-4 w-4" />
+            <Share2 className="h-3 w-3" />
             <span>{product.shares?.toLocaleString() ?? 0}</span>
           </div>
         </div>
       </CardContent>
-       <CardFooter className="flex justify-end gap-2">
-            <Button variant="ghost" size="sm">Details</Button>
-            <Button size="sm">Edit</Button>
+       <CardFooter className="flex justify-end gap-1 p-2">
+            <Button variant="ghost" size="sm" className="text-xs h-7">Details</Button>
+            <Button size="sm" className="text-xs h-7">Edit</Button>
       </CardFooter>
     </Card>
   );
