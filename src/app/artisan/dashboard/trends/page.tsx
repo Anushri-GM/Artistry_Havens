@@ -30,7 +30,7 @@ export default function TrendsPage() {
             >
                 <CarouselContent>
                     {frequentlyBought.map((product) => (
-                        <CarouselItem key={product.id} className="basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={product.id} className="basis-1/2">
                             <ProductCard product={product} />
                         </CarouselItem>
                     ))}
@@ -51,7 +51,7 @@ export default function TrendsPage() {
              >
                 <CarouselContent>
                     {bestsellers.map((product) => (
-                        <CarouselItem key={product.id} className="basis-1/2 lg:basis-1/3">
+                        <CarouselItem key={product.id} className="basis-1/2">
                             <ProductCard product={product} />
                         </CarouselItem>
                     ))}
