@@ -173,7 +173,7 @@ export default function ProductDetailPage() {
                 </div>
             </div>
 
-            <div className="p-4 pt-0 mb-24">
+            <div className="p-6 pt-0 mb-24">
                 <h2 className="font-headline text-xl font-bold mb-4">Ratings & Reviews</h2>
                 <div className="space-y-6">
                     <div>
@@ -233,5 +233,3 @@ export default function ProductDetailPage() {
     </div>
   )
 }
-
-    

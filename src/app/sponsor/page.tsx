@@ -51,10 +51,10 @@ export default function SponsorPage() {
             )}
             <div className="absolute inset-0 bg-primary/70" />
             <div className="relative z-10 max-w-4xl px-4">
-              <h1 className="font-headline text-5xl font-extrabold tracking-tight md:text-7xl">
+              <h1 className="font-headline text-4xl font-extrabold tracking-tight md:text-5xl">
                 Become a Patron of the Arts
               </h1>
-              <p className="mt-6 text-xl text-primary-foreground/80">
+              <p className="mt-6 text-lg text-primary-foreground/80">
                 Invest in culture, empower creators, and share in the success of India's finest artisans.
               </p>
               <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90">

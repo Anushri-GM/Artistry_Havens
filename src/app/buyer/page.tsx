@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Image from "next/image";
@@ -287,7 +288,7 @@ export default function BuyerPage() {
                             />
                             <div className="absolute inset-0 bg-black/40" />
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                                <h2 className="font-headline text-3xl font-extrabold drop-shadow-md">The Hands Behind the Art</h2>
+                                <h2 className="font-headline text-2xl font-extrabold drop-shadow-md">The Hands Behind the Art</h2>
                                 <p className="mt-2 text-sm max-w-xs drop-shadow-sm">Discover the stories and passion woven into every piece.</p>
                             </div>
                         </div>
