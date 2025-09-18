@@ -1,5 +1,6 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,26 +57,26 @@ export default function SponsorsPage() {
               <CardTitle>Sponsor Requests</CardTitle>
               <CardDescription>Review and respond to new sponsorship opportunities.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {mockSponsorRequests.map(request => (
-                     <div key={request.id} className="p-4 border rounded-lg">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-4">
+                     <Card key={request.id}>
+                        <CardHeader>
+                            <div className="flex items-start gap-4">
                                 <Avatar>
-                                <AvatarImage src={request.avatar?.imageUrl} alt={request.name} />
-                                <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
+                                    <AvatarImage src={request.avatar?.imageUrl} alt={request.name} />
+                                    <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                <p className="font-semibold">{request.name}</p>
-                                <p className="text-sm text-muted-foreground italic">"{request.message}"</p>
+                                    <CardTitle className="font-headline text-lg">{request.name}</CardTitle>
+                                    <CardDescription className="pt-2 italic">"{request.message}"</CardDescription>
                                 </div>
                             </div>
-                            <div className="flex gap-2">
-                                <Button size="sm" variant="outline"><ThumbsDown className="h-4 w-4 mr-2"/>Deny</Button>
-                                <Button size="sm"><Check className="h-4 w-4 mr-2"/>Accept</Button>
-                            </div>
-                        </div>
-                     </div>
+                        </CardHeader>
+                        <CardFooter className="flex justify-end gap-2">
+                           <Button size="sm" variant="outline"><ThumbsDown className="h-4 w-4 mr-2"/>Deny</Button>
+                           <Button size="sm"><Check className="h-4 w-4 mr-2"/>Accept</Button>
+                        </CardFooter>
+                     </Card>
                 ))}
             </CardContent>
           </Card>
