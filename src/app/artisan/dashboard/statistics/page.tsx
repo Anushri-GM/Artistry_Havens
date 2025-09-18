@@ -160,8 +160,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={30} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={30} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -179,8 +179,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={20} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={20} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={25} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={25} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -198,8 +198,8 @@ export default function StatisticsPage() {
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={60} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={60} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={80} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={80} />
                   </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
@@ -261,5 +261,7 @@ export default function StatisticsPage() {
   );
 }
 
+
+    
 
     
