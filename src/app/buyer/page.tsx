@@ -20,6 +20,7 @@ import React, { useState } from "react";
 import { generateCustomDesign } from "@/ai/flows/generate-custom-design";
 import { useToast } from "@/hooks/use-toast";
 import type { GenerateCustomDesignInput } from "@/ai/types/generate-custom-design-types";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const heroImages = [
   PlaceHolderImages.find(img => img.id === 'hero-1'),
@@ -51,7 +52,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
   }
 
   return (
-    <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl group">
+    <Card className="overflow-hidden transition-shadow duration-300 hover:shadow-xl group w-full">
       <Link href={`/buyer/product/${product.id}`}>
         <div className="block">
           {image && (
@@ -166,66 +167,68 @@ function CustomizationDialog() {
     }
 
     return (
-        <div className="grid grid-cols-1 gap-6 py-4">
-            <div className="space-y-4">
-                <div>
-                    <Label htmlFor="description">Describe your vision</Label>
-                    <Textarea 
-                        id="description" 
-                        placeholder="e.g., 'A wooden chess set...'" 
-                        rows={3}
-                        value={prompt}
-                        onChange={e => setPrompt(e.target.value)}
-                    />
-                </div>
-                 <div>
-                    <Label htmlFor="category">Choose a category</Label>
-                    <Select onValueChange={setCategory} value={category}>
-                        <SelectTrigger>
-                            <SelectValue placeholder="Select an artisan category..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
-                 <div>
-                    <Label htmlFor="reference-image">Upload a reference image (optional)</Label>
-                    <div className="mt-2 flex items-center gap-4">
-                        <Input id="reference-image" type="file" className="hidden" onChange={handleImageUpload} accept="image/*"/>
-                        <Button asChild variant="outline" size="sm">
-                            <label htmlFor="reference-image" className="cursor-pointer">
-                                <Upload className="mr-2 h-4 w-4" /> Choose File
-                            </label>
-                        </Button>
-                        {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={32} height={32} className="rounded-md object-cover" />}
+        <ScrollArea className="h-[70vh] sm:h-auto">
+            <div className="grid grid-cols-1 gap-6 py-4 px-4">
+                <div className="space-y-4">
+                    <div>
+                        <Label htmlFor="description">Describe your vision</Label>
+                        <Textarea 
+                            id="description" 
+                            placeholder="e.g., 'A wooden chess set...'" 
+                            rows={3}
+                            value={prompt}
+                            onChange={e => setPrompt(e.target.value)}
+                        />
                     </div>
+                    <div>
+                        <Label htmlFor="category">Choose a category</Label>
+                        <Select onValueChange={setCategory} value={category}>
+                            <SelectTrigger>
+                                <SelectValue placeholder="Select an artisan category..." />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {categories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div>
+                        <Label htmlFor="reference-image">Upload a reference image (optional)</Label>
+                        <div className="mt-2 flex items-center gap-4">
+                            <Input id="reference-image" type="file" className="hidden" onChange={handleImageUpload} accept="image/*"/>
+                            <Button asChild variant="outline" size="sm">
+                                <label htmlFor="reference-image" className="cursor-pointer">
+                                    <Upload className="mr-2 h-4 w-4" /> Choose File
+                                </label>
+                            </Button>
+                            {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={32} height={32} className="rounded-md object-cover" />}
+                        </div>
+                    </div>
+                    <Button onClick={handleGenerate} disabled={isLoading || !prompt || !category} className="w-full">
+                        {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
+                        Generate Mockup
+                    </Button>
                 </div>
-                <Button onClick={handleGenerate} disabled={isLoading || !prompt || !category} className="w-full">
-                    {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
-                    Generate Mockup
-                </Button>
+                <div className="space-y-2">
+                    <Label>AI-Generated Mockup</Label>
+                    <div className="relative aspect-square w-full rounded-lg bg-muted flex items-center justify-center border border-dashed">
+                        {isLoading ? (
+                            <div className="text-center text-muted-foreground p-4">
+                                <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
+                                <p className="text-sm">Generating your vision...</p>
+                            </div>
+                        ) : generatedMockup ? (
+                            <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg p-2" />
+                        ) : (
+                            <div className="text-center text-muted-foreground p-4">
+                                <Wand2 className="h-6 w-6 mx-auto mb-2" />
+                                <p className="text-sm">Your generated mockup will appear here.</p>
+                            </div>
+                        )}
+                    </div>
+                    <Button onClick={handleSubmitRequest} disabled={!generatedMockup} className="w-full">Send Request to Artisan</Button>
+                </div>
             </div>
-             <div className="space-y-2">
-                <Label>AI-Generated Mockup</Label>
-                <div className="relative aspect-square w-full rounded-lg bg-muted flex items-center justify-center border border-dashed">
-                    {isLoading ? (
-                        <div className="text-center text-muted-foreground p-4">
-                            <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
-                            <p className="text-sm">Generating your vision...</p>
-                        </div>
-                    ) : generatedMockup ? (
-                        <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg p-2" />
-                    ) : (
-                         <div className="text-center text-muted-foreground p-4">
-                            <Wand2 className="h-6 w-6 mx-auto mb-2" />
-                            <p className="text-sm">Your generated mockup will appear here.</p>
-                        </div>
-                    )}
-                </div>
-                <Button onClick={handleSubmitRequest} disabled={!generatedMockup} className="w-full">Send Request to Artisan</Button>
-             </div>
-        </div>
+        </ScrollArea>
     );
 }
 
@@ -245,8 +248,8 @@ export default function BuyerPage() {
                         <Wand2 className="mr-2 h-4 w-4"/> Create
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-md">
-                    <DialogHeader>
+                <DialogContent className="max-w-md p-0">
+                    <DialogHeader className="p-6 pb-0">
                         <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
                         <DialogDescription>
                            Describe your vision, and we'll generate a mockup for an artisan to create.
@@ -265,13 +268,13 @@ export default function BuyerPage() {
         </div>
       </header>
 
-      <main className="container mx-auto p-4">
-        <section className="mb-8">
+      <main className="flex flex-col items-center p-4">
+        <section className="mb-8 w-full">
           <Carousel opts={{ loop: true }} className="w-full -mx-4">
             <CarouselContent>
               {heroImages.map((image, index) => image && (
                 <CarouselItem key={index}>
-                  <div className="relative h-80 w-full">
+                  <div className="relative h-96 w-full">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
@@ -292,7 +295,7 @@ export default function BuyerPage() {
           </Carousel>
         </section>
         
-        <section className="mb-8">
+        <section className="mb-8 w-full max-w-md">
             <div className="mb-4 text-center">
                 <h2 className="font-headline text-xl font-bold">Explore Our Crafts</h2>
                 <p className="mt-1 text-sm text-muted-foreground">Find handmade treasures.</p>
@@ -315,7 +318,7 @@ export default function BuyerPage() {
             </div>
         </section>
 
-        <section className="mb-8">
+        <section className="mb-8 w-full max-w-md">
             <div className="mb-4 text-center">
                 <h2 className="font-headline text-xl font-bold">Top Picks</h2>
                  <p className="mt-1 text-sm text-muted-foreground">Join others in loving these popular creations.</p>
@@ -327,7 +330,7 @@ export default function BuyerPage() {
             </div>
         </section>
 
-        <section>
+        <section className="w-full max-w-md">
             <div className="mb-4 text-center">
                 <h2 className="font-headline text-xl font-bold">Trending Now</h2>
                 <p className="mt-1 text-sm text-muted-foreground">See what's capturing attention.</p>
