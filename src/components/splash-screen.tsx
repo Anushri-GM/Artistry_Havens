@@ -22,7 +22,7 @@ export function SplashScreen() {
             src="https://image2url.com/images/1758193888034-dbd65cc5-da9e-49fd-8766-4f0a1903d5f0.jpg"
             alt="Artisan hands working on a craft"
             fill
-            className="object-cover"
+            className="object-contain"
             priority
         />
     </div>
