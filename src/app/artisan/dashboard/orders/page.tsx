@@ -21,24 +21,23 @@ export default function MyOrdersPage() {
       <div className="space-y-6">
         {orders.map(order => (
           <Card key={order.id}>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="flex flex-row gap-4">
                {order.product.image && (
-                <div className="w-full sm:w-1/4 p-4 sm:p-0 sm:pl-4 sm:py-4">
+                <div className="w-1/4 p-4 sm:p-0 sm:pl-4 sm:py-4 flex-shrink-0">
                     <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
                         <Image src={order.product.image.imageUrl} alt={order.product.name} fill className="object-cover" />
                     </div>
                 </div>
               )}
-              <div className="flex-1">
-                <CardHeader>
+              <div className="flex-1 flex flex-col">
+                <CardHeader className="flex-1 pb-2">
                   <div className="flex justify-between items-start">
                     <div>
-                        <CardTitle>{order.product.name}</CardTitle>
-                        <CardDescription className="pt-2">
+                        <CardTitle className="text-lg font-headline">{order.product.name}</CardTitle>
+                        <CardDescription className="pt-2 text-xs">
                             <p><strong>Order ID:</strong> {order.id}</p>
                             <p><strong>Buyer:</strong> {order.buyer}</p>
-                            <p><strong>Quantity:</strong> {order.quantity}</p>
-                            <p><strong>Contact:</strong> {order.phone}</p>
+                            <p><strong>Qty:</strong> {order.quantity}</p>
                         </CardDescription>
                     </div>
                     <Badge variant={order.status === 'Delivered' ? 'default' : (order.status === 'Shipped' ? 'secondary' : 'outline')}>
@@ -46,9 +45,9 @@ export default function MyOrdersPage() {
                     </Badge>
                   </div>
                 </CardHeader>
-                <CardFooter className="flex justify-end gap-2 bg-background/50 p-4">
-                    <Button variant="outline" size="sm">View Details</Button>
-                    <Button size="sm">Update Status</Button>
+                <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
+                    <Button variant="outline" size="sm">Details</Button>
+                    <Button size="sm">Update</Button>
                 </CardFooter>
               </div>
             </div>
