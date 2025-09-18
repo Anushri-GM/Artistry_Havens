@@ -18,13 +18,13 @@ export default function ProfilePage() {
 
       <Card>
         <CardHeader className="relative">
-          <div className="flex flex-col items-center gap-6">
-            <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
+          <div className="flex flex-col items-center gap-4">
+            <Avatar className="h-28 w-28 border-4 border-background shadow-lg">
               <AvatarImage src={avatarImage?.imageUrl} alt="Artisan" />
               <AvatarFallback>A</AvatarFallback>
             </Avatar>
             <div className="text-center">
-              <CardTitle className="font-headline text-3xl">Rohan Joshi</CardTitle>
+              <CardTitle className="font-headline text-2xl">Rohan Joshi</CardTitle>
               <div className="flex items-center justify-center gap-2 mt-2">
                 <div className="flex items-center gap-0.5">
                   <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
@@ -33,17 +33,17 @@ export default function ProfilePage() {
                   <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
                   <Star className="h-5 w-5 fill-yellow-400/50 text-yellow-500" />
                 </div>
-                <span className="text-muted-foreground text-sm">(4.9 from 152 reviews)</span>
+                <span className="text-muted-foreground text-sm">(152 reviews)</span>
               </div>
                <div className="mt-4 flex flex-wrap gap-2 justify-center">
                 {artCategories.map(cat => <Badge key={cat} variant="secondary">{cat}</Badge>)}
                </div>
             </div>
           </div>
-          <Button variant="outline" className="absolute top-4 right-4"><Edit className="mr-2 h-4 w-4"/> Edit</Button>
+          <Button variant="outline" size="sm" className="absolute top-2 right-2"><Edit className="mr-2 h-4 w-4"/> Edit</Button>
         </CardHeader>
-        <CardContent className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-4">
+        <CardContent className="mt-6 grid grid-cols-1 gap-8">
+            <div className="space-y-6">
                 <h3 className="font-headline text-xl font-semibold">Professional Details</h3>
                  <div className="flex items-start gap-4">
                     <MapPin className="h-5 w-5 text-muted-foreground mt-1 flex-shrink-0"/>
@@ -59,12 +59,12 @@ export default function ProfilePage() {
                         <p className="text-muted-foreground">Joshi Wooden Crafts</p>
                     </div>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4">
-                     <p className="font-semibold w-full sm:w-auto">Years of Experience:</p>
-                    <p className="text-muted-foreground">15+ Years</p>
+                <div className="flex items-start gap-4">
+                     <p className="font-semibold flex-shrink-0">Experience:</p>
+                    <p className="text-muted-foreground text-right w-full">15+ Years</p>
                 </div>
             </div>
-             <div className="space-y-4">
+             <div className="space-y-6">
                 <h3 className="font-headline text-xl font-semibold">Personal Details</h3>
                 <p className="text-sm text-muted-foreground italic">These details are only visible to you and accepted sponsors.</p>
                  <div className="flex items-start gap-4">
