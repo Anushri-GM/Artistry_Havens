@@ -274,10 +274,10 @@ export default function BuyerPage() {
             <main className="flex flex-col items-center p-4">
                 <section className="mb-8 w-full">
                 <Carousel opts={{ loop: true }} className="w-full">
-                    <CarouselContent>
+                    <CarouselContent className="-ml-2">
                     {heroImages.map((image, index) => image && (
-                        <CarouselItem key={index}>
-                        <div className="relative h-[60vh] w-full">
+                        <CarouselItem key={index} className="pl-2">
+                        <div className="relative h-[60vh] w-full overflow-hidden rounded-lg">
                             <Image
                             src={image.imageUrl}
                             alt={image.description}
