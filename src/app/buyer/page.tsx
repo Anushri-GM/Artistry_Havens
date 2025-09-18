@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Image from "next/image";
@@ -56,7 +55,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
       <Link href={`/buyer/product/${product.id}`}>
         <div className="block">
           {image && (
-            <div className="relative h-40 w-full">
+            <div className="relative h-32 w-full">
               <Image
                 src={image.imageUrl}
                 alt={image.description}
@@ -349,3 +348,5 @@ export default function BuyerPage() {
     </div>
   );
 }
+
+    
