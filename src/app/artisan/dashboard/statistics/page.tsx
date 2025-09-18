@@ -3,7 +3,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CartesianGrid, XAxis, YAxis, ResponsiveContainer, LineChart, Line, Legend } from 'recharts';
+import { CartesianGrid, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
@@ -13,9 +13,8 @@ import {
   ChartLegendContent,
 } from '@/components/ui/chart';
 import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Heart, Share2, Bot, Loader2, Sparkles, ShoppingCart } from 'lucide-react';
+import { Heart, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
@@ -153,18 +152,18 @@ export default function StatisticsPage() {
         </TabsList>
         <TabsContent value="weekly">
           <Card>
-            <CardContent className="pt-6 overflow-x-auto">
-              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                  <LineChart data={mockWeeklyStatsData}>
+                  <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                     <ChartLegend content={<ChartLegendContent />} />
-                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
-                  </LineChart>
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={20} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={20} />
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -172,18 +171,18 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="monthly">
           <Card>
-            <CardContent className="pt-6 overflow-x-auto">
-              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[600px]">
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                   <LineChart data={mockStatsData}>
+                   <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
-                  </LineChart>
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={10} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={10} />
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -191,18 +190,18 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="yearly">
           <Card>
-            <CardContent className="pt-6 overflow-x-auto">
-              <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
                 <ResponsiveContainer>
-                  <LineChart data={mockYearlyStatsData}>
+                  <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
                      <ChartLegend content={<ChartLegendContent />} />
-                    <Line dataKey="likes" type="monotone" stroke="var(--color-likes)" strokeWidth={2} dot={true} />
-                    <Line dataKey="bought" type="monotone" stroke="var(--color-bought)" strokeWidth={2} dot={true} />
-                  </LineChart>
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
@@ -262,3 +261,4 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
