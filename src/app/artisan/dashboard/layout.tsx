@@ -152,7 +152,7 @@ export default function ArtisanDashboardLayout({ children }: { children: React.R
 
   return (
     <div className="flex justify-center">
-      <div className="w-full max-w-md">
+      <div className="w-full">
         <SidebarProvider>
           <div className="flex min-h-screen">
             <Sidebar collapsible="icon" className="border-r">

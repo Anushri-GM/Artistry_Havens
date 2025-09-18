@@ -63,7 +63,7 @@ export default function UploadPage() {
 
   return (
     <div className="flex justify-center min-h-screen bg-background">
-    <div className="w-full max-w-md">
+    <div className="w-full">
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
         <div className='flex items-center gap-2'>
             <Button variant="ghost" size="icon" asChild>
@@ -77,7 +77,7 @@ export default function UploadPage() {
         </Button>
     </header>
     <main className="p-4">
-    <div className="grid grid-cols-1 gap-8">
+    <div className="grid grid-cols-1 gap-8 max-w-md mx-auto">
       <div className="space-y-8">
         <Card>
             <CardHeader>

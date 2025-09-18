@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
@@ -26,8 +27,8 @@ const benefits = [
 export default function SponsorPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
-      <div className="w-full max-w-md">
-        <header className="absolute top-0 z-10 w-full max-w-md">
+      <div className="w-full">
+        <header className="absolute top-0 z-10 w-full">
           <div className="container mx-auto flex h-24 items-center justify-between p-4">
             <div className="flex items-center gap-2 text-white">
               <ArtistryHavensLogo className="h-8 w-8" />

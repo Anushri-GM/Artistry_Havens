@@ -235,7 +235,7 @@ function CustomizationDialog() {
 export default function BuyerPage() {
   return (
     <div className="min-h-screen bg-background flex justify-center">
-        <div className="w-full max-w-md bg-background">
+        <div className="w-full bg-background">
             <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
                 <div className="container mx-auto flex h-16 items-center justify-between p-4">
                 <div className="flex items-center gap-2">
