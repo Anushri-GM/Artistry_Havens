@@ -53,12 +53,11 @@ import { Textarea } from '@/components/ui/textarea';
 const avatar = PlaceHolderImages.find(img => img.id === 'avatar-1');
 
 const navItems = [
-  { href: '/artisan/dashboard', label: 'Home', icon: Home },
+  { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: AreaChart },
   { href: '/artisan/dashboard/revenue', label: 'Revenue', icon: BadgeIndianRupee },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
-  { href: '/artisan/dashboard/upload', label: 'Upload Product', icon: Upload },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box },
   { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send },

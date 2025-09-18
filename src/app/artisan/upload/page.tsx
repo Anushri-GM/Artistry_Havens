@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Copy, Download, Eye, Facebook, GalleryHorizontal, Instagram, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2 } from 'lucide-react';
+import { Camera, Copy, Download, Eye, Facebook, GalleryHorizontal, Instagram, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft } from 'lucide-react';
 import { generateProductStory } from '@/ai/flows/generate-product-story';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import Link from 'next/link';
 
 const previewImage = PlaceHolderImages.find(p => p.id === "pottery-1");
 
@@ -61,8 +62,17 @@ export default function UploadPage() {
     }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <div className="lg:col-span-2 space-y-8">
+    <div className="flex justify-center min-h-screen bg-background">
+    <div className="w-full max-w-md">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
+        <Button variant="ghost" size="icon" asChild>
+            <Link href="/artisan/dashboard"><ArrowLeft /></Link>
+        </Button>
+        <h1 className="font-headline text-xl font-bold">Upload Product</h1>
+    </header>
+    <main className="p-4">
+    <div className="grid grid-cols-1 gap-8">
+      <div className="space-y-8">
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Upload Your Product</CardTitle>
@@ -147,8 +157,8 @@ export default function UploadPage() {
         </Card>
       </div>
       
-      <div className="lg:col-span-1">
-          <Card className="sticky top-24">
+      <div>
+          <Card className="sticky bottom-4 top-auto mt-8">
             <CardHeader>
                 <CardTitle className="font-headline">Actions</CardTitle>
             </CardHeader>
@@ -181,6 +191,9 @@ export default function UploadPage() {
             </DialogContent>
         </Dialog>
 
+    </div>
+    </main>
+    </div>
     </div>
   );
 }

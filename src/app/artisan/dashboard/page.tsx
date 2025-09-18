@@ -11,7 +11,7 @@ export default function ArtisanDashboardPage() {
                 <p className="text-muted-foreground mt-2 text-md">What would you like to do today?</p>
             </div>
             <div className="grid grid-cols-1 gap-6 w-full max-w-md">
-                <Link href="/artisan/dashboard/trends">
+                <Link href="/artisan/dashboard/home">
                     <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-primary/10 via-background to-background">
                         <CardHeader>
                             <div className="flex justify-center">
@@ -26,7 +26,7 @@ export default function ArtisanDashboardPage() {
                         </CardContent>
                     </Card>
                 </Link>
-                <Link href="/artisan/dashboard/upload">
+                <Link href="/artisan/upload">
                     <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-accent/10 via-background to-background">
                         <CardHeader>
                             <div className="flex justify-center">
