@@ -27,11 +27,11 @@ export function SplashScreen() {
             priority
         />
         <div className="absolute inset-0 bg-black/50" />
-        <div className="relative z-10 flex flex-col items-center gap-6 text-white text-center">
-            <ArtistryHavensLogo className="h-20 w-20" />
+        <div className="relative z-10 flex flex-col items-center gap-6 text-white text-center p-4">
+            <ArtistryHavensLogo className="h-16 w-16 md:h-20 md:w-20" />
             <div>
-                 <h1 className="font-headline text-5xl font-bold drop-shadow-md">Artistry Havens</h1>
-                 <p className="mt-4 text-lg italic drop-shadow-sm">Where Every Creation Belongs.</p>
+                 <h1 className="font-headline text-4xl md:text-5xl font-bold drop-shadow-md">Artistry Havens</h1>
+                 <p className="mt-4 text-base md:text-lg italic drop-shadow-sm">Where Every Creation Belongs.</p>
             </div>
         </div>
     </div>
