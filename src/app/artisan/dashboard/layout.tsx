@@ -146,6 +146,10 @@ function PageHeader() {
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
+  if (pathname === '/artisan/dashboard') {
+    return <>{children}</>;
+  }
+
   return (
     <div className="flex justify-center">
       <div className="w-full max-w-md">

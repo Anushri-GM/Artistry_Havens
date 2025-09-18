@@ -5,7 +5,7 @@ import { Upload, Palette } from "lucide-react";
 
 export default function ArtisanDashboardPage() {
     return (
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
             <div className="text-center mb-8">
                 <h1 className="text-3xl font-bold font-headline">Welcome, Artisan!</h1>
                 <p className="text-muted-foreground mt-2 text-md">What would you like to do today?</p>
