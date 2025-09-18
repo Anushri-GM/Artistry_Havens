@@ -23,9 +23,9 @@ export default function ProfilePage() {
               <AvatarImage src={avatarImage?.imageUrl} alt="Artisan" />
               <AvatarFallback>A</AvatarFallback>
             </Avatar>
-            <div className="text-center md:text-left">
-              <CardTitle className="font-headline text-4xl">Rohan Joshi</CardTitle>
-              <div className="flex items-center justify-center md:justify-start gap-2 mt-2">
+            <div className="text-center">
+              <CardTitle className="font-headline text-3xl">Rohan Joshi</CardTitle>
+              <div className="flex items-center justify-center gap-2 mt-2">
                 <div className="flex items-center gap-0.5">
                   <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
                   <Star className="h-5 w-5 fill-yellow-400 text-yellow-500" />
@@ -35,7 +35,7 @@ export default function ProfilePage() {
                 </div>
                 <span className="text-muted-foreground text-sm">(4.9 from 152 reviews)</span>
               </div>
-               <div className="mt-4 flex flex-wrap gap-2 justify-center md:justify-start">
+               <div className="mt-4 flex flex-wrap gap-2 justify-center">
                 {artCategories.map(cat => <Badge key={cat} variant="secondary">{cat}</Badge>)}
                </div>
             </div>
@@ -59,8 +59,8 @@ export default function ProfilePage() {
                         <p className="text-muted-foreground">Joshi Wooden Crafts</p>
                     </div>
                 </div>
-                <div className="flex items-start gap-4">
-                     <p className="font-semibold w-32 flex-shrink-0">Years of Experience:</p>
+                <div className="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4">
+                     <p className="font-semibold w-full sm:w-auto">Years of Experience:</p>
                     <p className="text-muted-foreground">15+ Years</p>
                 </div>
             </div>
