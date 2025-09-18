@@ -153,7 +153,7 @@ export default function StatisticsPage() {
         </TabsList>
         <TabsContent value="weekly">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 px-0">
               <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
                 <ResponsiveContainer>
                   <LineChart data={mockWeeklyStatsData}>
@@ -172,7 +172,7 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="monthly">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 px-0">
               <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
                 <ResponsiveContainer>
                    <LineChart data={mockStatsData}>
@@ -191,7 +191,7 @@ export default function StatisticsPage() {
         </TabsContent>
         <TabsContent value="yearly">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 px-0">
               <ChartContainer config={chartConfig} className="h-[250px] w-full min-w-[250px] sm:h-[300px]">
                 <ResponsiveContainer>
                   <LineChart data={mockYearlyStatsData}>
