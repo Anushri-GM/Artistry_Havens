@@ -23,7 +23,7 @@ export default function MyOrdersPage() {
           <Card key={order.id}>
             <div className="flex flex-row gap-4">
                {order.product.image && (
-                <div className="w-1/4 p-4 sm:p-0 sm:pl-4 sm:py-4 flex-shrink-0">
+                <div className="w-1/3 p-4 flex-shrink-0">
                     <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
                         <Image src={order.product.image.imageUrl} alt={order.product.name} fill className="object-cover" />
                     </div>
