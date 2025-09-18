@@ -21,7 +21,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased">
         <div className="flex justify-center bg-gray-200">
-            <div className="w-full max-w-[420px] aspect-[9/19] bg-background min-h-screen shadow-2xl overflow-y-auto">
+            <div className="w-full max-w-[375px] aspect-[9/19] bg-background min-h-screen shadow-2xl overflow-y-auto">
                 {children}
             </div>
         </div>
