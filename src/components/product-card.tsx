@@ -25,7 +25,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="overflow-hidden">
       {product.image && (
-        <div className="relative h-32 w-full">
+        <div className="relative h-48 w-full">
           <Image
             src={product.image.imageUrl}
             alt={product.image.description}
