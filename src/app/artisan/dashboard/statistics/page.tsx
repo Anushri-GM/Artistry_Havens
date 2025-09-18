@@ -154,7 +154,7 @@ export default function StatisticsPage() {
             <CardContent className="pt-6 overflow-x-auto">
               <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[500px]">
                 <ResponsiveContainer>
-                  <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+                  <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
@@ -173,7 +173,7 @@ export default function StatisticsPage() {
             <CardContent className="pt-6 overflow-x-auto">
               <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[700px]">
                 <ResponsiveContainer>
-                   <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+                   <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
@@ -192,7 +192,7 @@ export default function StatisticsPage() {
             <CardContent className="pt-6 overflow-x-auto">
               <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[500px]">
                 <ResponsiveContainer>
-                  <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
+                  <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
                     <CartesianGrid vertical={false} />
                     <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
                     <YAxis />
@@ -260,10 +260,3 @@ export default function StatisticsPage() {
     </div>
   );
 }
-
-
-    
-
-    
-
-    
