@@ -1,3 +1,4 @@
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -56,7 +57,7 @@ export default function RevenuePage() {
                 </Card>
             </TabsContent>
             <TabsContent value="shared-profit" className="mt-6">
-                <Card>
+                 <Card>
                     <CardHeader>
                         <CardTitle>Shared Profit</CardTitle>
                         <CardDescription>Profit gained from selling sponsored products.</CardDescription>
@@ -85,26 +86,28 @@ export default function RevenuePage() {
                                 </div>
                             </div>
                          </div>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead className="whitespace-nowrap">Product</TableHead>
-                                    <TableHead>Sponsor</TableHead>
-                                    <TableHead className="text-right whitespace-nowrap">Total Revenue</TableHead>
-                                    <TableHead className="text-right whitespace-nowrap">Your Profit (80%)</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {sharedProfitProducts.map(product => (
-                                    <TableRow key={product.id}>
-                                        <TableCell className="font-medium">{product.name}</TableCell>
-                                        <TableCell>Craft Ventures</TableCell>
-                                        <TableCell className="text-right">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</TableCell>
-                                        <TableCell className="text-right font-semibold text-primary">${(product.revenue * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                        
+                        <div className="space-y-4 pt-4">
+                            <h3 className="font-headline text-lg font-semibold">Product Breakdown</h3>
+                            {sharedProfitProducts.map(product => (
+                                <Card key={product.id} className="bg-card">
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-base font-headline">{product.name}</CardTitle>
+                                        <CardDescription>Sponsored by Craft Ventures</CardDescription>
+                                    </CardHeader>
+                                    <CardContent className="space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-muted-foreground text-sm">Total Revenue:</span>
+                                            <span className="font-semibold">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                        </div>
+                                         <div className="flex justify-between items-center text-primary">
+                                            <span className="text-sm">Your Profit (80%):</span>
+                                            <span className="font-bold text-lg">${(product.revenue * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
                     </CardContent>
                 </Card>
             </TabsContent>
