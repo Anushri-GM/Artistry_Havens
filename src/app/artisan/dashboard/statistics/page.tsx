@@ -10,7 +10,7 @@ import {
   ChartTooltipContent,
   ChartConfig,
 } from '@/components/ui/chart';
-import { mockProducts, mockStatsData } from '@/lib/mock-data';
+import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Heart, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const chartConfig = {
   likes: {
@@ -139,25 +140,70 @@ export default function StatisticsPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold font-headline">Performance Overview</h1>
-        <p className="text-muted-foreground">Monthly likes and shares for all your products.</p>
+        <p className="text-muted-foreground">Likes and shares for all your products.</p>
       </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <ChartContainer config={chartConfig} className="h-[300px] w-full">
-            <ResponsiveContainer>
-              <BarChart data={mockStatsData}>
-                <CartesianGrid vertical={false} />
-                <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                <YAxis />
-                <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
-                <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="monthly">
+        <TabsList>
+          <TabsTrigger value="weekly">Weekly</TabsTrigger>
+          <TabsTrigger value="monthly">Monthly</TabsTrigger>
+          <TabsTrigger value="yearly">Yearly</TabsTrigger>
+        </TabsList>
+        <TabsContent value="weekly">
+          <Card>
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <ResponsiveContainer>
+                  <BarChart data={mockWeeklyStatsData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
+                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="monthly">
+          <Card>
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <ResponsiveContainer>
+                  <BarChart data={mockStatsData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
+                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="yearly">
+          <Card>
+            <CardContent className="pt-6">
+              <ChartContainer config={chartConfig} className="h-[300px] w-full">
+                <ResponsiveContainer>
+                  <BarChart data={mockYearlyStatsData}>
+                    <CartesianGrid vertical={false} />
+                    <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
+                    <YAxis />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} />
+                    <Bar dataKey="shares" fill="var(--color-shares)" radius={4} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </ChartContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
       
       <div>
         <h2 className="text-2xl font-bold font-headline">Product Breakdown</h2>

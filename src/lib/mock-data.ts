@@ -30,6 +30,20 @@ export const mockStatsData = [
     { month: "Dec", likes: 4800, shares: 4200 },
 ]
 
+export const mockWeeklyStatsData = [
+    { week: "Week 1", likes: 980, shares: 450 },
+    { week: "Week 2", likes: 1100, shares: 550 },
+    { week: "Week 3", likes: 850, shares: 350 },
+    { week: "Week 4", likes: 1250, shares: 700 },
+];
+
+export const mockYearlyStatsData = [
+    { year: "2022", likes: 35000, shares: 20000 },
+    { year: "2023", likes: 48000, shares: 28000 },
+    { year: "2024", likes: 42000, shares: 25000 },
+];
+
+
 export const mockSponsors = [
   {
     id: 'sponsor-1',
