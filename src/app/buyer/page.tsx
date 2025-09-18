@@ -158,7 +158,7 @@ function CustomizationDialog() {
 
     if (isSubmitted) {
         return (
-            <div className="text-center py-8">
+            <div className="text-center py-8 px-4">
                 <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold font-headline">Request Sent!</h3>
                 <p className="text-muted-foreground mt-2 text-sm">An artisan from the {category} category has been notified. They will review your request and get in touch soon.</p>
@@ -167,8 +167,8 @@ function CustomizationDialog() {
     }
 
     return (
-        <ScrollArea className="h-[70vh] sm:h-auto">
-            <div className="grid grid-cols-1 gap-6 py-4 px-4">
+        <ScrollArea className="h-full">
+            <div className="space-y-6 p-6">
                 <div className="space-y-4">
                     <div>
                         <Label htmlFor="description">Describe your vision</Label>
@@ -248,14 +248,16 @@ export default function BuyerPage() {
                         <Wand2 className="mr-2 h-4 w-4"/> Create
                     </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-md p-0">
-                    <DialogHeader className="p-6 pb-0">
+                <DialogContent className="max-w-md p-0 overflow-hidden h-[90vh] flex flex-col">
+                    <DialogHeader className="p-6 pb-4">
                         <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
                         <DialogDescription>
                            Describe your vision, and we'll generate a mockup for an artisan to create.
                         </DialogDescription>
                     </DialogHeader>
-                    <CustomizationDialog />
+                    <div className="flex-1 overflow-auto">
+                        <CustomizationDialog />
+                    </div>
                 </DialogContent>
             </Dialog>
             <Button variant="outline" size="sm" asChild>
@@ -274,7 +276,7 @@ export default function BuyerPage() {
             <CarouselContent>
               {heroImages.map((image, index) => image && (
                 <CarouselItem key={index}>
-                  <div className="relative h-96 w-full">
+                  <div className="relative h-[60vh] w-full">
                     <Image
                       src={image.imageUrl}
                       alt={image.description}
