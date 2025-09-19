@@ -68,17 +68,17 @@ function PageHeader() {
   const { isMobile, open } = useSidebar();
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
-        <SidebarTrigger className="md:hidden" />
+        <SidebarTrigger className="md:hidden h-9 w-9" />
         {isMobile && (
           <div className="flex items-center gap-2">
-            <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+            <ArtistryHavensLogo className="h-8 w-8 text-primary" />
              <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
           </div>
         )}
          {!isMobile && (
           <div className="flex items-center gap-4">
-              <SidebarTrigger />
-              {!open && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
+              <SidebarTrigger className="h-9 w-9" />
+              {!open && <ArtistryHavensLogo className="h-8 w-8 text-primary" />}
           </div>
         )}
         <div className="flex w-full items-center justify-end gap-1">
@@ -195,7 +195,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
                 </Link>
               </SidebarFooter>
             </Sidebar>
-            <div className="flex flex-1 flex-col overflow-hidden">
+            <div className="flex flex-1 flex-col overflow-x-hidden">
               <PageHeader />
               <main className="flex-1 overflow-y-auto overflow-x-hidden p-4">{children}</main>
             </div>
