@@ -65,14 +65,15 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
-        <DialogHeader>
+      <DialogContent className="max-w-md p-0 overflow-hidden flex flex-col h-[90vh]">
+        <DialogHeader className="p-6 pb-2">
           <DialogTitle className="font-headline text-xl">AI Review for: {product.name}</DialogTitle>
           <DialogDescription>
             An AI-powered analysis of your product's performance with suggestions for improvement.
           </DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-1 gap-6 mt-4">
+        <ScrollArea className="flex-1">
+        <div className="grid grid-cols-1 gap-6 p-6 pt-2">
             <div className='space-y-4'>
                 {product.image && (
                 <div className="relative h-56 w-full rounded-lg overflow-hidden">
@@ -123,7 +124,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                 </Button>
             </div>
         </div>
-
+        </ScrollArea>
       </DialogContent>
     </Dialog>
   );
@@ -157,15 +158,17 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <div className="overflow-x-auto">
                 <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
-                  <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                    <CartesianGrid vertical={false} />
-                    <YAxis />
-                    <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
-                  </BarChart>
+                  <ResponsiveContainer>
+                    <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                        <CartesianGrid vertical={false} />
+                        <YAxis />
+                        <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <ChartLegend content={<ChartLegendContent />} />
+                        <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
+                        <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </ChartContainer>
               </div>
             </CardContent>
@@ -176,15 +179,17 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <div className="overflow-x-auto">
                 <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[600px]">
-                  <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                    <CartesianGrid vertical={false} />
-                    <YAxis />
-                    <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={25} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={25} />
-                  </BarChart>
+                  <ResponsiveContainer>
+                    <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                        <CartesianGrid vertical={false} />
+                        <YAxis />
+                        <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <ChartLegend content={<ChartLegendContent />} />
+                        <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={25} />
+                        <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={25} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </ChartContainer>
               </div>
             </CardContent>
@@ -195,15 +200,17 @@ export default function StatisticsPage() {
             <CardContent className="pt-6">
               <div className="overflow-x-auto">
                 <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[300px]">
-                  <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                    <CartesianGrid vertical={false} />
-                    <YAxis />
-                    <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <ChartLegend content={<ChartLegendContent />} />
-                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={80} />
-                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={80} />
-                  </BarChart>
+                   <ResponsiveContainer>
+                    <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                        <CartesianGrid vertical={false} />
+                        <YAxis />
+                        <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
+                        <ChartTooltip content={<ChartTooltipContent />} />
+                        <ChartLegend content={<ChartLegendContent />} />
+                        <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={80} />
+                        <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={80} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </ChartContainer>
               </div>
             </CardContent>
@@ -263,6 +270,8 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+    
 
     
 
