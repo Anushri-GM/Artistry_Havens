@@ -19,30 +19,43 @@ function OrderList({ title, orders }: { title: string, orders: Order[] }) {
             <h2 className="text-2xl font-bold font-headline">{title}</h2>
             {orders.map(order => (
               <Card key={order.id}>
-                <div className="flex flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4">
                    {order.product.image && (
-                    <div className="w-1/3 p-4 flex-shrink-0">
+                    <div className="w-full sm:w-1/3 p-4 flex-shrink-0">
                         <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
                             <Image src={order.product.image.imageUrl} alt={order.product.name} fill className="object-cover" />
                         </div>
                     </div>
                   )}
-                  <div className="flex-1 flex flex-col">
-                    <CardHeader className="flex-1 pb-2">
-                      <div className="flex justify-between items-start">
-                        <div>
-                            <CardTitle className="text-lg font-headline">{order.product.name}</CardTitle>
-                            <CardDescription className="pt-2 text-xs space-y-1">
-                                <p><strong>Order ID:</strong> {order.id}</p>
-                                <p><strong>Buyer:</strong> {order.buyer}</p>
-                                <p><strong>Qty:</strong> {order.quantity}</p>
-                                <p><strong>Date:</strong> {format(order.orderDate, 'PPP p')}</p>
-                                <p><strong>Deliver by:</strong> {format(order.expectedDelivery, 'PPP')}</p>
-                            </CardDescription>
-                        </div>
-                      </div>
+                  <div className="flex-1 flex flex-col p-4 pt-0 sm:pt-4">
+                    <CardHeader className="p-0">
+                        <CardTitle className="text-lg font-headline">{order.product.name}</CardTitle>
                     </CardHeader>
-                    <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
+                    <CardContent className="p-0 mt-4 flex-1">
+                        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                            <div>
+                                <p className="font-semibold text-muted-foreground">Order ID</p>
+                                <p>{order.id}</p>
+                            </div>
+                             <div>
+                                <p className="font-semibold text-muted-foreground">Buyer</p>
+                                <p>{order.buyer}</p>
+                            </div>
+                             <div>
+                                <p className="font-semibold text-muted-foreground">Quantity</p>
+                                <p>{order.quantity}</p>
+                            </div>
+                             <div>
+                                <p className="font-semibold text-muted-foreground">Order Date</p>
+                                <p>{format(order.orderDate, 'PPp')}</p>
+                            </div>
+                             <div className="col-span-2">
+                                <p className="font-semibold text-muted-foreground">Deliver By</p>
+                                <p>{format(order.expectedDelivery, 'PPP')}</p>
+                            </div>
+                        </div>
+                    </CardContent>
+                    <CardFooter className="p-0 mt-4 flex justify-end gap-2">
                         <Button variant="outline" size="sm">Details</Button>
                         <Button size="sm" asChild>
                             <Link href={`/artisan/dashboard/orders/${order.id}`}>Update</Link>
