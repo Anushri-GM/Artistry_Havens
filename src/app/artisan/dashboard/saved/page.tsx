@@ -31,7 +31,7 @@ export default function SavedCollectionPage() {
         {Object.entries(groupedByCategory).map(([category, products]) => (
           <AccordionItem key={category} value={category} className="border rounded-lg bg-card overflow-hidden">
             <AccordionTrigger className="px-6 py-4 text-lg font-headline hover:no-underline">
-                {category} ({products.length})
+                {category}
             </AccordionTrigger>
             <AccordionContent>
                 <div className="p-6 pt-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
