@@ -26,6 +26,8 @@ interface Order {
   buyer: string;
   phone: string;
   status: OrderStatus;
+  orderDate: Date;
+  expectedDelivery: Date;
 }
 
 interface OrderRequest {
@@ -46,9 +48,9 @@ interface OrderContextType {
 
 // Initial Data
 const initialOrders: Order[] = [
-  { id: 'ORD001', product: mockProducts[0], quantity: 2, buyer: 'Anjali P.', phone: '+91 12345 67890', status: 'Processing' },
-  { id: 'ORD002', product: mockProducts[2], quantity: 1, buyer: 'Ravi K.', phone: '+91 23456 78901', status: 'Shipped' },
-  { id: 'ORD003', product: mockProducts[4], quantity: 1, buyer: 'Sunita M.', phone: ' +91 34567 89012', status: 'Delivered' },
+  { id: 'ORD001', product: mockProducts[0], quantity: 2, buyer: 'Anjali P.', phone: '+91 12345 67890', status: 'Processing', orderDate: new Date('2024-07-20T10:30:00'), expectedDelivery: new Date('2024-07-28') },
+  { id: 'ORD002', product: mockProducts[2], quantity: 1, buyer: 'Ravi K.', phone: '+91 23456 78901', status: 'Shipped', orderDate: new Date('2024-07-18T15:00:00'), expectedDelivery: new Date('2024-07-25') },
+  { id: 'ORD003', product: mockProducts[4], quantity: 1, buyer: 'Sunita M.', phone: ' +91 34567 89012', status: 'Delivered', orderDate: new Date('2024-07-15T09:00:00'), expectedDelivery: new Date('2024-07-22') },
 ];
 
 const initialRequests: OrderRequest[] = [
@@ -107,6 +109,8 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
       buyer: request.buyer,
       phone: '+91 99999 88888', // Example phone
       status: 'Processing',
+      orderDate: new Date(),
+      expectedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7 days from now
     };
 
     setOrders(prevOrders => [newOrder, ...prevOrders]);

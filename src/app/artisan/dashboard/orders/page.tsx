@@ -7,6 +7,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useOrders } from "@/context/OrderContext";
 import Link from "next/link";
+import { format } from 'date-fns';
 
 export default function MyOrdersPage() {
   const { orders } = useOrders();
@@ -33,10 +34,12 @@ export default function MyOrdersPage() {
                   <div className="flex justify-between items-start">
                     <div>
                         <CardTitle className="text-lg font-headline">{order.product.name}</CardTitle>
-                        <CardDescription className="pt-2 text-xs">
+                        <CardDescription className="pt-2 text-xs space-y-1">
                             <p><strong>Order ID:</strong> {order.id}</p>
                             <p><strong>Buyer:</strong> {order.buyer}</p>
                             <p><strong>Qty:</strong> {order.quantity}</p>
+                            <p><strong>Date:</strong> {format(order.orderDate, 'PPP p')}</p>
+                            <p><strong>Deliver by:</strong> {format(order.expectedDelivery, 'PPP')}</p>
                         </CardDescription>
                     </div>
                     <Badge variant={order.status === 'Delivered' ? 'default' : (order.status === 'Shipped' ? 'secondary' : 'outline')}>
