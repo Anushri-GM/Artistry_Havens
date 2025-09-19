@@ -40,7 +40,7 @@ export default function SponsorsPage() {
                       <p className="text-sm text-muted-foreground">Expires: {sponsor.expiry}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 self-end sm:self-center">
+                  <div className="flex items-center gap-2 self-end sm:self-center flex-wrap justify-end">
                     <Badge variant="secondary" className="whitespace-nowrap">{sponsor.share}% Share</Badge>
                      <Button variant="outline" size="sm"><MessageSquare className="h-4 w-4 mr-2"/>Chat</Button>
                     <Button variant="destructive" size="sm">Terminate</Button>
@@ -72,7 +72,7 @@ export default function SponsorsPage() {
                                 </div>
                             </div>
                         </CardHeader>
-                        <CardFooter className="flex justify-end gap-2">
+                        <CardFooter className="flex flex-wrap justify-end gap-2">
                            <Button size="sm" variant="outline"><ThumbsDown className="h-4 w-4 mr-2"/>Deny</Button>
                            <Button size="sm"><Check className="h-4 w-4 mr-2"/>Accept</Button>
                         </CardFooter>
