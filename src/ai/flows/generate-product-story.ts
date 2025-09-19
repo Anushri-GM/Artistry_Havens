@@ -5,10 +5,11 @@
  *
  * - generateProductStory - A function that handles the product story generation process.
  * - GenerateProductStoryInput - The input type for the generateProductStory function.
- * - GenerateProductStoryOutput - The return type for the generateProductStory function.
+ * - GenerateProductStoryOutput - The return type for the generateProductStoryOutput function.
  */
 
 import {ai} from '@/ai/genkit';
+import {googleAI} from '@genkit-ai/googleai';
 import {z} from 'genkit';
 
 const GenerateProductStoryInputSchema = z.object({
@@ -27,17 +28,12 @@ export async function generateProductStory(input: GenerateProductStoryInput): Pr
   return generateProductStoryFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'generateProductStoryPrompt',
-  input: {schema: GenerateProductStoryInputSchema},
-  output: {schema: GenerateProductStoryOutputSchema},
-  prompt: `You are a skilled storyteller helping artisans craft compelling product stories.
+const promptTemplate = `You are a skilled storyteller helping artisans craft compelling product stories.
 
   Based on the artisan's voice input, create a captivating and engaging product story that highlights the craft's unique qualities, origin, and the artisan's passion.
 
   Voice Input: {{{voiceInput}}}
-  `,
-});
+  `;
 
 const generateProductStoryFlow = ai.defineFlow(
   {
@@ -46,7 +42,19 @@ const generateProductStoryFlow = ai.defineFlow(
     outputSchema: GenerateProductStoryOutputSchema,
   },
   async input => {
-    const {output} = await prompt(input);
+    
+    // Explicitly use Vertex AI for this flow.
+    const llm = googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT });
+
+    const { output } = await ai.generate({
+      model: llm,
+      prompt: promptTemplate,
+      input: input,
+      output: {
+        schema: GenerateProductStoryOutputSchema,
+      },
+    });
+    
     return output!;
   }
 );
