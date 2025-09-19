@@ -19,6 +19,7 @@ import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-rev
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const chartConfig = {
   likes: {
@@ -96,22 +97,24 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
             </div>
             <div className="space-y-4">
                 <h3 className='font-semibold font-headline'>Generated AI Review</h3>
-                <Card className="min-h-[180px] bg-primary/5">
+                <Card className="bg-primary/5">
                     <CardContent className="p-4">
-                        {isLoading ? (
-                            <div className="flex items-center justify-center h-full">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                            </div>
-                        ) : review ? (
-                             <div className="text-sm prose prose-sm max-w-none">
-                                <p>{review}</p>
-                             </div>
-                        ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-center p-4">
-                                <Sparkles className="h-8 w-8 text-primary/50 mb-2"/>
-                                <p className="text-sm text-muted-foreground">Click the button to generate an AI performance review.</p>
-                            </div>
-                        )}
+                        <ScrollArea className="h-[180px] w-full">
+                            {isLoading ? (
+                                <div className="flex items-center justify-center h-full">
+                                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                </div>
+                            ) : review ? (
+                                <div className="text-sm prose prose-sm max-w-none pr-4">
+                                    <p>{review}</p>
+                                </div>
+                            ) : (
+                                <div className="flex flex-col items-center justify-center h-full text-center p-4">
+                                    <Sparkles className="h-8 w-8 text-primary/50 mb-2"/>
+                                    <p className="text-sm text-muted-foreground">Click the button to generate an AI performance review.</p>
+                                </div>
+                            )}
+                        </ScrollArea>
                     </CardContent>
                 </Card>
                 <Button onClick={handleGenerateReview} disabled={isLoading} className="w-full">
@@ -260,5 +263,7 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+    
 
     
