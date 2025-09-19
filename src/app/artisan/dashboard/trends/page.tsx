@@ -2,7 +2,7 @@
 'use client';
 import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
-import { ProductCard } from "@/components/product-card";
+import { TrendProductCard } from "@/components/trend-product-card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
 
@@ -31,7 +31,7 @@ export default function TrendsPage() {
                 <CarouselContent>
                     {frequentlyBought.map((product) => (
                         <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                            <ProductCard product={product} />
+                            <TrendProductCard product={product} />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
@@ -52,7 +52,7 @@ export default function TrendsPage() {
                 <CarouselContent>
                     {bestsellers.map((product) => (
                         <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                            <ProductCard product={product} />
+                            <TrendProductCard product={product} />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
