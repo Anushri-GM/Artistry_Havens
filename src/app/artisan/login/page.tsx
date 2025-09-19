@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ArtistryHavensLogo } from '@/components/icons';
-import { Phone, Shield } from 'lucide-react';
+import { Phone, Shield, Smartphone } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -46,14 +46,22 @@ export default function ArtisanLoginPage() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="auth-number">Mobile / Aadhar Number</Label>
+            <Label htmlFor="auth-number">Mobile or Aadhar Number</Label>
             <div className="relative">
-              <Input id="auth-number" type="text" placeholder="Enter your 10 or 16 digit number" className="pl-10" />
+              <Input id="auth-number" type="text" placeholder="Enter your 10-digit mobile or 16-digit Aadhar" className="pl-10" />
                <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
-                <Phone className="h-5 w-5" />
+                <Shield className="h-5 w-5" />
                </div>
             </div>
-            
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="recovery-number">Recovery Mobile Number (Optional)</Label>
+            <div className="relative">
+              <Input id="recovery-number" type="text" placeholder="Enter a 10-digit mobile number for recovery" className="pl-10" />
+               <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
+                <Smartphone className="h-5 w-5" />
+               </div>
+            </div>
           </div>
            <div className="flex items-center space-x-2">
             <Checkbox id="terms" />
