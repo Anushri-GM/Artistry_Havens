@@ -1,17 +1,15 @@
 
+'use client';
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { mockProducts } from "@/lib/mock-data";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-
-const orders = [
-  { id: 'ORD001', product: mockProducts[0], quantity: 2, buyer: 'Anjali P.', phone: '+91 12345 67890', status: 'Processing' },
-  { id: 'ORD002', product: mockProducts[2], quantity: 1, buyer: 'Ravi K.', phone: '+91 23456 78901', status: 'Shipped' },
-  { id: 'ORD003', product: mockProducts[4], quantity: 1, buyer: 'Sunita M.', phone: '+91 34567 89012', status: 'Delivered' },
-];
+import { useOrders } from "@/context/OrderContext";
 
 export default function MyOrdersPage() {
+  const { orders } = useOrders();
+
   return (
     <div className="space-y-8">
       <div>

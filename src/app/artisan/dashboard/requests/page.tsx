@@ -4,35 +4,13 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Check, ThumbsDown, Wand2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-
-const requests = [
-  {
-    id: "REQ001",
-    buyer: "Priya Desai",
-    image: PlaceHolderImages.find(p => p.id === "jewelry-1"),
-    description: "I love your turquoise necklace, but could you make one with a moonstone instead? Same design.",
-    isAiRequest: false,
-  },
-  {
-    id: "REQ002",
-    buyer: "Amit Kumar",
-    image: PlaceHolderImages.find(p => p.id === "woodwork-1"),
-    description: "Can you create a custom wooden chess set? I'm looking for a traditional Rajasthani design.",
-    isAiRequest: false,
-  },
-  {
-    id: "AI_REQ001",
-    buyer: "Deepa Sharma",
-    image: {imageUrl: "https://picsum.photos/seed/ai-mockup-1/600/600"},
-    description: 'A terracotta vase with traditional Madhubani art depicting a peacock scene. The color palette should be earthy tones with a touch of royal blue.',
-    isAiRequest: true,
-  }
-];
+import { useOrders } from "@/context/OrderContext";
 
 export default function OrderRequestsPage() {
+  const { requests, acceptRequest, denyRequest } = useOrders();
+
   return (
     <div className="space-y-8">
       <div>
@@ -41,7 +19,7 @@ export default function OrderRequestsPage() {
       </div>
 
       <div className="space-y-6">
-        {requests.map(request => (
+        {requests.length > 0 ? requests.map(request => (
           <Card key={request.id}>
             <div className="flex gap-4">
               <div className="flex flex-col flex-1">
@@ -60,8 +38,8 @@ export default function OrderRequestsPage() {
                   </div>
                 </CardHeader>
                 <CardFooter className="flex justify-end gap-2 mt-auto">
-                    <Button variant="outline" size="sm"><ThumbsDown className="mr-2 h-4 w-4" /> Deny</Button>
-                    <Button size="sm"><Check className="mr-2 h-4 w-4" /> Accept</Button>
+                    <Button variant="outline" size="sm" onClick={() => denyRequest(request.id)}><ThumbsDown className="mr-2 h-4 w-4" /> Deny</Button>
+                    <Button size="sm" onClick={() => acceptRequest(request.id)}><Check className="mr-2 h-4 w-4" /> Accept</Button>
                 </CardFooter>
               </div>
               
@@ -84,7 +62,9 @@ export default function OrderRequestsPage() {
               )}
             </div>
           </Card>
-        ))}
+        )) : (
+          <p className="text-sm text-muted-foreground text-center">You have no new order requests.</p>
+        )}
       </div>
     </div>
   );
