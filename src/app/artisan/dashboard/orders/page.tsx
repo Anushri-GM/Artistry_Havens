@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useOrders } from "@/context/OrderContext";
+import Link from "next/link";
 
 export default function MyOrdersPage() {
   const { orders } = useOrders();
@@ -45,7 +46,9 @@ export default function MyOrdersPage() {
                 </CardHeader>
                 <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
                     <Button variant="outline" size="sm">Details</Button>
-                    <Button size="sm">Update</Button>
+                    <Button size="sm" asChild>
+                        <Link href={`/artisan/dashboard/orders/${order.id}`}>Update</Link>
+                    </Button>
                 </CardFooter>
               </div>
             </div>

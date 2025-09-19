@@ -17,13 +17,15 @@ interface Product {
   };
 }
 
+type OrderStatus = 'Processing' | 'Shipped' | 'Delivered';
+
 interface Order {
   id: string;
   product: Product;
   quantity: number;
   buyer: string;
   phone: string;
-  status: 'Processing' | 'Shipped' | 'Delivered';
+  status: OrderStatus;
 }
 
 interface OrderRequest {
@@ -39,13 +41,14 @@ interface OrderContextType {
   requests: OrderRequest[];
   acceptRequest: (requestId: string) => void;
   denyRequest: (requestId: string) => void;
+  updateOrderStatus: (orderId: string, status: OrderStatus) => void;
 }
 
 // Initial Data
 const initialOrders: Order[] = [
   { id: 'ORD001', product: mockProducts[0], quantity: 2, buyer: 'Anjali P.', phone: '+91 12345 67890', status: 'Processing' },
   { id: 'ORD002', product: mockProducts[2], quantity: 1, buyer: 'Ravi K.', phone: '+91 23456 78901', status: 'Shipped' },
-  { id: 'ORD003', product: mockProducts[4], quantity: 1, buyer: 'Sunita M.', phone: '+91 34567 89012', status: 'Delivered' },
+  { id: 'ORD003', product: mockProducts[4], quantity: 1, buyer: 'Sunita M.', phone: ' +91 34567 89012', status: 'Delivered' },
 ];
 
 const initialRequests: OrderRequest[] = [
@@ -113,9 +116,17 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   const denyRequest = (requestId: string) => {
     setRequests(prevRequests => prevRequests.filter(r => r.id !== requestId));
   };
+  
+  const updateOrderStatus = (orderId: string, status: OrderStatus) => {
+    setOrders(prevOrders =>
+      prevOrders.map(order =>
+        order.id === orderId ? { ...order, status } : order
+      )
+    );
+  };
 
   return (
-    <OrderContext.Provider value={{ orders, requests, acceptRequest, denyRequest }}>
+    <OrderContext.Provider value={{ orders, requests, acceptRequest, denyRequest, updateOrderStatus }}>
       {children}
     </OrderContext.Provider>
   );
