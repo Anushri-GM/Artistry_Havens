@@ -1,41 +1,11 @@
 
 'use client';
 import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarInset,
-  SidebarTrigger,
   useSidebar,
 } from '@/components/ui/sidebar';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import {
-  AreaChart,
-  BadgeIndianRupee,
-  Bell,
-  Box,
-  Heart,
-  Home,
-  LogOut,
-  Palette,
-  Send,
-  Settings,
-  User,
-  HelpCircle,
-  Handshake,
-  Mic,
-  Bookmark,
-  Upload,
-} from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { ArtistryHavensLogo } from '@/components/icons';
+import { Bell, HelpCircle, Mic } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,33 +14,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { ArtistryHavensLogo } from '@/components/icons';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 
-const avatar = PlaceHolderImages.find(img => img.id === 'avatar-1');
-
-const navItems = [
-  { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
-  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
-  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: AreaChart },
-  { href: '/artisan/dashboard/revenue', label: 'Revenue', icon: BadgeIndianRupee },
-  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
-  { type: 'divider' },
-  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box },
-  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send },
-  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark },
-  { type: 'divider' },
-  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User },
-];
-
 function PageHeader() {
   const { isMobile, open } = useSidebar();
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
-        <SidebarTrigger className="md:hidden" />
         {isMobile && (
           <div className="flex items-center gap-2">
             <ArtistryHavensLogo className="h-6 w-6 text-primary" />
@@ -79,7 +31,6 @@ function PageHeader() {
         )}
          {!isMobile && (
           <div className="flex items-center gap-4">
-              <SidebarTrigger />
               {!open && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
           </div>
         )}
@@ -144,61 +95,9 @@ function PageHeader() {
 }
 
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-
-  if (pathname === '/artisan/dashboard') {
-    return <>{children}</>;
-  }
-
   return (
-    <div className="flex justify-center">
-      <div className="w-full">
-        <SidebarProvider>
-          <div className="flex h-[100svh] overflow-hidden">
-            <Sidebar collapsible="icon" className="border-r">
-              <SidebarHeader className="flex items-center gap-2 p-2">
-                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-                <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
-                  Artistry Havens
-                </h1>
-              </SidebarHeader>
-              <SidebarContent>
-                <SidebarMenu>
-                  {navItems.map((item, index) =>
-                    item.type === 'divider' ? (
-                      <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
-                    ) : (
-                      <SidebarMenuItem key={item.label}>
-                        <Link href={item.href!}>
-                          <SidebarMenuButton
-                            isActive={pathname === item.href}
-                            tooltip={{ children: item.label, side: 'right' }}
-                          >
-                            <item.icon />
-                            <span>{item.label}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                    )
-                  )}
-                </SidebarMenu>
-              </SidebarContent>
-              <SidebarFooter className="flex flex-col gap-2 p-2">
-                <Link href="/artisan/login">
-                    <SidebarMenuButton>
-                        <LogOut />
-                        <span>Logout</span>
-                    </SidebarMenuButton>
-                </Link>
-              </SidebarFooter>
-            </Sidebar>
-            <div className="flex flex-1 flex-col overflow-hidden">
-              <PageHeader />
-              <main className="flex-1 overflow-y-auto p-4">{children}</main>
-            </div>
-          </div>
-        </SidebarProvider>
-      </div>
-    </div>
+    <>
+        {children}
+    </>
   );
 }
