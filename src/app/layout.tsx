@@ -143,10 +143,12 @@ function PageHeader() {
 
 function GlobalNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor'];
+  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard'];
   const isBuyerPath = pathname.startsWith('/buyer');
+  const isUploadPath = pathname === '/artisan/upload';
 
-  if (pathsWithoutNav.includes(pathname) || (isBuyerPath && !pathname.includes('/product/'))) {
+
+  if (pathsWithoutNav.includes(pathname) || (isBuyerPath && !pathname.startsWith('/buyer/product/')) || isUploadPath) {
     if (pathname.startsWith('/buyer/product/')) {
        // On product detail page, we want the children to take up the full height
        return <div className="h-full">{children}</div>;
