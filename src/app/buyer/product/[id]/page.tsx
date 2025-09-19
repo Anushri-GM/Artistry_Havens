@@ -89,146 +89,144 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex justify-center">
-      <div className="w-full bg-background relative flex flex-col">
-        <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
-            <div className="container mx-auto flex h-16 items-center justify-between p-4">
-            <div className="flex items-center gap-4">
-                <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                    <ArrowLeft />
-                </Button>
-                <h1 className="font-headline text-xl font-bold truncate">{product.name}</h1>
-            </div>
-            <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={handleLike}>
-                    <Heart />
-                </Button>
-                <Button variant="ghost" size="icon">
-                    <ShoppingBag />
-                </Button>
-            </div>
-            </div>
-        </header>
-        <main className="flex-1 overflow-y-auto">
-            <div>
-                {image && (
-                    <div className="relative aspect-square w-full">
-                    <Image
-                        src={image.imageUrl}
-                        alt={image.description}
-                        fill
-                        className="object-cover"
-                        data-ai-hint={image.imageHint}
-                        priority
-                    />
-                    </div>
-                )}
-            </div>
+    <div className="flex flex-col h-full">
+      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
+          <div className="container mx-auto flex h-16 items-center justify-between p-4">
+          <div className="flex items-center gap-4">
+              <Button variant="ghost" size="icon" onClick={() => router.back()}>
+                  <ArrowLeft />
+              </Button>
+              <h1 className="font-headline text-xl font-bold truncate">{product.name}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={handleLike}>
+                  <Heart />
+              </Button>
+              <Button variant="ghost" size="icon">
+                  <ShoppingBag />
+              </Button>
+          </div>
+          </div>
+      </header>
+      <main className="flex-1 overflow-y-auto">
+          <div>
+              {image && (
+                  <div className="relative aspect-square w-full">
+                  <Image
+                      src={image.imageUrl}
+                      alt={image.description}
+                      fill
+                      className="object-cover"
+                      data-ai-hint={image.imageHint}
+                      priority
+                  />
+                  </div>
+              )}
+          </div>
 
-            <div className="p-4 space-y-6">
-                <div className="flex items-start justify-between">
-                    <div>
-                        <h1 className="font-headline text-2xl font-bold">{product.name}</h1>
-                         <div className="flex items-center gap-2 mt-1">
-                            <StarRating rating={product.rating} readOnly/>
-                            <span className="font-semibold ml-1 text-sm">{product.rating}</span>
-                            <span className="text-muted-foreground text-sm">({product.reviews} reviews)</span>
-                        </div>
-                    </div>
-                    <p className="text-2xl font-bold text-primary">${product.price}</p>
-                </div>
-                
-                <Card className="bg-primary/5">
-                    <CardHeader>
-                        <div className="flex items-center gap-4">
-                            <Avatar className="h-12 w-12">
-                                <AvatarImage src={artisanAvatar?.imageUrl} />
-                                <AvatarFallback>{product.artisan.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <div>
-                                <p className="text-xs text-muted-foreground">Created by</p>
-                                <CardTitle className="font-headline text-lg">{product.artisan}</CardTitle>
-                            </div>
-                        </div>
-                    </CardHeader>
-                </Card>
+          <div className="p-4 space-y-6">
+              <div className="flex items-start justify-between">
+                  <div>
+                      <h1 className="font-headline text-2xl font-bold">{product.name}</h1>
+                       <div className="flex items-center gap-2 mt-1">
+                          <StarRating rating={product.rating} readOnly/>
+                          <span className="font-semibold ml-1 text-sm">{product.rating}</span>
+                          <span className="text-muted-foreground text-sm">({product.reviews} reviews)</span>
+                      </div>
+                  </div>
+                  <p className="text-2xl font-bold text-primary">${product.price}</p>
+              </div>
+              
+              <Card className="bg-primary/5">
+                  <CardHeader>
+                      <div className="flex items-center gap-4">
+                          <Avatar className="h-12 w-12">
+                              <AvatarImage src={artisanAvatar?.imageUrl} />
+                              <AvatarFallback>{product.artisan.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <div>
+                              <p className="text-xs text-muted-foreground">Created by</p>
+                              <CardTitle className="font-headline text-lg">{product.artisan}</CardTitle>
+                          </div>
+                      </div>
+                  </CardHeader>
+              </Card>
 
-                <div>
-                    <h3 className="font-headline text-lg font-semibold mb-2">Description</h3>
-                    <p className="text-sm text-muted-foreground">{product.description}</p>
-                </div>
-                
-                 <div>
-                    <h3 className="font-headline text-lg font-semibold mb-2">The Story Behind</h3>
-                    <p className="text-sm text-muted-foreground italic">{product.story}</p>
-                </div>
-            </div>
+              <div>
+                  <h3 className="font-headline text-lg font-semibold mb-2">Description</h3>
+                  <p className="text-sm text-muted-foreground">{product.description}</p>
+              </div>
+              
+               <div>
+                  <h3 className="font-headline text-lg font-semibold mb-2">The Story Behind</h3>
+                  <p className="text-sm text-muted-foreground italic">{product.story}</p>
+              </div>
+          </div>
 
-            <div className="p-6 pt-0 pb-24">
-                <h2 className="font-headline text-xl font-bold mb-4">Ratings & Reviews</h2>
-                <div className="space-y-6">
-                    <div>
-                         <h3 className="font-headline text-lg font-semibold mb-4">Write a Review</h3>
-                         <Card>
-                            <CardContent className="p-4">
-                                <form onSubmit={handleReviewSubmit} className="space-y-4">
-                                    <div>
-                                        <label className="font-medium mb-2 block text-sm">Your Rating</label>
-                                        <StarRating rating={rating} setRating={setRating} />
-                                    </div>
-                                    <div>
-                                        <label htmlFor="review-text" className="font-medium mb-2 block text-sm">Your Review</label>
-                                        <Textarea 
-                                            id="review-text"
-                                            placeholder="What did you like or dislike?"
-                                            value={reviewText}
-                                            onChange={(e) => setReviewText(e.target.value)}
-                                            rows={3}
-                                        />
-                                    </div>
-                                    <Button type="submit" className="w-full">Submit Review</Button>
-                                </form>
-                            </CardContent>
-                         </Card>
-                    </div>
-                    <div className="space-y-4">
-                        <h3 className="font-headline text-lg font-semibold">What others are saying</h3>
-                        {reviews.length > 0 ? (
-                            reviews.map(review => (
-                                <Card key={review.id}>
-                                    <CardHeader className="p-4">
-                                        <div className="flex items-center gap-3">
-                                            <Avatar className="h-10 w-10">
-                                                <AvatarImage src={review.avatarUrl} />
-                                                <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
-                                            </Avatar>
-                                            <div>
-                                                <p className="font-semibold text-sm">{review.author}</p>
-                                                <StarRating rating={review.rating} readOnly />
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-                                    <CardContent className="px-4 pb-4">
-                                        <p className="text-sm text-muted-foreground italic">"{review.comment}"</p>
-                                    </CardContent>
-                                </Card>
-                            ))
-                        ) : (
-                            <p className="text-muted-foreground text-sm">No reviews yet. Be the first to write one!</p>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </main>
-        <div className="sticky bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2 w-full">
-            <Button size="lg" variant="outline" className="flex-1">
-                <MessageSquare className="mr-2 h-4 w-4" /> Message
-            </Button>
-            <Button size="lg" className="flex-1" onClick={handleAddToCart}>
-                <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
-            </Button>
-        </div>
-      </div>
+          <div className="p-6 pt-0">
+              <h2 className="font-headline text-xl font-bold mb-4">Ratings & Reviews</h2>
+              <div className="space-y-6">
+                  <div>
+                       <h3 className="font-headline text-lg font-semibold mb-4">Write a Review</h3>
+                       <Card>
+                          <CardContent className="p-4">
+                              <form onSubmit={handleReviewSubmit} className="space-y-4">
+                                  <div>
+                                      <label className="font-medium mb-2 block text-sm">Your Rating</label>
+                                      <StarRating rating={rating} setRating={setRating} />
+                                  </div>
+                                  <div>
+                                      <label htmlFor="review-text" className="font-medium mb-2 block text-sm">Your Review</label>
+                                      <Textarea 
+                                          id="review-text"
+                                          placeholder="What did you like or dislike?"
+                                          value={reviewText}
+                                          onChange={(e) => setReviewText(e.target.value)}
+                                          rows={3}
+                                      />
+                                  </div>
+                                  <Button type="submit" className="w-full">Submit Review</Button>
+                              </form>
+                          </CardContent>
+                       </Card>
+                  </div>
+                  <div className="space-y-4">
+                      <h3 className="font-headline text-lg font-semibold">What others are saying</h3>
+                      {reviews.length > 0 ? (
+                          reviews.map(review => (
+                              <Card key={review.id}>
+                                  <CardHeader className="p-4">
+                                      <div className="flex items-center gap-3">
+                                          <Avatar className="h-10 w-10">
+                                              <AvatarImage src={review.avatarUrl} />
+                                              <AvatarFallback>{review.author.charAt(0)}</AvatarFallback>
+                                          </Avatar>
+                                          <div>
+                                              <p className="font-semibold text-sm">{review.author}</p>
+                                              <StarRating rating={review.rating} readOnly />
+                                          </div>
+                                      </div>
+                                  </CardHeader>
+                                  <CardContent className="px-4 pb-4">
+                                      <p className="text-sm text-muted-foreground italic">"{review.comment}"</p>
+                                  </CardContent>
+                              </Card>
+                          ))
+                      ) : (
+                          <p className="text-muted-foreground text-sm">No reviews yet. Be the first to write one!</p>
+                      )}
+                  </div>
+              </div>
+          </div>
+      </main>
+      <footer className="sticky bottom-0 p-4 bg-background border-t flex gap-2 w-full">
+          <Button size="lg" variant="outline" className="flex-1">
+              <MessageSquare className="mr-2 h-4 w-4" /> Message
+          </Button>
+          <Button size="lg" className="flex-1" onClick={handleAddToCart}>
+              <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
+          </Button>
+      </footer>
     </div>
   )
 }
