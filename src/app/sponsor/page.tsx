@@ -27,6 +27,16 @@ const benefits = [
     },
 ];
 
+const productsByCategory = mockProducts.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+        acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+}, {} as Record<string, typeof mockProducts>);
+
+
 export default function SponsorPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
@@ -95,22 +105,29 @@ export default function SponsorPage() {
                 <h2 className="font-headline text-2xl font-bold">Discover Artisans to Sponsor</h2>
                 <p className="mt-2 text-muted-foreground">Here are some of the talented creators you can support.</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                {mockProducts.slice(0, 4).map(product => (
-                  <Card key={product.id} className="overflow-hidden group">
-                    {product.image && (
-                      <div className="relative aspect-[4/3] w-full">
-                        <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
-                      </div>
-                    )}
-                    <CardHeader>
-                      <CardTitle className="font-headline text-lg leading-tight">{product.name}</CardTitle>
-                      <p className="text-sm text-muted-foreground">by {product.artisan}</p>
-                    </CardHeader>
-                    <CardContent>
-                      <Button className="w-full" asChild><Link href="/buyer/login">Sponsor</Link></Button>
-                    </CardContent>
-                  </Card>
+              <div className="space-y-12">
+                {Object.entries(productsByCategory).map(([category, products]) => (
+                  <div key={category}>
+                    <h3 className="font-headline text-xl font-bold mb-4">{category}</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                      {products.map(product => (
+                        <Card key={product.id} className="overflow-hidden group">
+                          {product.image && (
+                            <div className="relative aspect-[4/3] w-full">
+                              <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                            </div>
+                          )}
+                          <CardHeader>
+                            <CardTitle className="font-headline text-lg leading-tight">{product.name}</CardTitle>
+                            <p className="text-sm text-muted-foreground">by {product.artisan}</p>
+                          </CardHeader>
+                          <CardContent>
+                            <Button className="w-full" asChild><Link href="/buyer/login">Sponsor</Link></Button>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
