@@ -27,15 +27,6 @@ const benefits = [
     },
 ];
 
-const terms = [
-    "Sponsors agree to a profit-sharing model as negotiated with the artisan, typically ranging from 10-25% of the revenue from sponsored products.",
-    "Sponsorship agreements have a minimum duration of 6 months to ensure a stable partnership and meaningful impact.",
-    "Sponsors will be prominently featured on the sponsored artisan's profile and product pages.",
-    "All financial transactions and reporting will be handled transparently through the Artistry Havens platform.",
-    "Sponsors are encouraged to engage with artisans to provide mentorship and support, but creative control remains with the artisan.",
-    "Either party may terminate the agreement with a 30-day notice period. The platform will mediate any disputes."
-];
-
 export default function SponsorPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex justify-center">
@@ -122,25 +113,6 @@ export default function SponsorPage() {
                   </Card>
                 ))}
               </div>
-            </div>
-          </section>
-
-           <section className="bg-primary/5 py-16">
-            <div className="container mx-auto px-4">
-                <div className="text-center mb-12">
-                    <h2 className="font-headline text-2xl font-bold">Sponsorship Terms & Conditions</h2>
-                    <p className="mt-2 text-muted-foreground">Key guidelines for a successful partnership.</p>
-                </div>
-                <div className="max-w-3xl mx-auto">
-                    <ul className="space-y-4">
-                        {terms.map((term, index) => (
-                            <li key={index} className="flex items-start gap-3">
-                                <CheckCircle className="h-5 w-5 text-green-500 mt-1 flex-shrink-0" />
-                                <span className="text-muted-foreground">{term}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
             </div>
           </section>
 
