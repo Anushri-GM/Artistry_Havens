@@ -90,7 +90,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="min-h-screen bg-background flex justify-center">
-      <div className="w-full bg-background">
+      <div className="w-full bg-background relative flex flex-col">
         <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
             <div className="container mx-auto flex h-16 items-center justify-between p-4">
             <div className="flex items-center gap-4">
@@ -109,7 +109,7 @@ export default function ProductDetailPage() {
             </div>
             </div>
         </header>
-        <main>
+        <main className="flex-1 overflow-y-auto">
             <div>
                 {image && (
                     <div className="relative aspect-square w-full">
@@ -162,18 +162,9 @@ export default function ProductDetailPage() {
                     <h3 className="font-headline text-lg font-semibold mb-2">The Story Behind</h3>
                     <p className="text-sm text-muted-foreground italic">{product.story}</p>
                 </div>
-                
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2 w-full max-w-md mx-auto">
-                    <Button size="lg" variant="outline" className="flex-1">
-                        <MessageSquare className="mr-2 h-4 w-4" /> Message
-                    </Button>
-                    <Button size="lg" className="flex-1" onClick={handleAddToCart}>
-                        <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
-                    </Button>
-                </div>
             </div>
 
-            <div className="p-6 pt-0 mb-24">
+            <div className="p-6 pt-0 pb-24">
                 <h2 className="font-headline text-xl font-bold mb-4">Ratings & Reviews</h2>
                 <div className="space-y-6">
                     <div>
@@ -229,6 +220,14 @@ export default function ProductDetailPage() {
                 </div>
             </div>
         </main>
+        <div className="sticky bottom-0 left-0 right-0 p-4 bg-background border-t flex gap-2 w-full">
+            <Button size="lg" variant="outline" className="flex-1">
+                <MessageSquare className="mr-2 h-4 w-4" /> Message
+            </Button>
+            <Button size="lg" className="flex-1" onClick={handleAddToCart}>
+                <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
+            </Button>
+        </div>
       </div>
     </div>
   )
