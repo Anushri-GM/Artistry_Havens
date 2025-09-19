@@ -67,21 +67,20 @@ const navItems = [
 function PageHeader() {
   const { isMobile, open } = useSidebar();
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
-        <SidebarTrigger className="md:hidden h-9 w-9" />
-        {isMobile && (
-          <div className="flex items-center gap-2">
-            <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-             <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
-          </div>
-        )}
-         {!isMobile && (
-          <div className="flex items-center gap-4">
-              <SidebarTrigger className="h-9 w-9" />
-              {!open && <ArtistryHavensLogo className="h-8 w-8 text-primary" />}
-          </div>
-        )}
-        <div className="flex w-full items-center justify-end gap-1">
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
+        <div className="flex items-center gap-2">
+            <SidebarTrigger className="h-9 w-9" />
+             {!isMobile && !open && <ArtistryHavensLogo className="h-8 w-8 text-primary" />}
+        </div>
+
+        <div className="flex flex-1 justify-center">
+            <div className="flex items-center gap-2">
+                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+                <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
+            </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-1">
 
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
