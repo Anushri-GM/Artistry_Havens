@@ -30,20 +30,20 @@ export default function SponsorsPage() {
             <CardContent className="space-y-4">
               {mockSponsors.map(sponsor => (
                 <div key={sponsor.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <Avatar>
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
                       <AvatarImage src={sponsor.avatar?.imageUrl} alt={sponsor.name} />
                       <AvatarFallback>{sponsor.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold">{sponsor.name}</p>
-                      <p className="text-sm text-muted-foreground">Expires: {sponsor.expiry}</p>
+                      <p className="font-semibold text-base">{sponsor.name}</p>
+                      <p className="text-xs text-muted-foreground">Expires: {sponsor.expiry}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 self-end sm:self-center flex-wrap justify-end">
-                    <Badge variant="secondary" className="whitespace-nowrap">{sponsor.share}% Share</Badge>
-                     <Button variant="outline" size="sm"><MessageSquare className="h-4 w-4 mr-2"/>Chat</Button>
-                    <Button variant="destructive" size="sm">Terminate</Button>
+                    <Badge variant="secondary" className="whitespace-nowrap text-xs">{sponsor.share}% Share</Badge>
+                     <Button variant="outline" size="sm" className="h-8"><MessageSquare className="h-4 w-4 mr-2"/>Chat</Button>
+                    <Button variant="destructive" size="sm" className="h-8">Terminate</Button>
                   </div>
                 </div>
               ))}
