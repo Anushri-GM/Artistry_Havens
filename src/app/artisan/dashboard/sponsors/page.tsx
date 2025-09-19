@@ -29,7 +29,7 @@ export default function SponsorsPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {mockSponsors.map(sponsor => (
-                <div key={sponsor.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={sponsor.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border rounded-lg">
                   <div className="flex items-center gap-4">
                     <Avatar>
                       <AvatarImage src={sponsor.avatar?.imageUrl} alt={sponsor.name} />
@@ -40,8 +40,8 @@ export default function SponsorsPage() {
                       <p className="text-sm text-muted-foreground">Expires: {sponsor.expiry}</p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <Badge variant="secondary">{sponsor.share}% Share</Badge>
+                  <div className="flex items-center gap-2 self-end sm:self-center">
+                    <Badge variant="secondary" className="whitespace-nowrap">{sponsor.share}% Share</Badge>
                      <Button variant="outline" size="sm"><MessageSquare className="h-4 w-4 mr-2"/>Chat</Button>
                     <Button variant="destructive" size="sm">Terminate</Button>
                   </div>
