@@ -2,7 +2,6 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useOrders } from "@/context/OrderContext";
@@ -41,9 +40,6 @@ function OrderList({ title, orders }: { title: string, orders: Order[] }) {
                                 <p><strong>Deliver by:</strong> {format(order.expectedDelivery, 'PPP')}</p>
                             </CardDescription>
                         </div>
-                        <Badge variant={order.status === 'Delivered' ? 'default' : (order.status === 'Shipped' ? 'secondary' : 'outline')}>
-                          {order.status}
-                        </Badge>
                       </div>
                     </CardHeader>
                     <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
