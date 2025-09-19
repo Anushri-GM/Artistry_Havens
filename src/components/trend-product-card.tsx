@@ -1,8 +1,11 @@
 
+'use client';
+
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Share2 } from "lucide-react";
+import { Heart, Share2, Bookmark } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type Product = {
   id: string;
@@ -22,6 +25,15 @@ interface TrendProductCardProps {
 }
 
 export function TrendProductCard({ product }: TrendProductCardProps) {
+  const { toast } = useToast();
+
+  const handleSave = () => {
+    toast({
+      title: "Saved!",
+      description: `"${product.name}" has been added to your saved collection.`,
+    });
+  };
+
   return (
     <Card className="overflow-hidden">
       {product.image && (
@@ -52,6 +64,10 @@ export function TrendProductCard({ product }: TrendProductCardProps) {
       </CardContent>
        <CardFooter className="flex justify-end gap-1 p-2">
             <Button variant="ghost" size="sm" className="text-xs h-7">Details</Button>
+            <Button size="sm" className="text-xs h-7" onClick={handleSave}>
+              <Bookmark className="mr-2 h-3 w-3" />
+              Save
+            </Button>
       </CardFooter>
     </Card>
   );
