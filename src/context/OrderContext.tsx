@@ -17,9 +17,9 @@ interface Product {
   };
 }
 
-type OrderStatus = 'Processing' | 'Shipped' | 'Delivered';
+export type OrderStatus = 'Processing' | 'Shipped' | 'Delivered';
 
-interface Order {
+export interface Order {
   id: string;
   product: Product;
   quantity: number;
@@ -30,7 +30,7 @@ interface Order {
   expectedDelivery: Date;
 }
 
-interface OrderRequest {
+export interface OrderRequest {
   id: string;
   buyer: string;
   image: { imageUrl: string } | undefined;
