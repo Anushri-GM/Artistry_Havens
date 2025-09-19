@@ -148,21 +148,16 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const isUploadPath = pathname === '/artisan/upload';
 
 
-  if (pathsWithoutNav.includes(pathname) || (isBuyerPath && !pathname.startsWith('/buyer/product/')) || isUploadPath) {
+  if (pathsWithoutNav.includes(pathname) || isBuyerPath || isUploadPath) {
     if (pathname.startsWith('/buyer/product/')) {
-       // On product detail page, we want the children to take up the full height
-       return <div className="h-full">{children}</div>;
+       return <div className="h-full flex flex-col">{children}</div>;
     }
     return <>{children}</>;
   }
   
-  if(isBuyerPath){
-     return <>{children}</>;
-  }
-  
   return (
         <SidebarProvider>
-          <div className="flex h-[100svh] overflow-hidden">
+          <div className="flex h-full overflow-hidden">
             <Sidebar collapsible="icon" className="border-r">
               <SidebarHeader className="flex items-center gap-2 p-2">
                 <ArtistryHavensLogo className="h-8 w-8 text-primary" />
@@ -202,7 +197,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             </Sidebar>
             <div className="flex flex-1 flex-col overflow-hidden">
               <PageHeader />
-              <main className="flex-1 overflow-y-auto p-4">{children}</main>
+              <main className="flex-1 overflow-y-auto overflow-x-hidden p-4">{children}</main>
             </div>
           </div>
         </SidebarProvider>
