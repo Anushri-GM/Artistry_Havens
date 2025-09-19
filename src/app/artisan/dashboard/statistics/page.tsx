@@ -75,7 +75,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
             <div className='space-y-4'>
                 {product.image && (
                 <div className="relative h-56 w-full rounded-lg overflow-hidden">
-                    <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover" />
+                    <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain" />
                 </div>
                 )}
                 <div className='grid grid-cols-2 gap-4'>
@@ -152,84 +152,57 @@ export default function StatisticsPage() {
         <TabsContent value="weekly">
           <Card>
             <CardContent className="pt-6">
-               <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                 <ResponsiveContainer>
-                   <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                     <CartesianGrid vertical={false} />
-                     <YAxis />
-                     <div className="overflow-x-auto pl-2">
-                       <div className="h-[250px]" style={{width: '150%'}}>
-                          <ResponsiveContainer>
-                             <BarChart data={mockWeeklyStatsData} margin={{ left: -30 }}>
-                               <CartesianGrid vertical={false} />
-                               <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
-                               <ChartTooltip content={<ChartTooltipContent />} />
-                               <ChartLegend content={<ChartLegendContent />} />
-                               <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
-                               <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
-                             </BarChart>
-                          </ResponsiveContainer>
-                       </div>
-                     </div>
-                   </BarChart>
-                 </ResponsiveContainer>
-               </ChartContainer>
+              <div className="overflow-x-auto">
+                <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[400px]">
+                  <BarChart data={mockWeeklyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                    <CartesianGrid vertical={false} />
+                    <YAxis />
+                    <XAxis dataKey="week" tickLine={false} tickMargin={10} axisLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={40} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={40} />
+                  </BarChart>
+                </ChartContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="monthly">
           <Card>
             <CardContent className="pt-6">
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                 <ResponsiveContainer>
-                   <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                     <CartesianGrid vertical={false} />
-                     <YAxis />
-                     <div className="overflow-x-auto pl-2">
-                       <div className="h-[250px]" style={{width: '200%'}}>
-                         <ResponsiveContainer>
-                           <BarChart data={mockStatsData} margin={{ left: -30 }}>
-                             <CartesianGrid vertical={false} />
-                             <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
-                             <ChartTooltip content={<ChartTooltipContent />} />
-                             <ChartLegend content={<ChartLegendContent />} />
-                             <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={25} />
-                             <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={25} />
-                           </BarChart>
-                         </ResponsiveContainer>
-                       </div>
-                     </div>
-                   </BarChart>
-                 </ResponsiveContainer>
-               </ChartContainer>
+              <div className="overflow-x-auto">
+                <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[600px]">
+                  <BarChart data={mockStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                    <CartesianGrid vertical={false} />
+                    <YAxis />
+                    <XAxis dataKey="month" tickLine={false} tickMargin={10} axisLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={25} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={25} />
+                  </BarChart>
+                </ChartContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
         <TabsContent value="yearly">
           <Card>
             <CardContent className="pt-6">
-              <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                 <ResponsiveContainer>
-                   <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
-                     <CartesianGrid vertical={false} />
-                     <YAxis />
-                     <div className="overflow-x-auto pl-2">
-                       <div className="h-[250px]" style={{width: '120%'}}>
-                         <ResponsiveContainer>
-                           <BarChart data={mockYearlyStatsData} margin={{ left: -30 }}>
-                             <CartesianGrid vertical={false} />
-                             <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
-                             <ChartTooltip content={<ChartTooltipContent />} />
-                             <ChartLegend content={<ChartLegendContent />} />
-                             <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={80} />
-                             <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={80} />
-                           </BarChart>
-                         </ResponsiveContainer>
-                       </div>
-                     </div>
-                   </BarChart>
-                 </ResponsiveContainer>
-               </ChartContainer>
+              <div className="overflow-x-auto">
+                <ChartContainer config={chartConfig} className="h-[300px] w-full min-w-[300px]">
+                  <BarChart data={mockYearlyStatsData} margin={{ top: 20, right: 20, bottom: 20, left: 10 }}>
+                    <CartesianGrid vertical={false} />
+                    <YAxis />
+                    <XAxis dataKey="year" tickLine={false} tickMargin={10} axisLine={false} />
+                    <ChartTooltip content={<ChartTooltipContent />} />
+                    <ChartLegend content={<ChartLegendContent />} />
+                    <Bar dataKey="likes" fill="var(--color-likes)" radius={4} barSize={80} />
+                    <Bar dataKey="bought" fill="var(--color-bought)" radius={4} barSize={80} />
+                  </BarChart>
+                </ChartContainer>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -247,7 +220,7 @@ export default function StatisticsPage() {
                 {product.image && (
                  <div className="w-1/3 p-4 flex-shrink-0">
                      <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-                         <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover" />
+                         <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain" />
                      </div>
                  </div>
                )}
@@ -287,3 +260,5 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+    
