@@ -4,7 +4,7 @@
 import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import { ProductCard } from "@/components/product-card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
 
 export default function ArtisanHomePage() {
@@ -28,16 +28,15 @@ export default function ArtisanHomePage() {
                 plugins={[autoplayPluginLTR.current]}
                 onMouseEnter={autoplayPluginLTR.current.stop}
                 onMouseLeave={autoplayPluginLTR.current.play}
+                className="w-full"
             >
-                <CarouselContent>
+                <CarouselContent className="-ml-4">
                     {frequentlyBought.slice(0,3).map((product) => (
-                        <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                        <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
                             <ProductCard product={product} />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
             </Carousel>
         </div>
 
@@ -49,16 +48,15 @@ export default function ArtisanHomePage() {
                 plugins={[autoplayPluginRTL.current]}
                 onMouseEnter={autoplayPluginRTL.current.stop}
                 onMouseLeave={autoplayPluginRTL.current.play}
+                className="w-full"
             >
-                <CarouselContent>
+                <CarouselContent className="-ml-4">
                     {bestsellers.slice(0,3).map((product) => (
-                        <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                        <CarouselItem key={product.id} className="basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
                             <ProductCard product={product} />
                         </CarouselItem>
                     ))}
                 </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
             </Carousel>
         </div>
     </div>
