@@ -143,7 +143,7 @@ function PageHeader() {
 
 function GlobalNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard'];
+  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection'];
   const isBuyerPath = pathname.startsWith('/buyer');
   const isUploadPath = pathname === '/artisan/upload';
 

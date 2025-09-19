@@ -59,7 +59,7 @@ export default function ArtisanLoginPage() {
       title: 'Login Successful',
       description: 'Welcome back!',
     });
-    router.push('/artisan/dashboard');
+    router.push('/artisan/category-selection');
   };
 
   return (
