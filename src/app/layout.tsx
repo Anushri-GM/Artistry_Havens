@@ -19,6 +19,7 @@ import Link from 'next/link';
 import {
   AreaChart,
   BadgeIndianRupee,
+  BarChart,
   Bell,
   Box,
   Heart,
@@ -52,7 +53,7 @@ import { Textarea } from '@/components/ui/textarea';
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
-  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: AreaChart },
+  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart },
   { href: '/artisan/dashboard/revenue', label: 'Revenue', icon: BadgeIndianRupee },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
   { type: 'divider' },
