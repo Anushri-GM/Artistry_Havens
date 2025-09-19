@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { CheckCircle, Handshake, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Link from "next/link";
+import { mockProducts } from "@/lib/mock-data";
 
 const heroImage = PlaceHolderImages.find(img => img.id === "sponsor-hero");
 const benefits = [
@@ -44,7 +46,7 @@ export default function SponsorPage() {
               <ArtistryHavensLogo className="h-8 w-8" />
               <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
             </div>
-            <Button variant="secondary">Login</Button>
+            <Button variant="secondary" asChild><Link href="/buyer/login">Login</Link></Button>
           </div>
         </header>
         
@@ -68,8 +70,8 @@ export default function SponsorPage() {
               <p className="mt-6 text-lg text-primary-foreground/80">
                 Invest in culture, empower creators, and share in the success of India's finest artisans.
               </p>
-              <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90">
-                Start Sponsoring Today
+              <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
+                <Link href="/buyer/login">Start Sponsoring Today</Link>
               </Button>
             </div>
           </section>
@@ -82,7 +84,7 @@ export default function SponsorPage() {
                           We bridge the gap between tradition and modern patronage, creating opportunities for growth and cultural preservation.
                       </p>
                   </div>
-                  <div className="grid grid-cols-1 gap-12">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                       {benefits.map(benefit => (
                           <div key={benefit.title} className="text-center">
                               <div className="flex justify-center mb-6">
@@ -96,7 +98,34 @@ export default function SponsorPage() {
               </div>
           </section>
 
-           <section className="bg-background py-16">
+          <section className="bg-background py-16">
+            <div className="container mx-auto px-4">
+              <div className="text-center mb-12">
+                <h2 className="font-headline text-2xl font-bold">Discover Artisans to Sponsor</h2>
+                <p className="mt-2 text-muted-foreground">Here are some of the talented creators you can support.</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {mockProducts.slice(0, 4).map(product => (
+                  <Card key={product.id} className="overflow-hidden group">
+                    {product.image && (
+                      <div className="relative aspect-[4/3] w-full">
+                        <Image src={product.image.imageUrl} alt={product.name} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
+                      </div>
+                    )}
+                    <CardHeader>
+                      <CardTitle className="font-headline text-lg leading-tight">{product.name}</CardTitle>
+                      <p className="text-sm text-muted-foreground">by {product.artisan}</p>
+                    </CardHeader>
+                    <CardContent>
+                      <Button className="w-full" asChild><Link href="/buyer/login">Sponsor</Link></Button>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </div>
+          </section>
+
+           <section className="bg-primary/5 py-16">
             <div className="container mx-auto px-4">
                 <div className="text-center mb-12">
                     <h2 className="font-headline text-2xl font-bold">Sponsorship Terms & Conditions</h2>
@@ -115,14 +144,14 @@ export default function SponsorPage() {
             </div>
           </section>
 
-          <section className="bg-primary/5 py-20">
+          <section className="bg-primary text-primary-foreground py-20">
               <div className="container mx-auto text-center">
                   <h2 className="font-headline text-3xl font-bold">Ready to Make an Impact?</h2>
-                  <p className="mt-4 max-w-2xl mx-auto text-lg text-muted-foreground">
+                  <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-foreground/80">
                     Join our exclusive network of sponsors and start your journey of patronage.
                   </p>
-                  <Button size="lg" className="mt-8">
-                      Create a Sponsor Account
+                  <Button size="lg" variant="secondary" className="mt-8" asChild>
+                      <Link href="/buyer/login">Create a Sponsor Account</Link>
                   </Button>
               </div>
           </section>
