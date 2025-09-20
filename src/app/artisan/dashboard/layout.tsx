@@ -2,6 +2,8 @@
 'use client';
 import {
   useSidebar,
+  SidebarProvider,
+  SidebarTrigger
 } from '@/components/ui/sidebar';
 import { ArtistryHavensLogo } from '@/components/icons';
 import { Bell, HelpCircle, Mic } from 'lucide-react';
@@ -23,15 +25,20 @@ function PageHeader() {
   const { isMobile, open } = useSidebar();
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
-        {isMobile && (
+        {isMobile ? (
           <div className="flex items-center gap-2">
             <ArtistryHavensLogo className="h-6 w-6 text-primary" />
              <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
           </div>
-        )}
-         {!isMobile && (
+        ) : (
           <div className="flex items-center gap-4">
-              {!open && <ArtistryHavensLogo className="h-6 w-6 text-primary" />}
+              <SidebarTrigger className="h-9 w-9" />
+              {!open && (
+                <>
+                    <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+                    <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
+                </>
+              )}
           </div>
         )}
         <div className="flex w-full items-center justify-end gap-1">
@@ -96,11 +103,11 @@ function PageHeader() {
 
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <>
+    <SidebarProvider>
         <PageHeader />
         <main className="p-4 overflow-auto">
             {children}
         </main>
-    </>
+    </SidebarProvider>
   );
 }
