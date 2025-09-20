@@ -7,12 +7,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { translateText } from "@/ai/flows/translate-text";
+import { generateRoleImage } from "@/ai/flows/generate-role-image";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const rolesData = [
+const initialRolesData = [
   {
     name: "Artisan",
     description: "I create and sell crafts",
-    imageUrl: "https://picsum.photos/seed/artisan-role/400/400",
+    imageUrl: null as string | null,
     imageHint: "artisan working",
     href: "/artisan/login",
     emoji: "🎨"
@@ -20,7 +22,7 @@ const rolesData = [
   {
     name: "Buyer",
     description: "I want to buy crafts",
-    imageUrl: "https://picsum.photos/seed/buyer-role/400/400",
+    imageUrl: null as string | null,
     imageHint: "person shopping",
     href: "/buyer",
     emoji: "🛍️"
@@ -28,7 +30,7 @@ const rolesData = [
   {
     name: "Sponsor",
     description: "I want to support artisans",
-    imageUrl: "https://picsum.photos/seed/sponsor-role/400/400",
+    imageUrl: null as string | null,
     imageHint: "patron art",
     href: "/sponsor",
     emoji: "❤️"
@@ -48,14 +50,42 @@ function RoleSelection() {
     const searchParams = useSearchParams();
     const lang = searchParams.get('lang') || 'en';
     
+    const [rolesData, setRolesData] = useState(initialRolesData);
     const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [areImagesLoading, setAreImagesLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            setAreImagesLoading(true);
+            try {
+                const imagePromises = initialRolesData.map(role => generateRoleImage({roleName: role.name}));
+                const images = await Promise.all(imagePromises);
+                setRolesData(prevRoles => prevRoles.map((role, index) => ({
+                    ...role,
+                    imageUrl: images[index].imageDataUri
+                })));
+            } catch (error) {
+                console.error("Failed to generate role images:", error);
+                 // Fallback to placeholder URLs if generation fails
+                const fallbackRoles = [
+                    { ...initialRolesData[0], imageUrl: "https://picsum.photos/seed/artisan-role/400/400" },
+                    { ...initialRolesData[1], imageUrl: "https://picsum.photos/seed/buyer-role/400/400" },
+                    { ...initialRolesData[2], imageUrl: "https://picsum.photos/seed/sponsor-role/400/400" },
+                ];
+                setRolesData(fallbackRoles);
+            } finally {
+                setAreImagesLoading(false);
+            }
+        };
+        fetchImages();
+    }, []);
 
     useEffect(() => {
         const originalContent = {
             title: "Welcome!",
             description: "Please select your role to continue.",
-            roles: rolesData.map(r => ({ name: r.name, description: r.description }))
+            roles: initialRolesData.map(r => ({ name: r.name, description: r.description }))
         };
 
         const translateContent = async () => {
@@ -76,7 +106,7 @@ function RoleSelection() {
                 const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
                 const translations = await Promise.all(translationPromises);
                 
-                const translatedRoles = rolesData.map((_, index) => ({
+                const translatedRoles = initialRolesData.map((_, index) => ({
                     name: translations[2 + index * 2].translatedText,
                     description: translations[3 + index * 2].translatedText
                 }));
@@ -119,14 +149,20 @@ function RoleSelection() {
                       <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
                           <CardHeader className="p-0">
                             <div className="relative h-40 w-full">
-                                <Image 
-                                    src={role.imageUrl}
-                                    alt={role.name}
-                                    fill
-                                    className="object-cover"
-                                    data-ai-hint={role.imageHint}
-                                />
-                                <div className="absolute inset-0 bg-black/30"></div>
+                                {areImagesLoading || !role.imageUrl ? (
+                                    <Skeleton className="h-full w-full" />
+                                ) : (
+                                    <>
+                                        <Image 
+                                            src={role.imageUrl}
+                                            alt={role.name}
+                                            fill
+                                            className="object-cover"
+                                            data-ai-hint={role.imageHint}
+                                        />
+                                        <div className="absolute inset-0 bg-black/30"></div>
+                                    </>
+                                )}
                             </div>
                           </CardHeader>
                           <CardContent className="p-6">
