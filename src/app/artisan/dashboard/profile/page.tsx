@@ -178,7 +178,7 @@ function Profile() {
                     <Button variant="default" size="sm" onClick={handleEditToggle}><Save className="mr-2 h-4 w-4"/> {translatedContent.saveButton}</Button>
                  </>
             ) : (
-                <Button variant="secondary" size="sm" onClick={handleEditToggle}><Edit className="mr-2 h-4 w-4"/> {translatedContent.editButton}</Button>
+                <Button variant="accent" size="sm" onClick={handleEditToggle}><Edit className="mr-2 h-4 w-4"/> {translatedContent.editButton}</Button>
             )}
           </div>
           <div className="flex flex-col items-center gap-4 pt-8 sm:pt-0">
