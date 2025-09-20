@@ -7,13 +7,22 @@ import { useArtisan } from '@/context/ArtisanContext';
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from '@/components/ui/dialog';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { translateText } from '@/ai/flows/translate-text';
 import type { Product } from '@/context/ArtisanContext';
+import { MyProductCard } from '@/components/my-product-card';
 
 type TranslatedContent = {
   title: string;
@@ -37,6 +46,7 @@ function MyProducts() {
   const [translatedContent, setTranslatedContent] = React.useState<TranslatedContent | null>(null);
   const [translatedProducts, setTranslatedProducts] = React.useState<TranslatedProduct[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [selectedProduct, setSelectedProduct] = React.useState<TranslatedProduct | null>(null);
   
   React.useEffect(() => {
     const originalContent = {
@@ -113,6 +123,10 @@ function MyProducts() {
   if (isLoading) {
       return <div className="flex h-full items-center justify-center">Loading products...</div>
   }
+
+  const handleDetailsClick = (product: TranslatedProduct) => {
+    setSelectedProduct(product);
+  }
   
   return (
     <div className="space-y-8">
@@ -123,41 +137,44 @@ function MyProducts() {
         </p>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {translatedProducts.map((product) => (
-          <Card key={product.id} className="overflow-hidden">
-             <div className="flex flex-col sm:flex-row gap-4">
-               {product.image && (
-                <div className="w-full sm:w-1/3 p-4 flex-shrink-0">
-                    <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-                        <Image src={product.image.imageUrl} alt={product.translatedName} fill className="object-cover" />
-                    </div>
-                </div>
-              )}
-              <div className="flex-1 flex flex-col p-4 pt-0 sm:pt-4">
-                <CardHeader className="p-0">
-                  <CardTitle className="font-headline text-xl">{product.translatedName}</CardTitle>
-                </CardHeader>
-                <CardContent className="p-0 mt-4 flex-1 space-y-4">
-                    <div>
-                        <h3 className="font-semibold text-sm text-muted-foreground">{translatedContent?.descriptionLabel}</h3>
-                        <p className="text-sm mt-1">{product.translatedDescription}</p>
-                    </div>
-                     <div>
-                        <h3 className="font-semibold text-sm text-muted-foreground">{translatedContent?.storyLabel}</h3>
-                        <p className="text-sm italic mt-1">{product.translatedStory}</p>
-                    </div>
-                </CardContent>
-              </div>
-            </div>
-          </Card>
+          <MyProductCard key={product.id} product={product} onDetailsClick={() => handleDetailsClick(product)} />
         ))}
-         {products.length === 0 && (
+      </div>
+
+       {products.length === 0 && (
             <div className="text-center text-muted-foreground py-10">
                 <p>You haven't uploaded any products yet.</p>
             </div>
         )}
-      </div>
+
+        <Dialog open={!!selectedProduct} onOpenChange={() => setSelectedProduct(null)}>
+            <DialogContent className="max-w-md">
+                {selectedProduct && (
+                    <>
+                        <DialogHeader>
+                            <DialogTitle className="font-headline text-2xl">{selectedProduct.translatedName}</DialogTitle>
+                        </DialogHeader>
+                        <div className="space-y-4">
+                            {selectedProduct.image && (
+                                <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
+                                    <Image src={selectedProduct.image.imageUrl} alt={selectedProduct.translatedName} fill className="object-cover" />
+                                </div>
+                            )}
+                            <div>
+                                <h3 className="font-semibold text-sm text-muted-foreground">{translatedContent?.descriptionLabel}</h3>
+                                <p className="text-sm mt-1">{selectedProduct.translatedDescription}</p>
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-sm text-muted-foreground">{translatedContent?.storyLabel}</h3>
+                                <p className="text-sm italic mt-1">{selectedProduct.translatedStory}</p>
+                            </div>
+                        </div>
+                    </>
+                )}
+            </DialogContent>
+        </Dialog>
     </div>
   );
 }
