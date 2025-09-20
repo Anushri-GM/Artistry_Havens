@@ -506,24 +506,25 @@ function Upload() {
                                 </div>
                                 <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
                             </div>
-                            <div>
-                                <Label htmlFor="product-price">{translatedContent.priceLabel}</Label>
-                                <div className="relative">
-                                    <Input 
-                                        id="product-price" 
-                                        type="number"
-                                        placeholder={translatedContent.pricePlaceholder} 
-                                        value={productPrice} 
-                                        onChange={e => setProductPrice(e.target.value)} 
-                                        className="pl-8"
-                                    />
-                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
-                                        <BadgeIndianRupee className="h-5 w-5" />
-                                    </div>
-                                </div>
-                            </div>
                         </CardContent>
                     </Card>
+                    
+                    <div>
+                        <Label htmlFor="product-price">{translatedContent.priceLabel}</Label>
+                        <div className="relative mt-2">
+                            <Input 
+                                id="product-price" 
+                                type="number"
+                                placeholder={translatedContent.pricePlaceholder} 
+                                value={productPrice} 
+                                onChange={e => setProductPrice(e.target.value)} 
+                                className="pl-8"
+                            />
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
+                                <BadgeIndianRupee className="h-5 w-5" />
+                            </div>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
 
