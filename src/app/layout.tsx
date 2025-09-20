@@ -402,11 +402,11 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
 
 function RootLayoutContent({ children }: { children: React.ReactNode }) {
     return (
-      <SidebarProvider>
         <ArtisanProvider>
-            <GlobalNav>{children}</GlobalNav>
+          <SidebarProvider>
+              <GlobalNav>{children}</GlobalNav>
+          </SidebarProvider>
         </ArtisanProvider>
-      </SidebarProvider>
     )
 }
 
@@ -435,4 +435,3 @@ export default function RootLayout({
     </html>
   );
 }
-
