@@ -12,6 +12,9 @@ import { Check, MessageSquare, ThumbsDown } from "lucide-react";
 import { mockSponsors as initialSponsors, mockSponsorRequests as initialSponsorRequests } from "@/lib/mock-data";
 import { translateText } from '@/ai/flows/translate-text';
 
+type Sponsor = typeof initialSponsors[0];
+type SponsorRequest = typeof initialSponsorRequests[0];
+
 type TranslatedContent = {
     title: string;
     description: string;
@@ -31,6 +34,9 @@ type TranslatedContent = {
     noRequestsText: string;
 };
 
+type TranslatedSponsor = Sponsor & { translatedName: string };
+type TranslatedSponsorRequest = SponsorRequest & { translatedName: string; translatedMessage: string; };
+
 function Sponsors() {
   const [sponsors, setSponsors] = useState(initialSponsors);
   const [sponsorRequests, setSponsorRequests] = useState(initialSponsorRequests);
@@ -38,6 +44,8 @@ function Sponsors() {
   const lang = searchParams.get('lang') || 'en';
   
   const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
+  const [translatedSponsors, setTranslatedSponsors] = useState<TranslatedSponsor[]>([]);
+  const [translatedSponsorRequests, setTranslatedSponsorRequests] = useState<TranslatedSponsorRequest[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -63,31 +71,67 @@ function Sponsors() {
     const translate = async () => {
         if (lang === 'en') {
             setTranslatedContent(originalContent);
+            setTranslatedSponsors(sponsors.map(s => ({...s, translatedName: s.name})));
+            setTranslatedSponsorRequests(sponsorRequests.map(r => ({...r, translatedName: r.name, translatedMessage: r.message})));
             setIsLoading(false);
             return;
         }
 
         setIsLoading(true);
         try {
-            const texts = Object.values(originalContent);
-            const translations = await Promise.all(
-                texts.map(text => translateText({ text, targetLanguage: lang }))
+            // Translate static content
+            const staticTexts = Object.values(originalContent);
+            const staticTranslations = await Promise.all(
+                staticTexts.map(text => translateText({ text, targetLanguage: lang }))
             );
             const keys = Object.keys(originalContent) as (keyof TranslatedContent)[];
             const newContent = keys.reduce((acc, key, index) => {
-                acc[key] = translations[index].translatedText;
+                acc[key] = staticTranslations[index].translatedText;
                 return acc;
             }, {} as TranslatedContent);
             setTranslatedContent(newContent);
+            
+            // Translate dynamic sponsor content
+            const sponsorPromises = sponsors.map(async (sponsor) => {
+                const name = await translateText({ text: sponsor.name, targetLanguage: lang });
+                return {
+                    ...sponsor,
+                    translatedName: name.translatedText,
+                };
+            });
+            
+            // Translate dynamic request content
+            const requestPromises = sponsorRequests.map(async (request) => {
+                const [name, message] = await Promise.all([
+                    translateText({ text: request.name, targetLanguage: lang }),
+                    translateText({ text: request.message, targetLanguage: lang }),
+                ]);
+                return {
+                    ...request,
+                    translatedName: name.translatedText,
+                    translatedMessage: message.translatedText,
+                };
+            });
+
+            const [newTranslatedSponsors, newTranslatedSponsorRequests] = await Promise.all([
+                Promise.all(sponsorPromises),
+                Promise.all(requestPromises)
+            ]);
+
+            setTranslatedSponsors(newTranslatedSponsors);
+            setTranslatedSponsorRequests(newTranslatedSponsorRequests);
+
         } catch (error) {
             console.error("Failed to translate sponsors page", error);
             setTranslatedContent(originalContent);
+            setTranslatedSponsors(sponsors.map(s => ({...s, translatedName: s.name})));
+            setTranslatedSponsorRequests(sponsorRequests.map(r => ({...r, translatedName: r.name, translatedMessage: r.message})));
         } finally {
             setIsLoading(false);
         }
     };
     translate();
-  }, [lang]);
+  }, [lang, sponsors, sponsorRequests]);
 
   const handleAcceptRequest = (requestId: string) => {
     const request = sponsorRequests.find(r => r.id === requestId);
@@ -138,7 +182,7 @@ function Sponsors() {
               <CardDescription>{translatedContent.mySponsorsDescription}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              {sponsors.length > 0 ? sponsors.map(sponsor => (
+              {translatedSponsors.length > 0 ? translatedSponsors.map(sponsor => (
                 <div key={sponsor.id} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 border rounded-lg">
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
@@ -146,7 +190,7 @@ function Sponsors() {
                       <AvatarFallback>{sponsor.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-semibold text-base">{sponsor.name}</p>
+                      <p className="font-semibold text-base">{sponsor.translatedName}</p>
                       <p className="text-xs text-muted-foreground">{translatedContent.expiresLabel}: {sponsor.expiry}</p>
                     </div>
                   </div>
@@ -168,7 +212,7 @@ function Sponsors() {
               <CardDescription>{translatedContent.sponsorRequestsDescription}</CardDescription>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {sponsorRequests.length > 0 ? sponsorRequests.map(request => (
+                {translatedSponsorRequests.length > 0 ? translatedSponsorRequests.map(request => (
                      <Card key={request.id}>
                         <CardHeader>
                             <div className="flex items-start gap-4">
@@ -177,8 +221,8 @@ function Sponsors() {
                                     <AvatarFallback>{request.name.charAt(0)}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <CardTitle className="font-headline text-lg">{request.name}</CardTitle>
-                                    <CardDescription className="pt-2 italic">"{request.message}"</CardDescription>
+                                    <CardTitle className="font-headline text-lg">{request.translatedName}</CardTitle>
+                                    <CardDescription className="pt-2 italic">"{request.translatedMessage}"</CardDescription>
                                 </div>
                             </div>
                         </CardHeader>
