@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, Suspense } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -11,19 +11,63 @@ import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, 
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { generateProductDetails } from '@/ai/flows/generate-product-details';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSearchParams } from 'next/navigation';
+import { translateText } from '@/ai/flows/translate-text';
 
 const previewImage = PlaceHolderImages.find(p => p.id === "pottery-1");
-const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry"];
+const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
 
-export default function UploadPage() {
+type TranslatedContent = {
+    headerTitle: string;
+    uploadTitle: string;
+    uploadDescription: string;
+    imageLabel: string;
+    imagePlaceholder: string;
+    cameraButton: string;
+    galleryButton: string;
+    categoryLabel: string;
+    categoryPlaceholder: string;
+    aiTitle: string;
+    aiDescription: string;
+    generateDetailsButton: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    descriptionLabel: string;
+    descriptionPlaceholder: string;
+    storyLabel: string;
+    storyPlaceholder: string;
+    socialTitle: string;
+    socialDescription: string;
+    generateSocialButton: string;
+    actionsTitle: string;
+    previewButton: string;
+    uploadButton: string;
+    previewDialogTitle: string;
+    previewDialogDescription: string;
+    previewProductNamePlaceholder: string;
+    previewDescriptionPlaceholder: string;
+    previewStoryPlaceholder: string;
+    cameraDialogTitle: string;
+    cameraDialogDescription: string;
+    captureButton: string;
+    cameraAccessTitle: string;
+    cameraAccessDescription: string;
+    categoryNames: Record<string, string>;
+};
+
+
+function Upload() {
     const { toast } = useToast();
+    const searchParams = useSearchParams();
+    const lang = searchParams.get('lang') || 'en';
+
     const [productName, setProductName] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [productStory, setProductStory] = useState('');
@@ -40,6 +84,90 @@ export default function UploadPage() {
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
+    const [isTranslating, setIsTranslating] = useState(false);
+
+
+    useEffect(() => {
+        const originalContent = {
+            headerTitle: "Upload Product",
+            uploadTitle: "Upload Your Product",
+            uploadDescription: "Add an image and category to get started.",
+            imageLabel: "1. Product Image",
+            imagePlaceholder: "Drag & drop or select an option below",
+            cameraButton: "Take Photo",
+            galleryButton: "From Gallery",
+            categoryLabel: "2. Product Category",
+            categoryPlaceholder: "Select a category...",
+            aiTitle: "AI-Generated Content",
+            aiDescription: "Generate product details with the power of AI.",
+            generateDetailsButton: "Generate Details with AI",
+            nameLabel: "Product Name",
+            namePlaceholder: "e.g., Handwoven Silk Scarf",
+            descriptionLabel: "Product Description",
+            descriptionPlaceholder: "Describe your product, its materials, dimensions, etc.",
+            storyLabel: "Product Story",
+            storyPlaceholder: "The story behind your craft...",
+            socialTitle: "Generate Social Media Posts",
+            socialDescription: "Once your details are ready, let AI help market your product.",
+            generateSocialButton: "Generate Social Media Content",
+            actionsTitle: "Actions",
+            previewButton: "Preview",
+            uploadButton: "Upload Product",
+            previewDialogTitle: "Post Preview",
+            previewDialogDescription: "This is how your product will appear to buyers.",
+            previewProductNamePlaceholder: "Product Name",
+            previewDescriptionPlaceholder: "Product description will appear here.",
+            previewStoryPlaceholder: "Your generated story will appear here.",
+            cameraDialogTitle: "Take a Photo",
+            cameraDialogDescription: "Center your product in the frame and capture the image.",
+            captureButton: "Capture",
+            cameraAccessTitle: "Camera Access Required",
+            cameraAccessDescription: "Please allow camera access in your browser settings to use this feature.",
+        };
+
+        const translateAll = async () => {
+            if (lang === 'en') {
+                const categoryNames = categories.reduce((acc, cat) => ({...acc, [cat]: cat}), {});
+                setTranslatedContent({...originalContent, categoryNames});
+                setIsTranslating(false);
+                return;
+            }
+
+            setIsTranslating(true);
+            try {
+                const textsToTranslate = [
+                    ...Object.values(originalContent),
+                    ...categories
+                ];
+
+                const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+                const translations = await Promise.all(translationPromises);
+                
+                const contentKeys = Object.keys(originalContent) as (keyof typeof originalContent)[];
+                const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
+                    (acc as any)[key] = translations[index].translatedText;
+                    return acc;
+                }, {} as Partial<TranslatedContent>) as TranslatedContent;
+
+                newTranslatedContent.categoryNames = categories.reduce((acc, cat, index) => {
+                    acc[cat] = translations[contentKeys.length + index].translatedText;
+                    return acc;
+                }, {} as Record<string, string>);
+
+                setTranslatedContent(newTranslatedContent);
+            } catch (error) {
+                console.error("Translation failed", error);
+                const categoryNames = categories.reduce((acc, cat) => ({...acc, [cat]: cat}), {});
+                setTranslatedContent({...originalContent, categoryNames});
+            } finally {
+                setIsTranslating(false);
+            }
+        };
+
+        translateAll();
+    }, [lang]);
 
     useEffect(() => {
         if (isCameraOpen) {
@@ -95,7 +223,7 @@ export default function UploadPage() {
         setProductDescription('');
         setProductStory('');
         try {
-            const result = await generateProductDetails({ productImageDataUri: productImage, category: productCategory });
+            const result = await generateProductDetails({ productImageDataUri: productImage, category: productCategory, targetLanguage: lang });
             setProductName(result.productName);
             setProductDescription(result.productDescription);
             setProductStory(result.productStory);
@@ -157,196 +285,211 @@ export default function UploadPage() {
         toast({ title: "Copied to clipboard!" });
     }
 
-  return (
-    <div className="flex justify-center min-h-screen bg-background">
-    <div className="w-full">
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
-        <div className='flex items-center gap-2'>
-            <Button variant="ghost" size="icon" asChild>
-                <Link href="/artisan/dashboard"><ArrowLeft /></Link>
+    if (isTranslating || !translatedContent) {
+        return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+    }
+
+    return (
+        <div className="flex justify-center min-h-screen bg-background">
+        <div className="w-full">
+        <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
+            <div className='flex items-center gap-2'>
+                <Button variant="ghost" size="icon" asChild>
+                    <Link href={`/artisan/dashboard?lang=${lang}`}><ArrowLeft /></Link>
+                </Button>
+                <h1 className="font-headline text-xl font-bold">{translatedContent.headerTitle}</h1>
+            </div>
+            <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
+                <Mic className="h-5 w-5" />
+                <span className="sr-only">Voice Command</span>
             </Button>
-            <h1 className="font-headline text-xl font-bold">Upload Product</h1>
-        </div>
-        <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
-            <Mic className="h-5 w-5" />
-            <span className="sr-only">Voice Command</span>
-        </Button>
-    </header>
-    <main className="p-4">
-    <div className="grid grid-cols-1 gap-8 max-w-md mx-auto">
-      <div className="space-y-8">
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-2xl">Upload Your Product</CardTitle>
-                <CardDescription>Add an image and category to get started.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                <div>
-                    <Label>1. Product Image</Label>
-                    <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg relative overflow-hidden">
-                        {productImage ? (
-                            <Image src={productImage} alt="Product preview" fill className="object-contain p-2" />
-                        ) : (
-                            <div className="text-center p-4">
-                                <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
-                                <p className="mt-2 text-sm text-muted-foreground">Drag & drop or select an option below</p>
+        </header>
+        <main className="p-4">
+        <div className="grid grid-cols-1 gap-8 max-w-md mx-auto">
+        <div className="space-y-8">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline text-2xl">{translatedContent.uploadTitle}</CardTitle>
+                    <CardDescription>{translatedContent.uploadDescription}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div>
+                        <Label>{translatedContent.imageLabel}</Label>
+                        <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg relative overflow-hidden">
+                            {productImage ? (
+                                <Image src={productImage} alt="Product preview" fill className="object-contain p-2" />
+                            ) : (
+                                <div className="text-center p-4">
+                                    <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
+                                    <p className="mt-2 text-sm text-muted-foreground">{translatedContent.imagePlaceholder}</p>
+                                </div>
+                            )}
+                        </div>
+                        <div className="mt-4 flex justify-center gap-4">
+                            <Button variant="outline" onClick={() => setIsCameraOpen(true)}><Camera className="mr-2 h-4 w-4" /> {translatedContent.cameraButton}</Button>
+                            <Input type="file" id="file-upload" className="hidden" onChange={handleFileChange} accept="image/*" />
+                            <Button variant="outline" asChild>
+                            <Label htmlFor='file-upload' className="cursor-pointer flex items-center">
+                                    <GalleryHorizontal className="mr-2 h-4 w-4" /> {translatedContent.galleryButton}
+                            </Label>
+                            </Button>
+                        </div>
+                    </div>
+                    <div>
+                        <Label htmlFor="product-category">{translatedContent.categoryLabel}</Label>
+                        <Select onValueChange={handleCategoryChange} value={productCategory}>
+                            <SelectTrigger id="product-category">
+                                <SelectValue placeholder={translatedContent.categoryPlaceholder} />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {categories.map(c => <SelectItem key={c} value={c}>{translatedContent.categoryNames[c]}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                    </div>
+
+                    <Card className="bg-primary/5">
+                        <CardHeader>
+                            <CardTitle className="font-headline text-xl flex items-center gap-2">
+                                {translatedContent.aiTitle}
+                            </CardTitle>
+                            <CardDescription>
+                                {translatedContent.aiDescription}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                            <Button onClick={handleGenerateDetails} disabled={isDetailsLoading || !productImage || !productCategory} className="w-full">
+                            {isDetailsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                            {translatedContent.generateDetailsButton}
+                            </Button>
+                            <div>
+                                <Label htmlFor="product-name">{translatedContent.nameLabel}</Label>
+                                <Input id="product-name" placeholder={translatedContent.namePlaceholder} value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
                             </div>
+                            <div>
+                                <Label htmlFor="product-desc">{translatedContent.descriptionLabel}</Label>
+                                <Textarea id="product-desc" placeholder={translatedContent.descriptionPlaceholder} value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>
+                            </div>
+                            <div>
+                                <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
+                                <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
+                            </div>
+                        </CardContent>
+                    </Card>
+                </CardContent>
+            </Card>
+
+            <Card>
+                <CardHeader>
+                    <CardTitle className="font-headline text-xl flex items-center gap-2">
+                        {translatedContent.socialTitle}
+                    </CardTitle>
+                    <CardDescription>{translatedContent.socialDescription}</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                    <div>
+                        {socialContent ? (
+                            <Tabs defaultValue="Instagram">
+                                <TabsList>
+                                    <TabsTrigger value="Instagram"><Instagram className="h-4 w-4 mr-2" /> Instagram</TabsTrigger>
+                                    <TabsTrigger value="Facebook"><Facebook className="h-4 w-4 mr-2" /> Facebook</TabsTrigger>
+                                    <TabsTrigger value="Twitter(X)"><Twitter className="h-4 w-4 mr-2" /> Twitter (X)</TabsTrigger>
+                                </TabsList>
+                                {Object.entries(socialContent).map(([platform, content]) => (
+                                    <TabsContent key={platform} value={platform}>
+                                        <Card className="bg-primary/5">
+                                            <CardContent className="p-4 space-y-4">
+                                                <p className="text-sm whitespace-pre-wrap">{content}</p>
+                                                <Button variant="ghost" size="sm" onClick={() => copyToClipboard(content)}>
+                                                    <Copy className="mr-2 h-4 w-4" /> Copy
+                                                </Button>
+                                            </CardContent>
+                                        </Card>
+                                    </TabsContent>
+                                ))}
+                            </Tabs>
+                        ) : (
+                            <Button onClick={handleGenerateSocial} disabled={isSocialLoading || !productName} className="mt-2 w-full">
+                                {isSocialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Share2 className="mr-2 h-4 w-4" />}
+                                {translatedContent.generateSocialButton}
+                            </Button>
                         )}
                     </div>
-                    <div className="mt-4 flex justify-center gap-4">
-                        <Button variant="outline" onClick={() => setIsCameraOpen(true)}><Camera className="mr-2 h-4 w-4" /> Take Photo</Button>
-                        <Input type="file" id="file-upload" className="hidden" onChange={handleFileChange} accept="image/*" />
-                        <Button variant="outline" asChild>
-                           <Label htmlFor='file-upload' className="cursor-pointer flex items-center">
-                                <GalleryHorizontal className="mr-2 h-4 w-4" /> From Gallery
-                           </Label>
-                        </Button>
+                </CardContent>
+            </Card>
+        </div>
+        
+        <div>
+            <Card className="sticky bottom-4 top-auto mt-8">
+                <CardHeader>
+                    <CardTitle className="font-headline">{translatedContent.actionsTitle}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-4">
+                    <Button onClick={() => setIsPreviewOpen(true)} variant="outline" size="lg"><Eye className="mr-2 h-4 w-4" /> {translatedContent.previewButton}</Button>
+                    <Button size="lg"><UploadCloud className="mr-2 h-4 w-4" /> {translatedContent.uploadButton}</Button>
+                </CardContent>
+            </Card>
+        </div>
+
+        <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+                <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                        <DialogTitle className="font-headline">{translatedContent.previewDialogTitle}</DialogTitle>
+                        <DialogDescription>{translatedContent.previewDialogDescription}</DialogDescription>
+                    </DialogHeader>
+                    <div className="mt-4">
+                        <div className="relative h-80 w-full rounded-lg overflow-hidden bg-muted">
+                            <Image src={productImage || previewImage!.imageUrl} alt="Preview" fill className="object-contain" />
+                        </div>
+                        <h2 className="font-headline text-2xl mt-4">{productName || translatedContent.previewProductNamePlaceholder}</h2>
+                        <p className="text-lg font-semibold text-primary mt-1">$49.99</p>
+                        <h3 className="font-headline text-lg mt-4 font-semibold">Description</h3>
+                        <p className="text-muted-foreground text-sm">{productDescription || translatedContent.previewDescriptionPlaceholder}</p>
+                        <h3 className="font-headline text-lg mt-4 font-semibold">The Story</h3>
+                        <p className="text-sm text-muted-foreground italic">{productStory || translatedContent.previewStoryPlaceholder}</p>
                     </div>
-                </div>
-                <div>
-                    <Label htmlFor="product-category">2. Product Category</Label>
-                     <Select onValueChange={handleCategoryChange} value={productCategory}>
-                        <SelectTrigger id="product-category">
-                            <SelectValue placeholder="Select a category..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                </div>
+                </DialogContent>
+            </Dialog>
 
-                 <Card className="bg-primary/5">
-                    <CardHeader>
-                        <CardTitle className="font-headline text-xl flex items-center gap-2">
-                           AI-Generated Content
-                        </CardTitle>
-                        <CardDescription>
-                            Generate product details with the power of AI.
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Button onClick={handleGenerateDetails} disabled={isDetailsLoading || !productImage || !productCategory} className="w-full">
-                           {isDetailsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                           Generate Details with AI
-                        </Button>
-                         <div>
-                            <Label htmlFor="product-name">Product Name</Label>
-                            <Input id="product-name" placeholder="e.g., Handwoven Silk Scarf" value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
-                        </div>
-                        <div>
-                            <Label htmlFor="product-desc">Product Description</Label>
-                            <Textarea id="product-desc" placeholder="Describe your product, its materials, dimensions, etc." value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>
-                        </div>
-                        <div>
-                            <Label htmlFor="product-story">Product Story</Label>
-                            <Textarea id="product-story" placeholder="The story behind your craft..." value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
-                        </div>
-                    </CardContent>
-                 </Card>
-            </CardContent>
-        </Card>
-
-        <Card>
-            <CardHeader>
-                <CardTitle className="font-headline text-xl flex items-center gap-2">
-                    Generate Social Media Posts
-                </CardTitle>
-                <CardDescription>Once your details are ready, let AI help market your product.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-                 <div>
-                     {socialContent ? (
-                        <Tabs defaultValue="Instagram">
-                            <TabsList>
-                                <TabsTrigger value="Instagram"><Instagram className="h-4 w-4 mr-2" /> Instagram</TabsTrigger>
-                                <TabsTrigger value="Facebook"><Facebook className="h-4 w-4 mr-2" /> Facebook</TabsTrigger>
-                                <TabsTrigger value="Twitter(X)"><Twitter className="h-4 w-4 mr-2" /> Twitter (X)</TabsTrigger>
-                            </TabsList>
-                             {Object.entries(socialContent).map(([platform, content]) => (
-                                <TabsContent key={platform} value={platform}>
-                                    <Card className="bg-primary/5">
-                                        <CardContent className="p-4 space-y-4">
-                                            <p className="text-sm whitespace-pre-wrap">{content}</p>
-                                            <Button variant="ghost" size="sm" onClick={() => copyToClipboard(content)}>
-                                                <Copy className="mr-2 h-4 w-4" /> Copy
-                                            </Button>
-                                        </CardContent>
-                                    </Card>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
-                    ) : (
-                         <Button onClick={handleGenerateSocial} disabled={isSocialLoading || !productName} className="mt-2 w-full">
-                            {isSocialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Share2 className="mr-2 h-4 w-4" />}
-                            Generate Social Media Content
-                        </Button>
+            <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{translatedContent.cameraDialogTitle}</DialogTitle>
+                        <DialogDescription>{translatedContent.cameraDialogDescription}</DialogDescription>
+                    </DialogHeader>
+                    <div className="relative aspect-video w-full rounded-md bg-muted overflow-hidden">
+                        <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                        <canvas ref={canvasRef} className="hidden" />
+                    </div>
+                    {hasCameraPermission === false && (
+                        <Alert variant="destructive">
+                            <AlertTriangle className="h-4 w-4" />
+                            <AlertTitle>{translatedContent.cameraAccessTitle}</AlertTitle>
+                            <AlertDescription>
+                                {translatedContent.cameraAccessDescription}
+                            </AlertDescription>
+                        </Alert>
                     )}
-                </div>
-            </CardContent>
-        </Card>
-      </div>
-      
-      <div>
-          <Card className="sticky bottom-4 top-auto mt-8">
-            <CardHeader>
-                <CardTitle className="font-headline">Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4">
-                 <Button onClick={() => setIsPreviewOpen(true)} variant="outline" size="lg"><Eye className="mr-2 h-4 w-4" /> Preview</Button>
-                 <Button size="lg"><UploadCloud className="mr-2 h-4 w-4" /> Upload Product</Button>
-            </CardContent>
-          </Card>
-      </div>
-
-       <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle className="font-headline">Post Preview</DialogTitle>
-                    <DialogDescription>This is how your product will appear to buyers.</DialogDescription>
-                </DialogHeader>
-                <div className="mt-4">
-                    <div className="relative h-80 w-full rounded-lg overflow-hidden bg-muted">
-                        <Image src={productImage || previewImage!.imageUrl} alt="Preview" fill className="object-contain" />
-                    </div>
-                    <h2 className="font-headline text-2xl mt-4">{productName || "Product Name"}</h2>
-                    <p className="text-lg font-semibold text-primary mt-1">$49.99</p>
-                    <h3 className="font-headline text-lg mt-4 font-semibold">Description</h3>
-                    <p className="text-muted-foreground text-sm">{productDescription || "Product description will appear here."}</p>
-                    <h3 className="font-headline text-lg mt-4 font-semibold">The Story</h3>
-                    <p className="text-sm text-muted-foreground italic">{productStory || "Your generated story will appear here."}</p>
-                </div>
-            </DialogContent>
-        </Dialog>
-
-        <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>Take a Photo</DialogTitle>
-                    <DialogDescription>Center your product in the frame and capture the image.</DialogDescription>
-                </DialogHeader>
-                <div className="relative aspect-video w-full rounded-md bg-muted overflow-hidden">
-                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
-                    <canvas ref={canvasRef} className="hidden" />
-                </div>
-                {hasCameraPermission === false && (
-                    <Alert variant="destructive">
-                        <AlertTriangle className="h-4 w-4" />
-                        <AlertTitle>Camera Access Required</AlertTitle>
-                        <AlertDescription>
-                            Please allow camera access in your browser settings to use this feature.
-                        </AlertDescription>
-                    </Alert>
-                )}
-                <DialogFooter>
-                    <Button onClick={handleCapture} disabled={hasCameraPermission !== true}>
-                        <CircleDot className="mr-2 h-4 w-4" /> Capture
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    </div>
-    </main>
-    </div>
-    </div>
-  );
+                    <DialogFooter>
+                        <Button onClick={handleCapture} disabled={hasCameraPermission !== true}>
+                            <CircleDot className="mr-2 h-4 w-4" /> {translatedContent.captureButton}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        </div>
+        </main>
+        </div>
+        </div>
+    );
 }
+
+
+export default function UploadPage() {
+    return (
+        <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+            <Upload />
+        </Suspense>
+    )
+}
+
+    
