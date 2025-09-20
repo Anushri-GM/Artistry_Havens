@@ -27,7 +27,7 @@ const productDetailsPrompt = ai.definePrompt({
     The tone should be evocative, highlighting the craftsmanship and uniqueness of the item.
 
     - The product name should be creative and descriptive.
-    - The product description should detail the materials, dimensions (if inferrable), and potential uses.
+    - The product description should detail the materials, dimensions (if inferrable), and potential uses. It should be a maximum of 175 words.
     - The product story should create an emotional connection to the artisan and the craft.
 
     Category: {{{category}}}
