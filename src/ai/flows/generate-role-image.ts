@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Generates a unique image for a given user role.
@@ -16,18 +15,10 @@ export async function generateRoleImage(
   return generateRoleImageFlow(input);
 }
 
-const prompts: Record<string, string> = {
-    Buyer: `Generate a high-quality, professional photograph of a discerning buyer thoughtfully examining artisan crafts in a high-end boutique or gallery setting. 
-            The person should appear sophisticated and engaged, appreciating the quality and detail of the handmade products. 
-            The ambiance should be elegant and well-lit, highlighting the beauty of the crafts. 
-            The image should convey a sense of refined taste and appreciation for unique, high-quality items.`,
-    Sponsor: `Generate a high-quality, professional photograph representing patronage and support for the arts.
-              This could be an image of a handshake in front of an art piece, or a person discussing a craft with an artisan.
-              The mood should be collaborative and positive.
-              The image should convey trust and partnership.`
-}
 
 const artisanImageUrl = "https://image2url.com/images/1758398342370-5ab14d02-0dc5-4db2-a827-b098c96e830e.jpg";
+const buyerImageUrl = "https://picsum.photos/seed/buyer-role/400/400";
+const sponsorImageUrl = "https://picsum.photos/seed/sponsor-role/400/400";
 
 const generateRoleImageFlow = ai.defineFlow(
   {
@@ -36,29 +27,20 @@ const generateRoleImageFlow = ai.defineFlow(
     outputSchema: GenerateRoleImageOutputSchema,
   },
   async (input) => {
-
+    
     if (input.roleName === 'Artisan') {
         return { imageDataUri: artisanImageUrl };
     }
 
-    const prompt = prompts[input.roleName];
-    if (!prompt) {
-        throw new Error(`No prompt defined for role: ${input.roleName}`);
+    if (input.roleName === 'Buyer') {
+        return { imageDataUri: buyerImageUrl };
     }
 
-    const { media } = await ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
-        prompt: prompt,
-        config: {
-            aspectRatio: "1:1"
-        }
-    });
+    if (input.roleName === 'Sponsor') {
+        return { imageDataUri: sponsorImageUrl };
+    }
     
-    const url = media.url;
-    if (!url) {
-        throw new Error(`Image generation for role '${input.roleName}' failed.`);
-    }
-
-    return { imageDataUri: url };
+    // Fallback for any other role
+    throw new Error(`No static image URL defined for role: ${input.roleName}`);
   }
 );
