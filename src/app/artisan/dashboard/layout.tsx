@@ -2,7 +2,6 @@
 'use client';
 import {
   useSidebar,
-  SidebarProvider,
   SidebarTrigger
 } from '@/components/ui/sidebar';
 import { ArtistryHavensLogo } from '@/components/icons';
@@ -103,13 +102,11 @@ function PageHeader() {
 
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <SidebarProvider>
-        <div className="flex flex-1 flex-col overflow-x-hidden">
-            <PageHeader />
-            <main className="p-4 overflow-auto">
-                {children}
-            </main>
-        </div>
-    </SidebarProvider>
+    <div className="flex flex-1 flex-col overflow-x-hidden">
+        <PageHeader />
+        <main className="p-4 overflow-auto">
+            {children}
+        </main>
+    </div>
   );
 }

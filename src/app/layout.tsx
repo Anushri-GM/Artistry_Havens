@@ -156,7 +156,9 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
 function RootLayoutContent({ children }: { children: React.ReactNode }) {
     return (
         <ArtisanProvider>
-            <GlobalNav>{children}</GlobalNav>
+            <SidebarProvider>
+                <GlobalNav>{children}</GlobalNav>
+            </SidebarProvider>
         </ArtisanProvider>
     )
 }
