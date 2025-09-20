@@ -74,19 +74,28 @@ export default function UploadPage() {
 
     const handleImageChange = (dataUrl: string) => {
         setProductImage(dataUrl);
+        // Reset details when image changes
+        setProductName('');
+        setProductDescription('');
+        setProductStory('');
     };
     
     const handleCategoryChange = (category: string) => {
         setProductCategory(category);
     };
 
-    const handleGenerateDetails = async (imageUri: string, category: string) => {
+    const handleGenerateDetails = async () => {
+        if (!productImage || !productCategory) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Please provide an image and category first.' });
+            return;
+        }
+        
         setIsDetailsLoading(true);
         setProductName('');
         setProductDescription('');
         setProductStory('');
         try {
-            const result = await generateProductDetails({ productImageDataUri: imageUri, category: category });
+            const result = await generateProductDetails({ productImageDataUri: productImage, category: productCategory });
             setProductName(result.productName);
             setProductDescription(result.productDescription);
             setProductStory(result.productStory);
@@ -98,14 +107,6 @@ export default function UploadPage() {
             setIsDetailsLoading(false);
         }
     };
-
-    useEffect(() => {
-        if (productImage && productCategory) {
-            handleGenerateDetails(productImage, productCategory);
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [productImage, productCategory]);
-
 
     const handleCapture = () => {
         if (videoRef.current && canvasRef.current) {
@@ -177,7 +178,7 @@ export default function UploadPage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Upload Your Product</CardTitle>
-                <CardDescription>Add an image and category. We'll generate the rest!</CardDescription>
+                <CardDescription>Add an image and category to get started.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div>
@@ -189,12 +190,6 @@ export default function UploadPage() {
                             <div className="text-center p-4">
                                 <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
                                 <p className="mt-2 text-sm text-muted-foreground">Drag & drop or select an option below</p>
-                            </div>
-                        )}
-                         {isDetailsLoading && (
-                            <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center text-center">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                                <p className="mt-2 text-sm font-medium">Generating details...</p>
                             </div>
                         )}
                     </div>
@@ -210,7 +205,7 @@ export default function UploadPage() {
                 </div>
                 <div>
                     <Label htmlFor="product-category">2. Product Category</Label>
-                     <Select onValueChange={handleCategoryChange} value={productCategory} disabled={!productImage}>
+                     <Select onValueChange={handleCategoryChange} value={productCategory}>
                         <SelectTrigger id="product-category">
                             <SelectValue placeholder="Select a category..." />
                         </SelectTrigger>
@@ -223,11 +218,17 @@ export default function UploadPage() {
                  <Card className="bg-primary/5">
                     <CardHeader>
                         <CardTitle className="font-headline text-xl flex items-center gap-2">
-                            <Sparkles className="text-primary" />
                            AI-Generated Content
                         </CardTitle>
+                        <CardDescription>
+                            Generate product details with the power of AI.
+                        </CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        <Button onClick={handleGenerateDetails} disabled={isDetailsLoading || !productImage || !productCategory} className="w-full">
+                           {isDetailsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                           Generate Details with AI
+                        </Button>
                          <div>
                             <Label htmlFor="product-name">Product Name</Label>
                             <Input id="product-name" placeholder="e.g., Handwoven Silk Scarf" value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
