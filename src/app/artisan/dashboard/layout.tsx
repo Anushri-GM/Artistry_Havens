@@ -104,10 +104,12 @@ function PageHeader() {
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-        <PageHeader />
-        <main className="p-4 overflow-auto">
-            {children}
-        </main>
+        <div className="flex flex-1 flex-col overflow-x-hidden">
+            <PageHeader />
+            <main className="p-4 overflow-auto">
+                {children}
+            </main>
+        </div>
     </SidebarProvider>
   );
 }

@@ -106,50 +106,46 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
 
   if (isDashboardLayout) {
      return (
-        <SidebarProvider>
-          <div className="flex h-full overflow-hidden">
-            <Sidebar collapsible="icon" className="border-r">
-              <SidebarHeader className="flex items-center gap-2 p-2">
-                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-                <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
-                  Artistry Havens
-                </h1>
-              </SidebarHeader>
-              <SidebarContent>
-                <SidebarMenu>
-                  {translatedNavItems.map((item, index) =>
-                    item.type === 'divider' ? (
-                      <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
-                    ) : (
-                      <SidebarMenuItem key={item.label}>
-                        <Link href={`${item.href!}?lang=${lang}`}>
-                          <SidebarMenuButton
-                            isActive={pathname === item.href}
-                            tooltip={{ children: item.label, side: 'right' }}
-                          >
-                            <item.icon />
-                            <span>{item.label}</span>
-                          </SidebarMenuButton>
-                        </Link>
-                      </SidebarMenuItem>
-                    )
-                  )}
-                </SidebarMenu>
-              </SidebarContent>
-              <SidebarFooter className="flex flex-col gap-2 p-2">
-                <Link href={`/role-selection?lang=${lang}`}>
-                    <SidebarMenuButton>
-                        <LogOut />
-                        <span>{translatedLogout}</span>
-                    </SidebarMenuButton>
-                </Link>
-              </SidebarFooter>
-            </Sidebar>
-            <div className="flex flex-1 flex-col overflow-x-hidden">
-              {children}
-            </div>
-          </div>
-        </SidebarProvider>
+        <div className="flex h-full overflow-hidden">
+          <Sidebar collapsible="icon" className="border-r">
+            <SidebarHeader className="flex items-center gap-2 p-2">
+              <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+              <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
+                Artistry Havens
+              </h1>
+            </SidebarHeader>
+            <SidebarContent>
+              <SidebarMenu>
+                {translatedNavItems.map((item, index) =>
+                  item.type === 'divider' ? (
+                    <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
+                  ) : (
+                    <SidebarMenuItem key={item.label}>
+                      <Link href={`${item.href!}?lang=${lang}`}>
+                        <SidebarMenuButton
+                          isActive={pathname === item.href}
+                          tooltip={{ children: item.label, side: 'right' }}
+                        >
+                          <item.icon />
+                          <span>{item.label}</span>
+                        </SidebarMenuButton>
+                      </Link>
+                    </SidebarMenuItem>
+                  )
+                )}
+              </SidebarMenu>
+            </SidebarContent>
+            <SidebarFooter className="flex flex-col gap-2 p-2">
+              <Link href={`/role-selection?lang=${lang}`}>
+                  <SidebarMenuButton>
+                      <LogOut />
+                      <span>{translatedLogout}</span>
+                  </SidebarMenuButton>
+              </Link>
+            </SidebarFooter>
+          </Sidebar>
+          {children}
+        </div>
      )
   }
   
