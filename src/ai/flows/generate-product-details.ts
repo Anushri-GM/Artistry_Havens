@@ -19,12 +19,16 @@ const productDetailsPrompt = ai.definePrompt({
     name: 'productDetailsPrompt',
     input: { schema: GenerateProductDetailsInputSchema },
     output: { schema: GenerateProductDetailsOutputSchema },
-    model: googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT }),
+    model: googleAI.model('gemini-1.5-flash-vertex'),
     prompt: `You are an expert product marketer for an online marketplace for artisans. 
     
-    Given the image of a new product and its category, generate a compelling product name, description, and story.
+    Given the image of a new product and its category, generate a compelling product name, a detailed product description, and an engaging product story.
 
     The tone should be evocative, highlighting the craftsmanship and uniqueness of the item.
+
+    - The product name should be creative and descriptive.
+    - The product description should detail the materials, dimensions (if inferrable), and potential uses.
+    - The product story should create an emotional connection to the artisan and the craft.
 
     Category: {{{category}}}
     Product Image: {{media url=productImageDataUri}}
@@ -46,3 +50,4 @@ const generateProductDetailsFlow = ai.defineFlow(
     return output;
   }
 );
+
