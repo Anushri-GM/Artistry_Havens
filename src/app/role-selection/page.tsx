@@ -2,8 +2,8 @@
 'use client';
 
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Paintbrush, ShoppingBag, Heart } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { translateText } from "@/ai/flows/translate-text";
@@ -12,21 +12,24 @@ const rolesData = [
   {
     name: "Artisan",
     description: "I create and sell crafts",
-    icon: <Paintbrush className="h-12 w-12 text-primary" />,
+    imageUrl: "https://picsum.photos/seed/artisan-role/400/400",
+    imageHint: "artisan working",
     href: "/artisan/login",
     emoji: "🎨"
   },
   {
     name: "Buyer",
     description: "I want to buy crafts",
-    icon: <ShoppingBag className="h-12 w-12 text-primary" />,
+    imageUrl: "https://picsum.photos/seed/buyer-role/400/400",
+    imageHint: "person shopping",
     href: "/buyer",
     emoji: "🛍️"
   },
   {
     name: "Sponsor",
     description: "I want to support artisans",
-    icon: <Heart className="h-12 w-12 text-primary" />,
+    imageUrl: "https://picsum.photos/seed/sponsor-role/400/400",
+    imageHint: "patron art",
     href: "/sponsor",
     emoji: "❤️"
   },
@@ -114,8 +117,17 @@ function RoleSelection() {
               {rolesData.map((role, index) => (
                   <Link key={role.name} href={`${role.href}?lang=${lang}`} passHref>
                       <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
-                          <CardHeader className="bg-primary/5">
-                          <div className="flex justify-center">{role.icon}</div>
+                          <CardHeader className="p-0">
+                            <div className="relative h-40 w-full">
+                                <Image 
+                                    src={role.imageUrl}
+                                    alt={role.name}
+                                    fill
+                                    className="object-cover"
+                                    data-ai-hint={role.imageHint}
+                                />
+                                <div className="absolute inset-0 bg-black/30"></div>
+                            </div>
                           </CardHeader>
                           <CardContent className="p-6">
                           <CardTitle className="font-headline text-2xl">
