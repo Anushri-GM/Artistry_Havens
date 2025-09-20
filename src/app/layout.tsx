@@ -54,6 +54,7 @@ import { translateText } from '@/ai/flows/translate-text';
 
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
+  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart },
   { href: '/artisan/dashboard/revenue', label: 'Revenue', icon: BadgeIndianRupee },
