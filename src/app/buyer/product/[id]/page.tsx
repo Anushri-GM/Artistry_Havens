@@ -8,7 +8,7 @@ import { mockProducts, mockReviews } from "@/lib/mock-data";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingBag, Star, MessageSquare, Heart, ArrowLeft } from "lucide-react";
+import { ShoppingBag, Star, MessageSquare, Heart, ArrowLeft, Mic } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { useToast } from "@/hooks/use-toast";
@@ -98,12 +98,16 @@ export default function ProductDetailPage() {
               </Button>
               <h1 className="font-headline text-xl font-bold truncate">{product.name}</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
               <Button variant="ghost" size="icon" onClick={handleLike}>
                   <Heart />
               </Button>
               <Button variant="ghost" size="icon">
                   <ShoppingBag />
+              </Button>
+              <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
+                  <Mic className="h-5 w-5" />
+                  <span className="sr-only">Voice Command</span>
               </Button>
           </div>
           </div>

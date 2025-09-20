@@ -7,7 +7,7 @@ import Link from "next/link";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ShoppingBag, Star, Heart, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2, CheckCircle } from "lucide-react";
+import { ShoppingBag, Star, Heart, Palette, Axe, SprayCan, Drill, Tent, Wand2, Upload, Loader2, CheckCircle, Mic } from "lucide-react";
 import { ArtistryHavensLogo } from "@/components/icons";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { mockProducts } from "@/lib/mock-data";
@@ -242,7 +242,7 @@ export default function BuyerPage() {
                     <ArtistryHavensLogo className="h-6 w-6 text-primary" />
                     <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1">
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button size="sm">
@@ -266,6 +266,10 @@ export default function BuyerPage() {
                     </Button>
                     <Button variant="ghost" size="icon">
                         <ShoppingBag />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
+                        <Mic className="h-5 w-5" />
+                        <span className="sr-only">Voice Command</span>
                     </Button>
                 </div>
                 </div>

@@ -97,7 +97,10 @@ function PageHeader() {
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-        {children}
+        <PageHeader />
+        <main className="p-4 overflow-auto">
+            {children}
+        </main>
     </>
   );
 }

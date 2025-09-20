@@ -421,7 +421,7 @@ function Upload() {
         <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
             <div className='flex items-center gap-2'>
                 <Button variant="ghost" size="icon" asChild>
-                    <Link href={`/artisan/dashboard?lang=${lang}`}><ArrowLeft /></Link>
+                    <Link href={`/artisan/dashboard/home?lang=${lang}`}><ArrowLeft /></Link>
                 </Button>
                 <h1 className="font-headline text-xl font-bold">{translatedContent.headerTitle}</h1>
             </div>

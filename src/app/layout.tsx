@@ -150,6 +150,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection', '/artisan/upload/preview'];
   const isBuyerPath = pathname.startsWith('/buyer');
   const isUploadPath = pathname === '/artisan/upload';
+  const isDashboardLayout = pathname.startsWith('/artisan/dashboard/');
   
   const [translatedNavItems, setTranslatedNavItems] = useState(navItems);
   const [translatedLogout, setTranslatedLogout] = useState("Logout");
@@ -196,8 +197,9 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
     }
     return <>{children}</>;
   }
-  
-  return (
+
+  if (isDashboardLayout) {
+     return (
         <SidebarProvider>
           <div className="flex h-full overflow-hidden">
             <Sidebar collapsible="icon" className="border-r">
@@ -238,12 +240,14 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
               </SidebarFooter>
             </Sidebar>
             <div className="flex flex-1 flex-col overflow-x-hidden">
-              <PageHeader />
-              <main className="flex-1 overflow-y-auto overflow-x-hidden p-4">{children}</main>
+              {children}
             </div>
           </div>
         </SidebarProvider>
-  );
+     )
+  }
+  
+  return <>{children}</>;
 }
 
 
