@@ -21,6 +21,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { translateText } from '@/ai/flows/translate-text';
 import { useArtisan } from '@/context/ArtisanContext';
 import type { Product } from '@/context/ArtisanContext';
+import { cn } from '@/lib/utils';
 
 const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
 
@@ -62,6 +63,14 @@ type TranslatedContent = {
     cameraAccessTitle: string;
     cameraAccessDescription: string;
     categoryNames: Record<string, string>;
+    listeningToastTitle: string;
+    listeningToastDescription: string;
+    stoppedListeningToastTitle: string;
+    micPermissionDeniedTitle: string;
+    micPermissionDeniedDescription: string;
+    micNotSupportedTitle: string;
+    micNotSupportedDescription: string;
+    micErrorTitle: string;
 };
 
 
@@ -124,7 +133,7 @@ function Upload() {
             socialTitle: "Generate Social Media Posts",
             socialDescription: "Once your details are ready, let AI help market your product.",
             generateSocialButton: "Generate Social Media Content",
-            actionsTitle: "Actions",
+actionsTitle: "Actions",
             previewButton: "Preview",
             uploadButton: "Upload Product",
             previewDialogTitle: "Post Preview",
@@ -137,6 +146,14 @@ function Upload() {
             captureButton: "Capture",
             cameraAccessTitle: "Camera Access Required",
             cameraAccessDescription: "Please allow camera access in your browser settings to use this feature.",
+            listeningToastTitle: "Listening...",
+            listeningToastDescription: "Start speaking your product story.",
+            stoppedListeningToastTitle: "Stopped Listening.",
+            micPermissionDeniedTitle: "Permission Denied",
+            micPermissionDeniedDescription: "Microphone access was denied. Please allow it in your browser settings.",
+            micNotSupportedTitle: "Not Supported",
+            micNotSupportedDescription: "Speech recognition is not supported in this browser.",
+            micErrorTitle: "Recognition Error",
         };
 
         const translateAll = async () => {
@@ -151,14 +168,15 @@ function Upload() {
             try {
                 const baseContent = { ...originalContent };
                 const textsToTranslate = [
-                    ...Object.values(baseContent),
+                    ...Object.values(baseContent).filter(v => typeof v === 'string'),
                     ...categories
                 ];
 
                 const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
                 const translations = await Promise.all(translationPromises);
                 
-                const contentKeys = Object.keys(baseContent) as (keyof typeof originalContent)[];
+                const contentKeys = Object.keys(baseContent).filter(k => typeof (baseContent as any)[k] === 'string') as (keyof typeof originalContent)[];
+                
                 const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
                     (acc as any)[key] = translations[index].translatedText;
                     return acc;
@@ -299,6 +317,8 @@ function Upload() {
     }
 
     const toggleRecording = async () => {
+        if (!translatedContent) return;
+
         if (isRecording) {
             recognitionRef.current?.stop();
             setIsRecording(false);
@@ -311,7 +331,7 @@ function Upload() {
 
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             if (!SpeechRecognition) {
-                toast({ variant: 'destructive', title: 'Not Supported', description: 'Speech recognition is not supported in this browser.' });
+                toast({ variant: 'destructive', title: translatedContent.micNotSupportedTitle, description: translatedContent.micNotSupportedDescription });
                 return;
             }
 
@@ -322,17 +342,17 @@ function Upload() {
 
             recognitionRef.current.onstart = () => {
                 setIsRecording(true);
-                toast({ title: "Listening...", description: "Start speaking your product story." });
+                toast({ title: translatedContent.listeningToastTitle, description: translatedContent.listeningToastDescription });
             };
 
             recognitionRef.current.onend = () => {
                 setIsRecording(false);
-                toast({ title: "Stopped Listening." });
+                toast({ title: translatedContent.stoppedListeningToastTitle });
             };
 
             recognitionRef.current.onerror = (event) => {
                 console.error("Speech recognition error", event.error);
-                toast({ variant: 'destructive', title: 'Recognition Error', description: event.error });
+                toast({ variant: 'destructive', title: translatedContent.micErrorTitle, description: event.error });
             };
 
             recognitionRef.current.onresult = (event) => {
@@ -347,7 +367,7 @@ function Upload() {
             recognitionRef.current.start();
 
         } catch(err) {
-             toast({ variant: 'destructive', title: 'Permission Denied', description: 'Microphone access was denied. Please allow it in your browser settings.' });
+             toast({ variant: 'destructive', title: translatedContent.micPermissionDeniedTitle, description: translatedContent.micPermissionDeniedDescription });
         }
     };
 
@@ -499,10 +519,13 @@ function Upload() {
                             <div>
                                  <div className="flex items-center justify-between mb-2">
                                     <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
-                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleRecording}>
-                                        {isRecording ? <MicOff className="text-destructive" /> : <Mic />}
-                                        <span className="sr-only">{isRecording ? 'Stop recording' : 'Start recording'}</span>
-                                    </Button>
+                                    <div className="flex items-center gap-2">
+                                        {isRecording && <span className="text-xs text-destructive animate-pulse">{translatedContent.listeningToastTitle}</span>}
+                                        <Button variant="ghost" size="icon" className={cn("h-7 w-7", isRecording && "text-destructive animate-pulse")} onClick={toggleRecording}>
+                                            {isRecording ? <MicOff /> : <Mic />}
+                                            <span className="sr-only">{isRecording ? 'Stop recording' : 'Start recording'}</span>
+                                        </Button>
+                                    </div>
                                 </div>
                                 <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
                             </div>
@@ -631,3 +654,5 @@ export default function UploadPage() {
         </Suspense>
     )
 }
+
+    
