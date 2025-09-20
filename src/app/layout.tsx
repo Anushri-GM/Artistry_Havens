@@ -33,6 +33,7 @@ import {
   HelpCircle,
   Mic,
   MicOff,
+  Upload,
 } from 'lucide-react';
 import { ArtistryHavensLogo } from '@/components/icons';
 import { Suspense, useEffect, useState } from 'react';
@@ -65,6 +66,7 @@ import { useRouter } from 'next/navigation';
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'मुख', 'ড্যাশবোর্ড', 'హోమ్', 'வீடு', 'گھر'] },
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'उत्पाद', 'পণ্য', 'ఉత్పత్తులు', 'பொருட்கள்', 'مصنوعات'] },
+  { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'upload product', 'अपलोड', 'আপলোড', 'అప్లోడ్', 'பதிவேற்று', 'اپ لوڈ'] },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'ट्रेंड्स', 'প্রবণতা', 'ట్రెండ్లు', 'போக்குகள்', 'رجحانات'] },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance', 'आंकड़े', 'পরিসংখ্যান', 'గణాంకాలు', 'புள்ளிவிவரங்கள்', 'اعداد و شمار'] },
   { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings', 'वित्त', 'অর্থ', 'ఆదాయం', 'வருவாய்', 'مالیات'] },
@@ -383,7 +385,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="flex flex-col gap-2 p-2">
-            <Link href={`/role-selection?lang=${lang}`}>
+            <Link href={`/language?lang=${lang}`}>
                 <SidebarMenuButton>
                     <LogOut />
                     <span>{translatedLogout}</span>
@@ -392,10 +394,10 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
         </Sidebar>
         <div className="flex flex-1 flex-col overflow-hidden">
-            <div className="flex flex-1 flex-col overflow-y-auto">
+            <main className="flex-1 overflow-y-auto">
                 <PageHeader />
                 {children}
-            </div>
+            </main>
         </div>
       </div>
   )
