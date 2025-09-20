@@ -82,31 +82,31 @@
      {
       "id": "category-pottery",
       "description": "Pottery category image",
-      "imageUrl": "https://picsum.photos/seed/catpottery/400/400",
+      "imageUrl": "https://images.unsplash.com/photo-1578749556568-bc3c1e52f50e?q=80&w=400",
       "imageHint": "pottery"
     },
     {
       "id": "category-sculpture",
       "description": "Sculpture category image",
-      "imageUrl": "https://picsum.photos/seed/catsculpture/400/400",
+      "imageUrl": "https://images.unsplash.com/photo-1618512496248-a07fe835ce95?q=80&w=400",
       "imageHint": "sculpture"
     },
     {
       "id": "category-paintings",
       "description": "Paintings category image",
-      "imageUrl": "https://picsum.photos/seed/catpaintings/400/400",
+      "imageUrl": "https://images.unsplash.com/photo-1547891654-e66ed711b934?q=80&w=400",
       "imageHint": "painting canvas"
     },
     {
       "id": "category-crafts",
       "description": "Crafts category image",
-      "imageUrl": "https://picsum.photos/seed/catcrafts/400/400",
+      "imageUrl": "https://images.unsplash.com/photo-1599423300854-99435091a134?q=80&w=400",
       "imageHint": "handmade craft"
     },
     {
       "id": "category-textiles",
       "description": "Textiles category image",
-      "imageUrl": "https://picsum.photos/seed/cattextiles/400/400",
+      "imageUrl": "https://images.unsplash.com/photo-1620755938474-f2596245c593?q=80&w=400",
       "imageHint": "fabric textile"
     }
   ]
