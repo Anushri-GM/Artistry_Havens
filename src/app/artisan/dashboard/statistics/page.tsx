@@ -121,6 +121,7 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
         shares: product.shares || 0,
         revenue: product.revenue || 0,
         targetedAudience: "Art lovers aged 25-45, home decorators, and gift shoppers.",
+        targetLanguage: lang,
       };
       const result = await provideAiReview(input);
       setReview(result.review);

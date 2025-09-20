@@ -12,6 +12,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import { translateText } from './translate-text';
 
 const ProvideAiReviewInputSchema = z.object({
   productDescription: z.string().describe('The description of the product.'),
@@ -24,6 +25,7 @@ const ProvideAiReviewInputSchema = z.object({
     .describe(
       'A description of the targeted audience who have bought this product.'
     ),
+  targetLanguage: z.string().describe("The target language for the generated review, specified as a two-letter language code (e.g., 'en', 'hi')."),
 });
 
 export type ProvideAiReviewInput = z.infer<typeof ProvideAiReviewInputSchema>;
@@ -50,7 +52,7 @@ const provideAiReviewPrompt = ai.definePrompt({
   output: {schema: ProvideAiReviewOutputSchema},
   prompt: `You are an AI assistant providing a review of a product's performance for the artisan.
 
-  Based on the following data, provide a review with suggestions for improvement:
+  Based on the following data, provide a review with suggestions for improvement in English:
 
   Product Description: {{{productDescription}}}
   Product Story: {{{productStory}}}
@@ -71,6 +73,15 @@ const provideAiReviewFlow = ai.defineFlow(
   },
   async input => {
     const {output} = await provideAiReviewPrompt(input);
-    return output!;
+    if (!output) {
+      throw new Error('Failed to generate AI review.');
+    }
+
+    if (input.targetLanguage !== 'en') {
+        const translatedReview = await translateText({ text: output.review, targetLanguage: input.targetLanguage });
+        return { review: translatedReview.translatedText };
+    }
+    
+    return output;
   }
 );
