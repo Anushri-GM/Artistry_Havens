@@ -3,20 +3,23 @@
 
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Paintbrush, Hammer, CircleDotDashed, Gem, Scissors, Hand, CheckCircle, Anvil } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { translateText } from "@/ai/flows/translate-text";
+import { generateCategoryIcon } from "@/ai/flows/generate-category-icon";
 
-const categories = [
-    { name: "Woodwork", icon: <Hammer className="h-10 w-10 text-primary" /> },
-    { name: "Pottery", icon: <CircleDotDashed className="h-10 w-10 text-primary" /> },
-    { name: "Paintings", icon: <Paintbrush className="h-10 w-10 text-primary" /> },
-    { name: "Sculptures", icon: <Hand className="h-10 w-10 text-primary" /> },
-    { name: "Textiles", icon: <Scissors className="h-10 w-10 text-primary" /> },
-    { name: "Jewelry", icon: <Gem className="h-10 w-10 text-primary" /> },
-    { name: "Metalwork", icon: <Anvil className="h-10 w-10 text-primary" /> },
+const initialCategories = [
+    { name: "Woodwork" },
+    { name: "Pottery" },
+    { name: "Paintings" },
+    { name: "Sculptures" },
+    { name: "Textiles" },
+    { name: "Jewelry" },
+    { name: "Metalwork" },
 ];
 
 type TranslatedContent = {
@@ -26,6 +29,11 @@ type TranslatedContent = {
     categories: { name: string }[];
 };
 
+type CategoryWithIcon = {
+    name: string;
+    iconUrl: string | null;
+}
+
 function CategorySelection() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -34,13 +42,41 @@ function CategorySelection() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
+  const [categories, setCategories] = useState<CategoryWithIcon[]>(initialCategories.map(c => ({ ...c, iconUrl: null })));
+
+  useEffect(() => {
+    // Generate icons for all categories
+    const fetchIcons = async () => {
+        const iconPromises = initialCategories.map(category => 
+            generateCategoryIcon({ categoryName: category.name })
+        );
+
+        try {
+            const results = await Promise.all(iconPromises.map(p => p.catch(e => e)));
+            
+            setCategories(prevCategories => {
+                return prevCategories.map((category, index) => {
+                    const result = results[index];
+                    return {
+                        ...category,
+                        iconUrl: result instanceof Error ? null : result.iconDataUri,
+                    };
+                });
+            });
+        } catch (error) {
+            console.error("Failed to generate category icons:", error);
+        }
+    };
+    
+    fetchIcons();
+  }, []);
 
   useEffect(() => {
     const originalContent = {
         title: "Choose Your Crafts",
         description: "What kind of artisan are you? Select all that apply.",
         continueButton: "Continue",
-        categories: categories.map(c => ({ name: c.name }))
+        categories: initialCategories.map(c => ({ name: c.name }))
     };
     
     const translateContent = async () => {
@@ -62,7 +98,7 @@ function CategorySelection() {
         const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
         const translations = await Promise.all(translationPromises);
         
-        const translatedCategories = categories.map((_, index) => ({
+        const translatedCategories = initialCategories.map((_, index) => ({
             name: translations[index + 3].translatedText
         }));
 
@@ -125,10 +161,16 @@ function CategorySelection() {
                     <CheckCircle className="h-5 w-5 p-0.5" />
                   </div>
                 )}
-                <CardHeader>
-                  <div className="flex justify-center">{category.icon}</div>
+                <CardHeader className="p-0">
+                  <div className="relative w-full h-24 flex items-center justify-center">
+                    {category.iconUrl ? (
+                      <Image src={category.iconUrl} alt={category.name} fill className="object-cover" />
+                    ) : (
+                      <Skeleton className="h-full w-full" />
+                    )}
+                  </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-0">
+                <CardContent className="p-4 pt-2">
                   <CardTitle className="font-headline text-lg">{translatedContent.categories[index].name}</CardTitle>
                 </CardContent>
               </Card>
