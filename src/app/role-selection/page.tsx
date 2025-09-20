@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -107,10 +106,10 @@ function RoleSelection() {
           <div className="w-full max-w-md">
               <div className="mb-12 text-center">
               <h1 className="font-headline text-4xl font-bold tracking-tight text-foreground">
-                {translatedContent?.title}
+                {translatedContent.title}
               </h1>
               <p className="mt-2 text-lg text-muted-foreground">
-                {translatedContent?.description}
+                {translatedContent.description}
               </p>
               </div>
               <div className="grid grid-cols-1 gap-8">
@@ -122,10 +121,10 @@ function RoleSelection() {
                           </CardHeader>
                           <CardContent className="p-6">
                           <CardTitle className="font-headline text-2xl">
-                              {translatedContent?.roles[index]?.name} <span role="img" aria-label={role.name}>{role.emoji}</span>
+                              {translatedContent.roles[index].name} <span role="img" aria-label={role.name}>{role.emoji}</span>
                           </CardTitle>
                           <CardDescription className="mt-2 text-base">
-                              "{translatedContent?.roles[index]?.description}"
+                              "{translatedContent.roles[index].description}"
                           </CardDescription>
                           </CardContent>
                       </Card>

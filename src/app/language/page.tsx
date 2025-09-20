@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from "next/link";
@@ -36,7 +35,7 @@ function LanguageSelection() {
         if (lang === 'en') {
             setTranslatedContent({
                 title: "Welcome to Artistry Havens",
-                subtitle: "To Choose a Language",
+                subtitle: "Choose a Language",
                 footer: "Where Every Creation Belongs."
             });
             setIsLoading(false);
@@ -47,7 +46,7 @@ function LanguageSelection() {
         try {
             const [title, subtitle, footer] = await Promise.all([
                 translateText({ text: "Welcome to Artistry Havens", targetLanguage: lang }),
-                translateText({ text: "To Choose a Language", targetLanguage: lang }),
+                translateText({ text: "Choose a Language", targetLanguage: lang }),
                 translateText({ text: "Where Every Creation Belongs.", targetLanguage: lang })
             ]);
             setTranslatedContent({
@@ -59,7 +58,7 @@ function LanguageSelection() {
             console.error("Translation failed", error);
             setTranslatedContent({
                 title: "Welcome to Artistry Havens",
-                subtitle: "To Choose a Language",
+                subtitle: "Choose a Language",
                 footer: "Where Every Creation Belongs."
             });
         } finally {
@@ -88,12 +87,12 @@ function LanguageSelection() {
           </p>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {languages.map((lang) => (
-            <Link key={lang.code} href={`/role-selection?lang=${lang.code}`} passHref>
+          {languages.map((language) => (
+            <Link key={language.code} href={`/role-selection?lang=${language.code}`} passHref>
               <Card className="transform-gpu cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-xl">
                 <CardContent className={`flex h-40 w-full flex-col items-center justify-center bg-gradient-to-br from-primary/10 via-background to-background`}>
-                  <div className="text-4xl font-bold text-primary">{lang.native}</div>
-                  <div className="mt-2 text-sm text-muted-foreground">{lang.name}</div>
+                  <div className="text-4xl font-bold text-primary">{language.native}</div>
+                  <div className="mt-2 text-sm text-muted-foreground">{language.name}</div>
                 </CardContent>
               </Card>
             </Link>
