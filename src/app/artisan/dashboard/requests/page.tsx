@@ -20,6 +20,7 @@ type TranslatedContent = {
     aiMockup: string;
     reference: string;
     noRequests: string;
+    buyerNames: Record<string, string>;
 };
 
 function OrderRequests() {
@@ -44,16 +45,20 @@ function OrderRequests() {
 
     const translate = async () => {
         if (lang === 'en') {
-            setTranslatedContent(originalContent);
+            const buyerNames = requests.reduce((acc, r) => ({...acc, [r.id]: r.buyer}), {});
+            setTranslatedContent({...originalContent, buyerNames});
             setIsLoading(false);
             return;
         }
         setIsLoading(true);
         try {
-            const texts = Object.values(originalContent);
+            const texts = [
+                ...Object.values(originalContent),
+                ...requests.map(r => r.buyer)
+            ];
             const translations = await Promise.all(texts.map(t => translateText({ text: t, targetLanguage: lang })));
             let i = 0;
-            setTranslatedContent({
+            const newContent = {
                 title: translations[i++].translatedText,
                 description: translations[i++].translatedText,
                 requestFrom: translations[i++].translatedText,
@@ -62,16 +67,24 @@ function OrderRequests() {
                 aiMockup: translations[i++].translatedText,
                 reference: translations[i++].translatedText,
                 noRequests: translations[i++].translatedText,
-            });
+            };
+
+            const buyerNames = requests.reduce((acc, request, index) => {
+                acc[request.id] = translations[i + index].translatedText;
+                return acc;
+            }, {} as Record<string, string>);
+
+            setTranslatedContent({...newContent, buyerNames});
         } catch (error) {
             console.error("Failed to translate requests page", error);
-            setTranslatedContent(originalContent);
+            const buyerNames = requests.reduce((acc, r) => ({...acc, [r.id]: r.buyer}), {});
+            setTranslatedContent({...originalContent, buyerNames});
         } finally {
             setIsLoading(false);
         }
     };
     translate();
-  }, [lang]);
+  }, [lang, requests]);
 
   if (isLoading || !translatedContent) {
       return <div className="flex h-full items-center justify-center">Loading...</div>
@@ -92,7 +105,7 @@ function OrderRequests() {
                 <CardHeader>
                   <div className="flex justify-between items-start">
                     <div>
-                        <CardTitle>{translatedContent.requestFrom} {request.buyer}</CardTitle>
+                        <CardTitle>{translatedContent.requestFrom} {translatedContent.buyerNames[request.id]}</CardTitle>
                         <CardDescription className="pt-2 italic">"{request.description}"</CardDescription>
                     </div>
                     {request.isAiRequest && (
