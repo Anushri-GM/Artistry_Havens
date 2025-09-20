@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle, MicOff } from 'lucide-react';
+import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle, MicOff, BadgeIndianRupee } from 'lucide-react';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,7 +19,7 @@ import { generateProductDetails } from '@/ai/flows/generate-product-details';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { translateText } from '@/ai/flows/translate-text';
-import { ArtisanProvider, useArtisan } from '@/context/ArtisanContext';
+import { useArtisan } from '@/context/ArtisanContext';
 import type { Product } from '@/context/ArtisanContext';
 
 const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
@@ -43,6 +43,8 @@ type TranslatedContent = {
     descriptionPlaceholder: string;
     storyLabel: string;
     storyPlaceholder: string;
+    priceLabel: string;
+    pricePlaceholder: string;
     socialTitle: string;
     socialDescription: string;
     generateSocialButton: string;
@@ -74,6 +76,7 @@ function Upload() {
     const [productDescription, setProductDescription] = useState('');
     const [productStory, setProductStory] = useState('');
     const [productCategory, setProductCategory] = useState('');
+    const [productPrice, setProductPrice] = useState('');
 
     const [socialContent, setSocialContent] = useState<Record<string, string> | null>(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
@@ -116,10 +119,12 @@ function Upload() {
             descriptionPlaceholder: "Describe your product, its materials, dimensions, etc.",
             storyLabel: "Product Story",
             storyPlaceholder: "The story behind your craft...",
+            priceLabel: "Product Price",
+            pricePlaceholder: "Enter price in ₹",
             socialTitle: "Generate Social Media Posts",
             socialDescription: "Once your details are ready, let AI help market your product.",
             generateSocialButton: "Generate Social Media Content",
-actionsTitle: "Actions",
+            actionsTitle: "Actions",
             previewButton: "Preview",
             uploadButton: "Upload Product",
             previewDialogTitle: "Post Preview",
@@ -352,18 +357,18 @@ actionsTitle: "Actions",
             productStory,
             productCategory,
             productImage,
-            price: '49.99' // Example price, you might want to add a field for this
+            price: productPrice || '0.00'
         };
         sessionStorage.setItem('productPreview', JSON.stringify(previewData));
         router.push(`/artisan/upload/preview?lang=${lang}`);
     };
 
     const handleUpload = () => {
-        if (!productImage || !productName || !productDescription || !productStory || !productCategory) {
+        if (!productImage || !productName || !productDescription || !productStory || !productCategory || !productPrice) {
             toast({
                 variant: 'destructive',
                 title: 'Missing Information',
-                description: 'Please ensure all product details are filled out before uploading.',
+                description: 'Please ensure all product details, including price, are filled out before uploading.',
             });
             return;
         }
@@ -376,7 +381,7 @@ actionsTitle: "Actions",
             description: productDescription,
             story: productStory,
             category: productCategory,
-            price: (Math.random() * 100 + 20).toFixed(2), // Random price for example
+            price: productPrice,
             image: {
                 imageUrl: productImage,
                 description: productName,
@@ -500,6 +505,22 @@ actionsTitle: "Actions",
                                 </div>
                                 <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
                             </div>
+                            <div>
+                                <Label htmlFor="product-price">{translatedContent.priceLabel}</Label>
+                                <div className="relative">
+                                    <Input 
+                                        id="product-price" 
+                                        type="number"
+                                        placeholder={translatedContent.pricePlaceholder} 
+                                        value={productPrice} 
+                                        onChange={e => setProductPrice(e.target.value)} 
+                                        className="pl-8"
+                                    />
+                                    <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
+                                        <BadgeIndianRupee className="h-5 w-5" />
+                                    </div>
+                                </div>
+                            </div>
                         </CardContent>
                     </Card>
                 </CardContent>
@@ -597,9 +618,7 @@ actionsTitle: "Actions",
 export default function UploadPage() {
     return (
         <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
-            <ArtisanProvider>
-                <Upload />
-            </ArtisanProvider>
+            <Upload />
         </Suspense>
     )
 }

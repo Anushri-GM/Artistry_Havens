@@ -108,7 +108,7 @@ export default function PreviewPage() {
                                 <span className="text-muted-foreground text-sm">(0 reviews)</span>
                             </div>
                         </div>
-                        <p className="text-2xl font-bold text-primary">${price || '0.00'}</p>
+                        <p className="text-2xl font-bold text-primary">₹{price || '0.00'}</p>
                     </div>
                     
                     <Card className="bg-primary/5">
@@ -148,3 +148,5 @@ export default function PreviewPage() {
         </div>
     );
 }
+
+    

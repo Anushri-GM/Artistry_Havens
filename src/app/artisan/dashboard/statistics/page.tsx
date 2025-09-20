@@ -139,7 +139,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                     </Card>
                     <Card className='col-span-2'>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Revenue</CardTitle></CardHeader>
-                        <CardContent><div className="text-xl font-bold">${(product.revenue || 0).toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">₹{(product.revenue || 0).toLocaleString('en-IN')}</div></CardContent>
                     </Card>
                 </div>
 
@@ -327,3 +327,5 @@ export default function StatisticsPage() {
     </div>
   );
 }
+
+    

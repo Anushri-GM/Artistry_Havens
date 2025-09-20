@@ -134,7 +134,7 @@ export default function ProductDetailPage() {
                           <span className="text-muted-foreground text-sm">({product.reviews} reviews)</span>
                       </div>
                   </div>
-                  <p className="text-2xl font-bold text-primary">${product.price}</p>
+                  <p className="text-2xl font-bold text-primary">₹{product.price}</p>
               </div>
               
               <Card className="bg-primary/5">
@@ -230,3 +230,5 @@ export default function ProductDetailPage() {
     </div>
   )
 }
+
+    

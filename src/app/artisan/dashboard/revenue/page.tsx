@@ -39,7 +39,7 @@ export default function RevenuePage() {
                             <BadgeIndianRupee className="h-8 w-8 text-primary" />
                             <div>
                                 <p className="text-sm text-muted-foreground">Total Earnings</p>
-                                <p className="text-3xl font-bold">${totalMyProfit.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                <p className="text-3xl font-bold">₹{totalMyProfit.toLocaleString('en-IN', {minimumFractionDigits: 2})}</p>
                             </div>
                         </div>
                         <Table>
@@ -53,7 +53,7 @@ export default function RevenuePage() {
                                 {myProfitProducts.map(product => (
                                     <TableRow key={product.id}>
                                         <TableCell className="font-medium whitespace-normal">{product.name}</TableCell>
-                                        <TableCell className="text-right">${(product.revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</TableCell>
+                                        <TableCell className="text-right">₹{(product.revenue || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -77,7 +77,7 @@ export default function RevenuePage() {
                                      <BadgeIndianRupee className="h-4 w-4 text-muted-foreground" />
                                  </CardHeader>
                                 <CardContent>
-                                    <p className="text-2xl font-bold">${totalSharedProfit.toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                    <p className="text-2xl font-bold">₹{totalSharedProfit.toLocaleString('en-IN', {minimumFractionDigits: 2})}</p>
                                 </CardContent>
                             </Card>
                              <Card className="bg-primary/5">
@@ -88,7 +88,7 @@ export default function RevenuePage() {
                                      <Users className="h-4 w-4 text-muted-foreground" />
                                  </CardHeader>
                                 <CardContent>
-                                     <p className="text-2xl font-bold">${(totalSharedProfit * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</p>
+                                     <p className="text-2xl font-bold">₹{(totalSharedProfit * 0.8).toLocaleString('en-IN', {minimumFractionDigits: 2})}</p>
                                 </CardContent>
                             </Card>
                          </div>
@@ -110,11 +110,11 @@ export default function RevenuePage() {
                                             <div className="space-y-2 mt-auto">
                                                  <div className="flex justify-between items-baseline">
                                                     <span className="text-muted-foreground text-xs">Total Revenue:</span>
-                                                    <span className="font-semibold text-sm">${(product.revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                    <span className="font-semibold text-sm">₹{(product.revenue || 0).toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>
                                                 </div>
                                                  <div className="flex justify-between items-baseline text-primary">
                                                     <span className="text-xs font-medium">Your Profit (80%):</span>
-                                                    <span className="font-bold text-base">${((product.revenue || 0) * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                    <span className="font-bold text-base">₹{((product.revenue || 0) * 0.8).toLocaleString('en-IN', {minimumFractionDigits: 2})}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -129,3 +129,5 @@ export default function RevenuePage() {
     </div>
   );
 }
+
+    

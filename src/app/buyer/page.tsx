@@ -75,7 +75,7 @@ function ProductCard({ product }: { product: (typeof mockProducts)[0] }) {
             <p className="text-xs text-muted-foreground">by {product.artisan}</p>
           </CardHeader>
           <CardContent className="p-4 pt-0">
-            <p className="text-lg font-semibold text-primary">${product.price}</p>
+            <p className="text-lg font-semibold text-primary">₹{product.price}</p>
           </CardContent>
         </div>
       </Link>
