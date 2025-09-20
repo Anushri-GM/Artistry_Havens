@@ -31,7 +31,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'image2url.com',
+        hostname: 'storage.googleapis.com',
         port: '',
         pathname: '/**',
       },
