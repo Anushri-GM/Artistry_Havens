@@ -81,7 +81,6 @@ export default function UploadPage() {
     };
 
     const handleGenerateDetails = async (imageUri: string, category: string) => {
-        if (!imageUri || !category) return;
         setIsDetailsLoading(true);
         setProductName('');
         setProductDescription('');
@@ -104,6 +103,7 @@ export default function UploadPage() {
         if (productImage && productCategory) {
             handleGenerateDetails(productImage, productCategory);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [productImage, productCategory]);
 
 

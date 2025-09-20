@@ -3,79 +3,79 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Literata', serif;
 }
 
 @layer base {
   :root {
-    --background: 24 60% 98%; /* Almost white */
-    --foreground: 24 60% 10%; /* Dark brown */
-    --card: 24 60% 100%;
-    --card-foreground: 24 60% 10%;
-    --popover: 24 60% 100%;
-    --popover-foreground: 24 60% 10%;
-    --primary: 14 80% 45%; /* Terracotta Orange */
-    --primary-foreground: 24 60% 98%; /* Almost white */
-    --secondary: 24 60% 92%; /* Light tan */
-    --secondary-foreground: 14 80% 45%; /* Terracotta Orange */
-    --muted: 24 60% 90%;
-    --muted-foreground: 24 10% 45%;
-    --accent: 38 92% 50%; /* Amber */
-    --accent-foreground: 24 60% 10%;
+    --background: 270 50% 98%; /* Light Lavender */
+    --foreground: 270 50% 10%;
+    --card: 270 50% 100%;
+    --card-foreground: 270 50% 10%;
+    --popover: 270 50% 100%;
+    --popover-foreground: 270 50% 10%;
+    --primary: 272 100% 25%; /* Rich Indigo */
+    --primary-foreground: 270 50% 98%;
+    --secondary: 270 50% 94%;
+    --secondary-foreground: 272 100% 25%;
+    --muted: 270 50% 90%;
+    --muted-foreground: 270 10% 45%;
+    --accent: 262 80% 58%; /* Deep Violet */
+    --accent-foreground: 270 50% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 24 60% 88%;
-    --input: 24 60% 90%;
-    --ring: 14 80% 45%;
-    --chart-1: 14 80% 45%;
-    --chart-2: 38 92% 50%;
-    --chart-3: 14 70% 55%;
-    --chart-4: 38 80% 60%;
-    --chart-5: 24 50% 88%;
+    --border: 270 50% 88%;
+    --input: 270 50% 90%;
+    --ring: 262 80% 58%;
+    --chart-1: 272 100% 25%;
+    --chart-2: 262 80% 58%;
+    --chart-3: 272 80% 45%;
+    --chart-4: 262 70% 68%;
+    --chart-5: 270 50% 88%;
     --radius: 0.5rem;
-    --sidebar-background: 24 60% 99%;
-    --sidebar-foreground: 24 60% 10%;
-    --sidebar-primary: 14 80% 45%;
-    --sidebar-primary-foreground: 24 60% 98%;
-    --sidebar-accent: 24 60% 94%;
-    --sidebar-accent-foreground: 14 80% 45%;
-    --sidebar-border: 24 60% 88%;
-    --sidebar-ring: 14 80% 45%;
+    --sidebar-background: 270 50% 99%;
+    --sidebar-foreground: 270 50% 10%;
+    --sidebar-primary: 272 100% 25%;
+    --sidebar-primary-foreground: 270 50% 98%;
+    --sidebar-accent: 270 50% 94%;
+    --sidebar-accent-foreground: 272 100% 25%;
+    --sidebar-border: 270 50% 88%;
+    --sidebar-ring: 262 80% 58%;
   }
 
   .dark {
-    --background: 28 40% 10%;
-    --foreground: 35 90% 94%;
-    --card: 28 40% 12%;
-    --card-foreground: 35 90% 94%;
-    --popover: 28 40% 10%;
-    --popover-foreground: 35 90% 94%;
-    --primary: 38 92% 50%;
-    --primary-foreground: 28 80% 10%;
-    --secondary: 28 40% 20%;
-    --secondary-foreground: 35 90% 94%;
-    --muted: 28 40% 20%;
-    --muted-foreground: 30 20% 60%;
-    --accent: 35 93% 44%;
-    --accent-foreground: 0 0% 100%;
+    --background: 272 40% 10%; /* Dark Indigo */
+    --foreground: 270 50% 94%; /* Light Lavender tint */
+    --card: 272 40% 12%;
+    --card-foreground: 270 50% 94%;
+    --popover: 272 40% 10%;
+    --popover-foreground: 270 50% 94%;
+    --primary: 262 80% 68%; /* Lighter Violet for dark mode */
+    --primary-foreground: 272 80% 10%;
+    --secondary: 272 40% 20%;
+    --secondary-foreground: 270 50% 94%;
+    --muted: 272 40% 20%;
+    --muted-foreground: 270 20% 60%;
+    --accent: 262 90% 75%; /* Brighter Violet for attention */
+    --accent-foreground: 272 40% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 28 40% 20%;
-    --input: 28 40% 22%;
-    --ring: 35 93% 44%;
-    --chart-1: 38 92% 50%;
-    --chart-2: 35 93% 44%;
-    --chart-3: 28 80% 65%;
-    --chart-4: 35 50% 70%;
-    --chart-5: 38 50% 80%;
-    --sidebar-background: 28 40% 8%;
-    --sidebar-foreground: 35 90% 94%;
-    --sidebar-primary: 35 93% 44%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 28 40% 15%;
-    --sidebar-accent-foreground: 35 90% 94%;
-    --sidebar-border: 28 40% 20%;
-    --sidebar-ring: 35 93% 44%;
+    --border: 272 40% 20%;
+    --input: 272 40% 22%;
+    --ring: 262 80% 68%;
+    --chart-1: 262 80% 68%;
+    --chart-2: 262 90% 75%;
+    --chart-3: 272 70% 75%;
+    --chart-4: 262 50% 80%;
+    --chart-5: 272 30% 85%;
+    --sidebar-background: 272 40% 8%;
+    --sidebar-foreground: 270 50% 94%;
+    --sidebar-primary: 262 80% 68%;
+    --sidebar-primary-foreground: 272 40% 10%;
+    --sidebar-accent: 272 40% 15%;
+    --sidebar-accent-foreground: 270 50% 94%;
+    --sidebar-border: 272 40% 20%;
+    --sidebar-ring: 262 80% 68%;
   }
 }
 
