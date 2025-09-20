@@ -78,7 +78,7 @@ function Upload() {
     const [productCategory, setProductCategory] = useState('');
     const [productPrice, setProductPrice] = useState('');
 
-    const [socialContent, setSocialContent] = useState<Record<string, string> | null>(null);
+    const [socialContent, setSocialContent] = useState<{ content: Record<string, string>, imageDataUri: string } | null>(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
     const [isSocialLoading, setIsSocialLoading] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -285,7 +285,7 @@ function Upload() {
                 productStory: productStory || "Handcrafted with passion, this item tells a story of tradition and nature.",
                 socialMediaPlatforms: ["Instagram", "Facebook", "Twitter(X)"]
             });
-            setSocialContent(result.content);
+            setSocialContent(result);
         } catch (error) {
             toast({ variant: 'destructive', title: 'Error', description: 'Failed to generate social media content.' });
         } finally {
@@ -538,25 +538,32 @@ function Upload() {
                 <CardContent className="space-y-6">
                     <div>
                         {socialContent ? (
-                            <Tabs defaultValue="Instagram">
-                                <TabsList>
-                                    <TabsTrigger value="Instagram"><Instagram className="h-4 w-4 mr-2" /> Instagram</TabsTrigger>
-                                    <TabsTrigger value="Facebook"><Facebook className="h-4 w-4 mr-2" /> Facebook</TabsTrigger>
-                                    <TabsTrigger value="Twitter(X)"><Twitter className="h-4 w-4 mr-2" /> Twitter (X)</TabsTrigger>
-                                </TabsList>
-                                {Object.entries(socialContent).map(([platform, content]) => (
-                                    <TabsContent key={platform} value={platform}>
-                                        <Card className="bg-primary/5">
-                                            <CardContent className="p-4 space-y-4">
-                                                <p className="text-sm whitespace-pre-wrap">{content}</p>
-                                                <Button variant="ghost" size="sm" onClick={() => copyToClipboard(content)}>
-                                                    <Copy className="mr-2 h-4 w-4" /> Copy
-                                                </Button>
-                                            </CardContent>
-                                        </Card>
-                                    </TabsContent>
-                                ))}
-                            </Tabs>
+                            <div className='space-y-4'>
+                                {socialContent.imageDataUri && (
+                                     <div className="relative aspect-square w-full rounded-lg border overflow-hidden">
+                                        <Image src={socialContent.imageDataUri} alt="Generated Social Media Image" fill className="object-cover" />
+                                    </div>
+                                )}
+                                <Tabs defaultValue="Instagram">
+                                    <TabsList>
+                                        <TabsTrigger value="Instagram"><Instagram className="h-4 w-4 mr-2" /> Instagram</TabsTrigger>
+                                        <TabsTrigger value="Facebook"><Facebook className="h-4 w-4 mr-2" /> Facebook</TabsTrigger>
+                                        <TabsTrigger value="Twitter(X)"><Twitter className="h-4 w-4 mr-2" /> Twitter (X)</TabsTrigger>
+                                    </TabsList>
+                                    {Object.entries(socialContent.content).map(([platform, content]) => (
+                                        <TabsContent key={platform} value={platform}>
+                                            <Card className="bg-primary/5">
+                                                <CardContent className="p-4 space-y-4">
+                                                    <p className="text-sm whitespace-pre-wrap">{content}</p>
+                                                    <Button variant="ghost" size="sm" onClick={() => copyToClipboard(content)}>
+                                                        <Copy className="mr-2 h-4 w-4" /> Copy
+                                                    </Button>
+                                                </CardContent>
+                                            </Card>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+                            </div>
                         ) : (
                             <Button onClick={handleGenerateSocial} disabled={isSocialLoading || !productName} className="mt-2 w-full">
                                 {isSocialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Share2 className="mr-2 h-4 w-4" />}
@@ -624,7 +631,3 @@ export default function UploadPage() {
         </Suspense>
     )
 }
-
-    
-
-    
