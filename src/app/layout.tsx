@@ -1,6 +1,6 @@
 
 'use client';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import {
@@ -49,6 +49,8 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Suspense, useEffect, useState } from 'react';
+import { translateText } from '@/ai/flows/translate-text';
 
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
@@ -142,9 +144,50 @@ function PageHeader() {
 
 function GlobalNav({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const lang = searchParams.get('lang') || 'en';
+  
   const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection'];
   const isBuyerPath = pathname.startsWith('/buyer');
   const isUploadPath = pathname === '/artisan/upload';
+  
+  const [translatedNavItems, setTranslatedNavItems] = useState(navItems);
+  const [translatedLogout, setTranslatedLogout] = useState("Logout");
+
+  useEffect(() => {
+    const translateNav = async () => {
+      if (lang === 'en') {
+        setTranslatedNavItems(navItems);
+        setTranslatedLogout("Logout");
+        return;
+      }
+      try {
+        const itemLabels = navItems.filter(item => item.type !== 'divider').map(item => item.label);
+        const translations = await Promise.all([
+            ...itemLabels.map(label => translateText({ text: label!, targetLanguage: lang })),
+            translateText({text: "Logout", targetLanguage: lang})
+        ]);
+
+        const translatedItems = navItems.map(item => {
+            if (item.type === 'divider') return item;
+            const originalIndex = navItems.filter(it => it.type !== 'divider').findIndex(it => it.label === item.label);
+            return {
+                ...item,
+                label: translations[originalIndex].translatedText
+            };
+        });
+        
+        setTranslatedNavItems(translatedItems);
+        setTranslatedLogout(translations[translations.length-1].translatedText);
+
+      } catch (error) {
+        console.error("Failed to translate nav items", error);
+        setTranslatedNavItems(navItems);
+        setTranslatedLogout("Logout");
+      }
+    };
+    translateNav();
+  }, [lang]);
 
 
   if (pathsWithoutNav.includes(pathname) || isBuyerPath || isUploadPath) {
@@ -166,12 +209,12 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
               </SidebarHeader>
               <SidebarContent>
                 <SidebarMenu>
-                  {navItems.map((item, index) =>
+                  {translatedNavItems.map((item, index) =>
                     item.type === 'divider' ? (
                       <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
                     ) : (
                       <SidebarMenuItem key={item.label}>
-                        <Link href={item.href!}>
+                        <Link href={`${item.href!}?lang=${lang}`}>
                           <SidebarMenuButton
                             isActive={pathname === item.href}
                             tooltip={{ children: item.label, side: 'right' }}
@@ -186,10 +229,10 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
                 </SidebarMenu>
               </SidebarContent>
               <SidebarFooter className="flex flex-col gap-2 p-2">
-                <Link href="/role-selection">
+                <Link href={`/role-selection?lang=${lang}`}>
                     <SidebarMenuButton>
                         <LogOut />
-                        <span>Logout</span>
+                        <span>{translatedLogout}</span>
                     </SidebarMenuButton>
                 </Link>
               </SidebarFooter>
@@ -203,6 +246,12 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   );
 }
 
+
+function RootLayoutContent({ children }: { children: React.ReactNode }) {
+    return (
+        <GlobalNav>{children}</GlobalNav>
+    )
+}
 
 export default function RootLayout({
   children,
@@ -219,7 +268,9 @@ export default function RootLayout({
       <body className="font-body antialiased">
         <div className="flex justify-center bg-gray-200">
             <div className="w-full max-w-[375px] bg-background h-screen shadow-2xl flex flex-col">
-                <GlobalNav>{children}</GlobalNav>
+                <Suspense fallback={<div className="flex-1">{children}</div>}>
+                    <RootLayoutContent>{children}</RootLayoutContent>
+                </Suspense>
             </div>
         </div>
         <Toaster />

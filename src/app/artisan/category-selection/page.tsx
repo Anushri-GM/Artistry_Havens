@@ -1,12 +1,13 @@
 
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Paintbrush, Hammer, CircleDotDashed, Gem, Scissors, Hand, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { translateText } from "@/ai/flows/translate-text";
 
 const categories = [
     { name: "Woodwork", icon: <Hammer className="h-10 w-10 text-primary" /> },
@@ -17,9 +18,66 @@ const categories = [
     { name: "Jewelry", icon: <Gem className="h-10 w-10 text-primary" /> },
 ];
 
-export default function CategorySelectionPage() {
+type TranslatedContent = {
+    title: string;
+    description: string;
+    continueButton: string;
+    categories: { name: string }[];
+};
+
+function CategorySelection() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const lang = searchParams.get('lang') || 'en';
+  
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
+
+  useEffect(() => {
+    const translateContent = async () => {
+      if (lang === 'en') {
+        setTranslatedContent({
+            title: "Choose Your Crafts",
+            description: "What kind of artisan are you? Select all that apply.",
+            continueButton: "Continue",
+            categories: categories.map(c => ({ name: c.name }))
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      try {
+        const [title, description, continueButton, ...categoryTranslations] = await Promise.all([
+          translateText({ text: "Choose Your Crafts", targetLanguage: lang }),
+          translateText({ text: "What kind of artisan are you? Select all that apply.", targetLanguage: lang }),
+          translateText({ text: "Continue", targetLanguage: lang }),
+          ...categories.map(c => translateText({ text: c.name, targetLanguage: lang }))
+        ]);
+
+        setTranslatedContent({
+          title: title.translatedText,
+          description: description.translatedText,
+          continueButton: continueButton.translatedText,
+          categories: categoryTranslations.map(t => ({ name: t.translatedText }))
+        });
+
+      } catch (error) {
+        console.error("Translation failed", error);
+        setTranslatedContent({
+            title: "Choose Your Crafts",
+            description: "What kind of artisan are you? Select all that apply.",
+            continueButton: "Continue",
+            categories: categories.map(c => ({ name: c.name }))
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    translateContent();
+  }, [lang]);
 
   const handleCategoryClick = (categoryName: string) => {
     setSelectedCategories(prev => 
@@ -30,20 +88,23 @@ export default function CategorySelectionPage() {
   };
 
   const handleContinue = () => {
-    // Here you would typically save the selected categories to the user's profile
     console.log("Selected categories:", selectedCategories);
-    router.push("/artisan/dashboard");
+    router.push(`/artisan/dashboard?lang=${lang}`);
   };
+
+  if (isLoading || !translatedContent) {
+    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
+  }
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background p-4">
       <div className="w-full max-w-md">
         <div className="mb-12 text-center">
-          <h1 className="font-headline text-3xl font-bold tracking-tight text-foreground">Choose Your Crafts</h1>
-          <p className="mt-2 text-lg text-muted-foreground">What kind of artisan are you? Select all that apply.</p>
+          <h1 className="font-headline text-3xl font-bold tracking-tight text-foreground">{translatedContent.title}</h1>
+          <p className="mt-2 text-lg text-muted-foreground">{translatedContent.description}</p>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          {categories.map((category) => {
+          {categories.map((category, index) => {
             const isSelected = selectedCategories.includes(category.name);
             return (
               <Card 
@@ -63,7 +124,7 @@ export default function CategorySelectionPage() {
                   <div className="flex justify-center">{category.icon}</div>
                 </CardHeader>
                 <CardContent className="p-4 pt-0">
-                  <CardTitle className="font-headline text-lg">{category.name}</CardTitle>
+                  <CardTitle className="font-headline text-lg">{translatedContent.categories[index].name}</CardTitle>
                 </CardContent>
               </Card>
             )
@@ -76,10 +137,20 @@ export default function CategorySelectionPage() {
                 disabled={selectedCategories.length === 0}
                 onClick={handleContinue}
             >
-                Continue
+                {translatedContent.continueButton}
             </Button>
         </div>
       </div>
     </div>
   );
 }
+
+
+export default function CategorySelectionPage() {
+    return (
+        <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
+            <CategorySelection />
+        </Suspense>
+    )
+}
+
