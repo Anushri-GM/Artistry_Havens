@@ -8,6 +8,7 @@
 
 import {ai} from '@/ai/genkit';
 import { GenerateProductDetailsInput, GenerateProductDetailsInputSchema, GenerateProductDetailsOutput, GenerateProductDetailsOutputSchema } from '@/ai/types/generate-product-details-types';
+import { googleAI } from '@genkit-ai/googleai';
 
 
 export async function generateProductDetails(input: GenerateProductDetailsInput): Promise<GenerateProductDetailsOutput> {
@@ -37,7 +38,10 @@ const generateProductDetailsFlow = ai.defineFlow(
     outputSchema: GenerateProductDetailsOutputSchema,
   },
   async (input) => {
-    const { output } = await productDetailsPrompt(input);
+    // Explicitly use Vertex AI for this flow.
+    const llm = googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT });
+
+    const { output } = await productDetailsPrompt({input, model: llm});
     if (!output) {
         throw new Error("Failed to generate product details.");
     }
