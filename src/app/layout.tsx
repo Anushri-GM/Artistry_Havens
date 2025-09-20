@@ -31,6 +31,7 @@ import {
   Bell,
   HelpCircle,
   Mic,
+  MicOff,
 } from 'lucide-react';
 import { ArtistryHavensLogo } from '@/components/icons';
 import { Suspense, useEffect, useState } from 'react';
@@ -56,21 +57,23 @@ import {
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 
 const navItems = [
-  { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
-  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette },
-  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
-  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart },
-  { href: '/artisan/dashboard/income', label: 'Income', icon: BadgeIndianRupee },
-  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
+  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard'] },
+  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products'] },
+  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends'] },
+  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance'] },
+  { href: '/artisan/dashboard/income', label: 'Income', icon: BadgeIndianRupee, commands: ['income', 'revenue', 'earnings'] },
+  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box },
-  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send },
-  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark },
+  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders'] },
+  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests'] },
+  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'saved collection', 'bookmarks'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User },
+  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile'] },
 ];
 
 type TranslatedHeaderContent = {
@@ -93,9 +96,76 @@ function PageHeader() {
   const { isMobile, open } = useSidebar();
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang') || 'en';
+  const router = useRouter();
+  const { toast } = useToast();
+
+  const [isRecording, setIsRecording] = useState(false);
   
   const [translatedContent, setTranslatedContent] = useState<TranslatedHeaderContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const handleVoiceCommand = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast({
+        variant: 'destructive',
+        title: 'Voice Commands Not Supported',
+        description: 'Your browser does not support the Web Speech API.',
+      });
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = lang;
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      setIsRecording(true);
+      toast({ title: 'Listening...', description: 'Say a command like "Go to my products".' });
+    };
+
+    recognition.onend = () => {
+      setIsRecording(false);
+    };
+
+    recognition.onerror = (event) => {
+      console.error('Speech recognition error:', event.error);
+      setIsRecording(false);
+      toast({
+        variant: 'destructive',
+        title: 'Voice Recognition Error',
+        description: event.error === 'not-allowed' ? 'Microphone access was denied.' : 'An error occurred.',
+      });
+    };
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.toLowerCase().trim();
+      
+      const command = transcript.replace(/^(go to|show me|open)\s*/, '');
+
+      const foundNavItem = navItems.find(item => 
+        item.type !== 'divider' && item.commands && item.commands.some(cmd => command.includes(cmd))
+      );
+
+      if (foundNavItem && foundNavItem.href) {
+        toast({
+          title: `Navigating...`,
+          description: `Going to ${foundNavItem.label}.`,
+        });
+        router.push(`${foundNavItem.href}?lang=${lang}`);
+      } else {
+        toast({
+          variant: 'destructive',
+          title: 'Command Not Understood',
+          description: `Sorry, I didn't recognize the command: "${transcript}"`,
+        });
+      }
+    };
+
+    recognition.start();
+  };
+
 
   useEffect(() => {
     const originalContent = {
@@ -218,8 +288,10 @@ function PageHeader() {
           variant="ghost"
           size="icon"
           className="bg-primary/10 text-primary hover:bg-primary/20"
+          onClick={handleVoiceCommand}
+          disabled={isRecording}
         >
-          <Mic className="h-5 w-5" />
+          {isRecording ? <MicOff className="h-5 w-5 animate-pulse" /> : <Mic className="h-5 w-5" />}
           <span className="sr-only">Voice Command</span>
         </Button>
       </div>
@@ -235,20 +307,20 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   
   const showNav = pathname.startsWith('/artisan/dashboard/');
   
-  const [translatedNavItems, setTranslatedNavItems] = useState(navItems);
+  const [translatedNavItems, setTranslatedNavItems] = useState(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
   const [translatedLogout, setTranslatedLogout] = useState("Logout");
 
   useEffect(() => {
     const translateNav = async () => {
       if (lang === 'en') {
-        setTranslatedNavItems(navItems);
+        setTranslatedNavItems(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
         setTranslatedLogout("Logout");
         return;
       }
       try {
-        const itemLabels = navItems.filter(item => item.type !== 'divider').map(item => item.label);
+        const itemLabels = navItems.filter(item => item.type !== 'divider').map(item => item.label!);
         const translations = await Promise.all([
-            ...itemLabels.map(label => translateText({ text: label!, targetLanguage: lang })),
+            ...itemLabels.map(label => translateText({ text: label, targetLanguage: lang })),
             translateText({text: "Logout", targetLanguage: lang})
         ]);
 
@@ -261,12 +333,12 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             };
         });
         
-        setTranslatedNavItems(translatedItems);
+        setTranslatedNavItems(translatedItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! }));
         setTranslatedLogout(translations[translations.length-1].translatedText);
 
       } catch (error) {
         console.error("Failed to translate nav items", error);
-        setTranslatedNavItems(navItems);
+        setTranslatedNavItems(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
         setTranslatedLogout("Logout");
       }
     };
@@ -281,7 +353,6 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
       <div className="flex h-full overflow-hidden">
         <Sidebar collapsible="icon" className="border-r">
           <SidebarHeader className="flex items-center gap-2 p-2">
@@ -325,16 +396,17 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             {children}
         </div>
       </div>
-    </SidebarProvider>
   )
 }
 
 
 function RootLayoutContent({ children }: { children: React.ReactNode }) {
     return (
+      <SidebarProvider>
         <ArtisanProvider>
             <GlobalNav>{children}</GlobalNav>
         </ArtisanProvider>
+      </SidebarProvider>
     )
 }
 
@@ -363,3 +435,4 @@ export default function RootLayout({
     </html>
   );
 }
+
