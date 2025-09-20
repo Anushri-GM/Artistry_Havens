@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'cool-chocolate-swan0ykuns.edgeone.app',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image2url.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
