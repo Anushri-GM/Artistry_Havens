@@ -67,7 +67,7 @@ const navItems = [
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products'] },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends'] },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance'] },
-  { href: '/artisan/dashboard/finance', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings'] },
+  { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings'] },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners'] },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders'] },
@@ -217,6 +217,7 @@ function PageHeader() {
     <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
       {isMobile ? (
         <div className="flex items-center gap-2">
+           <SidebarTrigger className="h-9 w-9" />
           <ArtistryHavensLogo className="h-6 w-6 text-primary" />
           <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
         </div>
@@ -436,5 +437,3 @@ export default function RootLayout({
     </html>
   );
 }
-
-    
