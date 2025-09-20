@@ -4,26 +4,10 @@
  * @fileOverview Generates a unique icon for a given artisan craft category.
  *
  * - generateCategoryIcon - A function that handles the icon generation.
- * - GenerateCategoryIconInput - The input type for the function.
- * - GenerateCategoryIconOutput - The return type for the function.
  */
 
 import {ai} from '@/ai/genkit';
-import {z} from 'genkit';
-
-export const GenerateCategoryIconInputSchema = z.object({
-  categoryName: z.string().describe('The name of the artisan craft category.'),
-});
-export type GenerateCategoryIconInput = z.infer<typeof GenerateCategoryIconInputSchema>;
-
-export const GenerateCategoryIconOutputSchema = z.object({
-  iconDataUri: z
-    .string()
-    .describe(
-      "The generated icon image as a data URI. Format: 'data:image/png;base64,<encoded_data>'."
-    ),
-});
-export type GenerateCategoryIconOutput = z.infer<typeof GenerateCategoryIconOutputSchema>;
+import { GenerateCategoryIconInput, GenerateCategoryIconInputSchema, GenerateCategoryIconOutput, GenerateCategoryIconOutputSchema } from '@/ai/types/generate-category-icon-types';
 
 
 export async function generateCategoryIcon(
@@ -59,3 +43,4 @@ const generateCategoryIconFlow = ai.defineFlow(
     return { iconDataUri: url };
   }
 );
+

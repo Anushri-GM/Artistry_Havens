@@ -11,6 +11,7 @@ import { CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { translateText } from "@/ai/flows/translate-text";
 import { generateCategoryIcon } from "@/ai/flows/generate-category-icon";
+import { GenerateCategoryIconOutput } from "@/ai/types/generate-category-icon-types";
 
 const initialCategories = [
     { name: "Woodwork" },
@@ -59,7 +60,7 @@ function CategorySelection() {
                     const result = results[index];
                     return {
                         ...category,
-                        iconUrl: result instanceof Error ? null : result.iconDataUri,
+                        iconUrl: result instanceof Error ? null : (result as GenerateCategoryIconOutput).iconDataUri,
                     };
                 });
             });
