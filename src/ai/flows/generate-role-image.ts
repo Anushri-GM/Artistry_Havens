@@ -1,4 +1,3 @@
-
 'use server';
 /**
  * @fileOverview Generates a unique image for a given user role.
@@ -17,11 +16,6 @@ export async function generateRoleImage(
 }
 
 const prompts: Record<string, string> = {
-    Artisan: `Generate a high-quality, realistic photograph of an artisan working on their craft. 
-              The image should be vibrant and show the artisan's hands and the product they are making. 
-              Focus on the details of the craft, such as woodworking, pottery, or weaving.
-              The setting should be a well-lit workshop or studio.
-              The image should look professional and inspiring, suitable for a web application.`,
     Buyer: `Generate a high-quality, professional photograph of a discerning buyer thoughtfully examining artisan crafts in a high-end boutique or gallery setting. 
             The person should appear sophisticated and engaged, appreciating the quality and detail of the handmade products. 
             The ambiance should be elegant and well-lit, highlighting the beauty of the crafts. 
@@ -32,30 +26,4 @@ const prompts: Record<string, string> = {
               The image should convey trust and partnership.`
 }
 
-
-const generateRoleImageFlow = ai.defineFlow(
-  {
-    name: 'generateRoleImageFlow',
-    inputSchema: GenerateRoleImageInputSchema,
-    outputSchema: GenerateRoleImageOutputSchema,
-  },
-  async (input) => {
-    
-    const prompt = prompts[input.roleName] || `Generate a high-quality, realistic photograph representing a ${input.roleName}.`;
-
-    const { media } = await ai.generate({
-        model: 'googleai/imagen-4.0-fast-generate-001',
-        prompt: prompt,
-         config: {
-            aspectRatio: "1:1"
-        }
-    });
-    
-    const url = media.url;
-    if (!url) {
-        throw new Error('Image generation for role failed.');
-    }
-
-    return { imageDataUri: url };
-  }
-);
+const artisanImageDataUri = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAQsA4AMBIgACEQEDEQH/xAAaAAEBAQEBAQEAAAAAAAAAAAAAAQIDBAUG/8QAMBABAQACAQIDBgYCAwEAAAAAAAECEQMSITFBUWEEE3GBkaHwIjKxwdEUFWLR4fFy/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA//EABwRAQEBAQEBAQEBAAAAAAAAAAABEQISITHwA//aAAwDAQACEQMRAD8A/R5ce3L7b7l8b/L63d8WPL3v5cW+V5WXTq3h4b5/DZZZe+Hhvk8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gtsss
