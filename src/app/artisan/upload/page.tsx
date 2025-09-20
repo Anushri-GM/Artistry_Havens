@@ -8,7 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle } from 'lucide-react';
-import { generateProductStory } from '@/ai/flows/generate-product-story';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
