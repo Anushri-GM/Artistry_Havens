@@ -27,29 +27,37 @@ type TranslatedContent = {
 
 function LanguageSelection() {
   const searchParams = useSearchParams();
+  // Default to 'en' if no lang param, but this page is the entry point, so it likely won't have one initially.
   const lang = searchParams.get('lang') || 'en';
   const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    const originalContent = {
+        title: "Welcome to Artistry Havens",
+        subtitle: "Choose a Language",
+        footer: "Where Every Creation Belongs."
+    };
+
     const translateContent = async () => {
+        // No need to translate if the lang is English, but we run it for consistency in the logic flow.
+        // On this specific page, we usually start with 'en', so this is more for when a user navigates back.
         if (lang === 'en') {
-            setTranslatedContent({
-                title: "Welcome to Artistry Havens",
-                subtitle: "Choose a Language",
-                footer: "Where Every Creation Belongs."
-            });
+            setTranslatedContent(originalContent);
             setIsLoading(false);
             return;
         }
 
         setIsLoading(true);
         try {
-            const [title, subtitle, footer] = await Promise.all([
-                translateText({ text: "Welcome to Artistry Havens", targetLanguage: lang }),
-                translateText({ text: "Choose a Language", targetLanguage: lang }),
-                translateText({ text: "Where Every Creation Belongs.", targetLanguage: lang })
-            ]);
+            const translationPromises = [
+                translateText({ text: originalContent.title, targetLanguage: lang }),
+                translateText({ text: originalContent.subtitle, targetLanguage: lang }),
+                translateText({ text: originalContent.footer, targetLanguage: lang })
+            ];
+            
+            const [title, subtitle, footer] = await Promise.all(translationPromises);
+            
             setTranslatedContent({
                 title: title.translatedText,
                 subtitle: subtitle.translatedText,
@@ -57,11 +65,7 @@ function LanguageSelection() {
             });
         } catch (error) {
             console.error("Translation failed", error);
-            setTranslatedContent({
-                title: "Welcome to Artistry Havens",
-                subtitle: "Choose a Language",
-                footer: "Where Every Creation Belongs."
-            });
+            setTranslatedContent(originalContent); // Fallback to English
         } finally {
             setIsLoading(false);
         }

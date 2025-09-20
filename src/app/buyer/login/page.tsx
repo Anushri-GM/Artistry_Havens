@@ -27,56 +27,52 @@ function TermsAndConditionsDialog() {
     const [translatedContent, setTranslatedContent] = useState<TCTranslation | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     
-    const originalContent = [
-        { title: "Account Responsibility", text: "You are responsible for maintaining the confidentiality of your account and password and for restricting access to your computer." },
-        { title: "Product Authenticity", text: "Artisans guarantee that all products listed are handmade by them and accurately represented. Misrepresentation may result in account suspension." },
-        { title: "Prohibited Content", text: "Users may not post or transmit any content that is illegal, offensive, or infringes on the rights of others. This includes intellectual property rights." },
-        { title: "Transactions", text: "All transactions are processed through our secure payment gateway. Artistry Havens is not responsible for any disputes between buyers and artisans but will provide mediation support." },
-        { title: "Data Privacy", text: "We are committed to protecting your privacy. Your personal information will be handled in accordance with our Privacy Policy. We will not sell your data to third parties." },
-        { title: "Platform Modifications", text: "We reserve the right to modify or terminate the platform or your access to it for any reason, without notice, at any time." },
-    ];
+    const originalContent = {
+        title: "Terms & Conditions",
+        description: "Please read and agree to the terms and conditions before proceeding.",
+        items: [
+            { title: "Account Responsibility", text: "You are responsible for maintaining the confidentiality of your account and password and for restricting access to your computer." },
+            { title: "Product Authenticity", text: "Artisans guarantee that all products listed are handmade by them and accurately represented. Misrepresentation may result in account suspension." },
+            { title: "Prohibited Content", text: "Users may not post or transmit any content that is illegal, offensive, or infringes on the rights of others. This includes intellectual property rights." },
+            { title: "Transactions", text: "All transactions are processed through our secure payment gateway. Artistry Havens is not responsible for any disputes between buyers and artisans but will provide mediation support." },
+            { title: "Data Privacy", text: "We are committed to protecting your privacy. Your personal information will be handled in accordance with our Privacy Policy. We will not sell your data to third parties." },
+            { title: "Platform Modifications", text: "We reserve the right to modify or terminate the platform or your access to it for any reason, without notice, at any time." },
+        ]
+    };
 
     useEffect(() => {
         const translateContent = async () => {
             if (lang === 'en') {
-                setTranslatedContent({
-                    title: "Terms & Conditions",
-                    description: "Please read and agree to the terms and conditions before proceeding.",
-                    content: originalContent
-                });
+                setTranslatedContent({ ...originalContent, content: originalContent.items });
                 setIsLoading(false);
                 return;
             }
 
             setIsLoading(true);
             try {
-                const [title, description, ...contentTranslations] = await Promise.all([
-                    translateText({ text: "Terms & Conditions", targetLanguage: lang }),
-                    translateText({ text: "Please read and agree to the terms and conditions before proceeding.", targetLanguage: lang }),
-                    ...originalContent.flatMap(item => [
-                        translateText({ text: item.title, targetLanguage: lang }),
-                        translateText({ text: item.text, targetLanguage: lang })
-                    ])
-                ]);
+                const textsToTranslate = [
+                    originalContent.title,
+                    originalContent.description,
+                    ...originalContent.items.flatMap(item => [item.title, item.text])
+                ];
+                
+                const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+                const translations = await Promise.all(translationPromises);
 
-                const translatedItems = originalContent.map((_, index) => ({
-                    title: contentTranslations[index * 2].translatedText,
-                    text: contentTranslations[index * 2 + 1].translatedText,
+                const translatedItems = originalContent.items.map((_, index) => ({
+                    title: translations[2 + index * 2].translatedText,
+                    text: translations[3 + index * 2].translatedText,
                 }));
 
                 setTranslatedContent({
-                    title: title.translatedText,
-                    description: description.translatedText,
+                    title: translations[0].translatedText,
+                    description: translations[1].translatedText,
                     content: translatedItems
                 });
 
             } catch (error) {
                 console.error("TC Translation failed", error);
-                 setTranslatedContent({
-                    title: "Terms & Conditions",
-                    description: "Please read and agree to the terms and conditions before proceeding.",
-                    content: originalContent
-                });
+                setTranslatedContent({ ...originalContent, content: originalContent.items }); // Fallback to English
             } finally {
                 setIsLoading(false);
             }
@@ -126,67 +122,44 @@ function Login() {
     const [translatedContent, setTranslatedContent] = useState<LoginPageTranslation | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     
-     useEffect(() => {
+    useEffect(() => {
+        const originalContent = {
+            title: "Welcome Back!",
+            description: "Sign in to continue your journey through art.",
+            mobileLabel: "Mobile Number",
+            mobilePlaceholder: "Enter your 10-digit mobile number",
+            agreeLabel: "I agree to the",
+            tcButton: "Terms & Conditions",
+            otpInfo: "An OTP will be sent to your registered mobile number for verification.",
+            signInButton: "Send OTP & Sign In",
+            signUpPrompt: "New to Artistry Havens?",
+            signUpLink: "Sign Up",
+        };
+
         const translateContent = async () => {
             if (lang === 'en') {
-                setTranslatedContent({
-                    title: "Welcome Back!",
-                    description: "Sign in to continue your journey through art.",
-                    mobileLabel: "Mobile Number",
-                    mobilePlaceholder: "Enter your 10-digit mobile number",
-                    agreeLabel: "I agree to the",
-                    tcButton: "Terms & Conditions",
-                    otpInfo: "An OTP will be sent to your registered mobile number for verification.",
-                    signInButton: "Send OTP & Sign In",
-                    signUpPrompt: "New to Artistry Havens?",
-                    signUpLink: "Sign Up",
-                });
+                setTranslatedContent(originalContent);
                 setIsLoading(false);
                 return;
             }
 
             setIsLoading(true);
             try {
-                const results = await Promise.all([
-                    translateText({ text: "Welcome Back!", targetLanguage: lang }),
-                    translateText({ text: "Sign in to continue your journey through art.", targetLanguage: lang }),
-                    translateText({ text: "Mobile Number", targetLanguage: lang }),
-                    translateText({ text: "Enter your 10-digit mobile number", targetLanguage: lang }),
-                    translateText({ text: "I agree to the", targetLanguage: lang }),
-                    translateText({ text: "Terms & Conditions", targetLanguage: lang }),
-                    translateText({ text: "An OTP will be sent to your registered mobile number for verification.", targetLanguage: lang }),
-                    translateText({ text: "Send OTP & Sign In", targetLanguage: lang }),
-                    translateText({ text: "New to Artistry Havens?", targetLanguage: lang }),
-                    translateText({ text: "Sign Up", targetLanguage: lang }),
-                ]);
+                const textsToTranslate = Object.values(originalContent);
+                const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+                const translations = await Promise.all(translationPromises);
 
-                setTranslatedContent({
-                    title: results[0].translatedText,
-                    description: results[1].translatedText,
-                    mobileLabel: results[2].translatedText,
-                    mobilePlaceholder: results[3].translatedText,
-                    agreeLabel: results[4].translatedText,
-                    tcButton: results[5].translatedText,
-                    otpInfo: results[6].translatedText,
-                    signInButton: results[7].translatedText,
-                    signUpPrompt: results[8].translatedText,
-                    signUpLink: results[9].translatedText,
-                });
+                const contentKeys = Object.keys(originalContent) as (keyof LoginPageTranslation)[];
+                const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
+                    acc[key] = translations[index].translatedText;
+                    return acc;
+                }, {} as LoginPageTranslation);
+
+                setTranslatedContent(newTranslatedContent);
 
             } catch (error) {
                 console.error("Login Page Translation failed", error);
-                 setTranslatedContent({
-                    title: "Welcome Back!",
-                    description: "Sign in to continue your journey through art.",
-                    mobileLabel: "Mobile Number",
-                    mobilePlaceholder: "Enter your 10-digit mobile number",
-                    agreeLabel: "I agree to the",
-                    tcButton: "Terms & Conditions",
-                    otpInfo: "An OTP will be sent to your registered mobile number for verification.",
-                    signInButton: "Send OTP & Sign In",
-                    signUpPrompt: "New to Artistry Havens?",
-                    signUpLink: "Sign Up",
-                });
+                setTranslatedContent(originalContent); // Fallback to English
             } finally {
                 setIsLoading(false);
             }

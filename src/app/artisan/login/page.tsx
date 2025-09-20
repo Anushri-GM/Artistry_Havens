@@ -40,66 +40,41 @@ function ArtisanLogin() {
   const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
 
   useEffect(() => {
+    const originalContent = {
+        title: "Artisan Portal",
+        description: "Sign in to manage your craft and connect with your audience.",
+        mobileLabel: "Mobile Number",
+        mobilePlaceholder: "10-digit mobile number",
+        sendOtpButton: "Send OTP",
+        otpSentButton: "Sent",
+        otpLabel: "One-Time Password",
+        otpPlaceholder: "Enter the 5-digit OTP",
+        signInButton: "Sign In",
+        signUpPrompt: "New to Artistry Havens?",
+        signUpLink: "Sign Up"
+    };
+
     const translateContent = async () => {
       if (lang === 'en') {
-        setTranslatedContent({
-            title: "Artisan Portal",
-            description: "Sign in to manage your craft and connect with your audience.",
-            mobileLabel: "Mobile Number",
-            mobilePlaceholder: "10-digit mobile number",
-            sendOtpButton: "Send OTP",
-            otpSentButton: "Sent",
-            otpLabel: "One-Time Password",
-            otpPlaceholder: "Enter the 5-digit OTP",
-            signInButton: "Sign In",
-            signUpPrompt: "New to Artistry Havens?",
-            signUpLink: "Sign Up"
-        });
+        setTranslatedContent(originalContent);
         setIsLoading(false);
         return;
       }
 
       setIsLoading(true);
       try {
-        const [
-          title,
-          description,
-          mobileLabel,
-          mobilePlaceholder,
-          sendOtpButton,
-          otpLabel,
-          otpPlaceholder,
-          signInButton,
-          signUpPrompt,
-          signUpLink,
-        ] = await Promise.all([
-          translateText({ text: "Artisan Portal", targetLanguage: lang }),
-          translateText({ text: "Sign in to manage your craft and connect with your audience.", targetLanguage: lang }),
-          translateText({ text: "Mobile Number", targetLanguage: lang }),
-          translateText({ text: "10-digit mobile number", targetLanguage: lang }),
-          translateText({ text: "Send OTP", targetLanguage: lang }),
-          translateText({ text: "One-Time Password", targetLanguage: lang }),
-          translateText({ text: "Enter the 5-digit OTP", targetLanguage: lang }),
-          translateText({ text: "Sign In", targetLanguage: lang }),
-          translateText({ text: "New to Artistry Havens?", targetLanguage: lang }),
-          translateText({ text: "Sign Up", targetLanguage: lang }),
-        ]);
+        const textsToTranslate = Object.values(originalContent);
+        const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+        const translations = await Promise.all(translationPromises);
+        
+        const contentKeys = Object.keys(originalContent) as (keyof TranslatedContent)[];
+        const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
+            acc[key] = translations[index].translatedText;
+            return acc;
+        }, {} as TranslatedContent);
 
-        const otpSentButton = await translateText({ text: "Sent", targetLanguage: lang });
+        setTranslatedContent(newTranslatedContent);
 
-        setTranslatedContent({
-          title: title.translatedText,
-          description: description.translatedText,
-          mobileLabel: mobileLabel.translatedText,
-          mobilePlaceholder: mobilePlaceholder.translatedText,
-          sendOtpButton: sendOtpButton.translatedText,
-          otpSentButton: otpSentButton.translatedText,
-          otpLabel: otpLabel.translatedText,
-          otpPlaceholder: otpPlaceholder.translatedText,
-          signInButton: signInButton.translatedText,
-          signUpPrompt: signUpPrompt.translatedText,
-          signUpLink: signUpLink.translatedText,
-        });
       } catch (error) {
         console.error("Translation failed", error);
         toast({
@@ -107,19 +82,7 @@ function ArtisanLogin() {
           title: "Translation Error",
           description: "Could not translate the page. Falling back to English.",
         });
-         setTranslatedContent({
-            title: "Artisan Portal",
-            description: "Sign in to manage your craft and connect with your audience.",
-            mobileLabel: "Mobile Number",
-            mobilePlaceholder: "10-digit mobile number",
-            sendOtpButton: "Send OTP",
-            otpSentButton: "Sent",
-            otpLabel: "One-Time Password",
-            otpPlaceholder: "Enter the 5-digit OTP",
-            signInButton: "Sign In",
-            signUpPrompt: "New to Artistry Havens?",
-            signUpLink: "Sign Up"
-        });
+        setTranslatedContent(originalContent); // Fallback to English
       } finally {
         setIsLoading(false);
       }

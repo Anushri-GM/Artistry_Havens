@@ -35,42 +35,46 @@ function CategorySelection() {
   const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
 
   useEffect(() => {
+    const originalContent = {
+        title: "Choose Your Crafts",
+        description: "What kind of artisan are you? Select all that apply.",
+        continueButton: "Continue",
+        categories: categories.map(c => ({ name: c.name }))
+    };
+    
     const translateContent = async () => {
       if (lang === 'en') {
-        setTranslatedContent({
-            title: "Choose Your Crafts",
-            description: "What kind of artisan are you? Select all that apply.",
-            continueButton: "Continue",
-            categories: categories.map(c => ({ name: c.name }))
-        });
+        setTranslatedContent(originalContent);
         setIsLoading(false);
         return;
       }
 
       setIsLoading(true);
       try {
-        const [title, description, continueButton, ...categoryTranslations] = await Promise.all([
-          translateText({ text: "Choose Your Crafts", targetLanguage: lang }),
-          translateText({ text: "What kind of artisan are you? Select all that apply.", targetLanguage: lang }),
-          translateText({ text: "Continue", targetLanguage: lang }),
-          ...categories.map(c => translateText({ text: c.name, targetLanguage: lang }))
-        ]);
+        const textsToTranslate = [
+            originalContent.title,
+            originalContent.description,
+            originalContent.continueButton,
+            ...originalContent.categories.map(c => c.name)
+        ];
+
+        const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+        const translations = await Promise.all(translationPromises);
+        
+        const translatedCategories = categories.map((_, index) => ({
+            name: translations[index + 3].translatedText
+        }));
 
         setTranslatedContent({
-          title: title.translatedText,
-          description: description.translatedText,
-          continueButton: continueButton.translatedText,
-          categories: categoryTranslations.map(t => ({ name: t.translatedText }))
+          title: translations[0].translatedText,
+          description: translations[1].translatedText,
+          continueButton: translations[2].translatedText,
+          categories: translatedCategories
         });
 
       } catch (error) {
         console.error("Translation failed", error);
-        setTranslatedContent({
-            title: "Choose Your Crafts",
-            description: "What kind of artisan are you? Select all that apply.",
-            continueButton: "Continue",
-            categories: categories.map(c => ({ name: c.name }))
-        });
+        setTranslatedContent(originalContent); // Fallback to English
       } finally {
         setIsLoading(false);
       }

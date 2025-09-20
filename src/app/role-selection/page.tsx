@@ -49,47 +49,44 @@ function RoleSelection() {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        const originalContent = {
+            title: "Welcome!",
+            description: "Please select your role to continue.",
+            roles: rolesData.map(r => ({ name: r.name, description: r.description }))
+        };
+
         const translateContent = async () => {
             if (lang === 'en') {
-                 setTranslatedContent({
-                    title: "Welcome!",
-                    description: "Please select your role to continue.",
-                    roles: rolesData.map(r => ({ name: r.name, description: r.description }))
-                });
+                setTranslatedContent(originalContent);
                 setIsLoading(false);
                 return;
             }
 
             setIsLoading(true);
             try {
-                 const [titleRes, descriptionRes, ...roleTranslations] = await Promise.all([
-                    translateText({ text: "Welcome!", targetLanguage: lang }),
-                    translateText({ text: "Please select your role to continue.", targetLanguage: lang }),
-                    ...rolesData.flatMap(role => [
-                        translateText({ text: role.name, targetLanguage: lang }),
-                        translateText({ text: role.description, targetLanguage: lang })
-                    ])
-                ]);
+                const textsToTranslate = [
+                    originalContent.title,
+                    originalContent.description,
+                    ...originalContent.roles.flatMap(role => [role.name, role.description])
+                ];
 
+                const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+                const translations = await Promise.all(translationPromises);
+                
                 const translatedRoles = rolesData.map((_, index) => ({
-                    name: roleTranslations[index * 2].translatedText,
-                    description: roleTranslations[index * 2 + 1].translatedText
+                    name: translations[2 + index * 2].translatedText,
+                    description: translations[3 + index * 2].translatedText
                 }));
 
                 setTranslatedContent({
-                    title: titleRes.translatedText,
-                    description: descriptionRes.translatedText,
+                    title: translations[0].translatedText,
+                    description: translations[1].translatedText,
                     roles: translatedRoles
                 });
 
             } catch (error) {
                 console.error("Translation failed", error);
-                // Fallback to English on error
-                setTranslatedContent({
-                    title: "Welcome!",
-                    description: "Please select your role to continue.",
-                    roles: rolesData.map(r => ({ name: r.name, description: r.description }))
-                });
+                setTranslatedContent(originalContent); // Fallback to English
             } finally {
                 setIsLoading(false);
             }
