@@ -143,10 +143,8 @@ function PageHeader() {
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase().trim();
       
-      const command = transcript.replace(/^(go to|show me|open)\s*/, '');
-
       const foundNavItem = navItems.find(item => 
-        item.type !== 'divider' && item.commands && item.commands.some(cmd => command.includes(cmd))
+        item.type !== 'divider' && item.commands && item.commands.some(cmd => transcript.includes(cmd))
       );
 
       if (foundNavItem && foundNavItem.href) {
@@ -385,7 +383,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="flex flex-col gap-2 p-2">
-            <Link href={`/language?lang=${lang}`}>
+            <Link href={`/role-selection?lang=${lang}`}>
                 <SidebarMenuButton>
                     <LogOut />
                     <span>{translatedLogout}</span>
@@ -394,8 +392,10 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
         </Sidebar>
         <div className="flex flex-1 flex-col overflow-hidden">
-            <PageHeader />
-            {children}
+            <div className="flex flex-1 flex-col overflow-y-auto">
+                <PageHeader />
+                {children}
+            </div>
         </div>
       </div>
   )
