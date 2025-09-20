@@ -98,7 +98,7 @@ function RoleSelection() {
         translateContent();
     }, [lang]);
 
-    if (isLoading) {
+    if (isLoading || !translatedContent) {
         return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
     }
 
