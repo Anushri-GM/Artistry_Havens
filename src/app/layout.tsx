@@ -146,7 +146,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang') || 'en';
   
-  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection'];
+  const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection', '/artisan/upload/preview'];
   const isBuyerPath = pathname.startsWith('/buyer');
   const isUploadPath = pathname === '/artisan/upload';
   
