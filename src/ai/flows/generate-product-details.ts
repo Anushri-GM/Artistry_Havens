@@ -50,4 +50,3 @@ const generateProductDetailsFlow = ai.defineFlow(
     return output;
   }
 );
-
