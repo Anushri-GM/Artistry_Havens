@@ -33,7 +33,7 @@ const generateRoleImageFlow = ai.defineFlow(
     }
 
     if (input.roleName === 'Sponsor') {
-        return { imageDataUri: 'https://i.ibb.co/C6dCYw3/sponsor.jpg' };
+        return { imageDataUri: 'https://i.ibb.co/PZW4dF9/sponsor.jpg' };
     }
     
     // Fallback for any other role
