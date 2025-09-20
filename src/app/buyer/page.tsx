@@ -16,11 +16,13 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { generateCustomDesign } from "@/ai/flows/generate-custom-design";
 import { useToast } from "@/hooks/use-toast";
 import type { GenerateCustomDesignInput } from "@/ai/types/generate-custom-design-types";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { generateCategoryIcon } from "@/ai/flows/generate-category-icon";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const heroImages = [
   PlaceHolderImages.find(img => img.id === 'hero-1'),
@@ -28,12 +30,12 @@ const heroImages = [
   PlaceHolderImages.find(img => img.id === 'hero-3'),
 ].filter(Boolean);
 
-const categories = [
-  { name: "Pottery", icon: <Palette className="h-6 w-6" />, imageId: 'category-pottery' },
-  { name: "Sculpture", icon: <Axe className="h-6 w-6" />, imageId: 'category-sculpture' },
-  { name: "Paintings", icon: <SprayCan className="h-6 w-6" />, imageId: 'category-paintings' },
-  { name: "Crafts", icon: <Drill className="h-6 w-6" />, imageId: 'category-crafts' },
-  { name: "Textiles", icon: <Tent className="h-6 w-6" />, imageId: 'category-textiles' },
+const initialCategories = [
+  { name: "Pottery", icon: <Palette className="h-6 w-6" />, imageUrl: null as string | null },
+  { name: "Sculpture", icon: <Axe className="h-6 w-6" />, imageUrl: null as string | null },
+  { name: "Paintings", icon: <SprayCan className="h-6 w-6" />, imageUrl: null as string | null },
+  { name: "Crafts", icon: <Drill className="h-6 w-6" />, imageUrl: null as string | null },
+  { name: "Textiles", icon: <Tent className="h-6 w-6" />, imageUrl: null as string | null },
 ];
 
 const bestSellers = [...mockProducts].sort((a, b) => (b.reviews || 0) - (a.reviews || 0)).slice(0, 4);
@@ -187,7 +189,7 @@ function CustomizationDialog() {
                                 <SelectValue placeholder="Select an artisan category..." />
                             </SelectTrigger>
                             <SelectContent>
-                                {categories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
+                                {initialCategories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
                             </SelectContent>
                         </Select>
                     </div>
@@ -233,6 +235,29 @@ function CustomizationDialog() {
 }
 
 export default function BuyerPage() {
+    const [categories, setCategories] = useState(initialCategories);
+
+    useEffect(() => {
+        const fetchCategoryImages = async () => {
+            const imagePromises = initialCategories.map(category => 
+                generateCategoryIcon({ categoryName: category.name })
+            );
+
+            try {
+                const results = await Promise.all(imagePromises);
+                const updatedCategories = initialCategories.map((category, index) => ({
+                    ...category,
+                    imageUrl: results[index].iconDataUri
+                }));
+                setCategories(updatedCategories);
+            } catch (error) {
+                console.error("Failed to generate category images:", error);
+            }
+        };
+
+        fetchCategoryImages();
+    }, []);
+
   return (
     <div className="min-h-screen bg-background flex justify-center">
         <div className="w-full bg-background">
@@ -308,20 +333,23 @@ export default function BuyerPage() {
                         <p className="mt-1 text-sm text-muted-foreground">Find handmade treasures.</p>
                     </div>
                     <div className="grid grid-cols-3 gap-2">
-                        {categories.map(category => {
-                        const image = PlaceHolderImages.find(img => img.id === category.imageId);
-                        return (
+                        {categories.map(category => (
                             <Link href="#" key={category.name}>
                                 <div className="group relative block overflow-hidden rounded-lg text-center">
-                                    {image && <Image src={image.imageUrl} alt={category.name} width={200} height={200} className="object-cover w-full h-24" data-ai-hint={image.imageHint}/>}
+                                    <div className="relative w-full h-24">
+                                    {category.imageUrl ? (
+                                        <Image src={category.imageUrl} alt={category.name} fill className="object-cover" />
+                                    ) : (
+                                        <Skeleton className="h-full w-full" />
+                                    )}
+                                    </div>
                                     <div className="absolute inset-0 bg-black/50 flex flex-col items-center justify-center p-1">
                                         <div className="text-white">{category.icon}</div>
                                         <p className="mt-1 font-headline text-sm font-semibold text-white">{category.name}</p>
                                     </div>
                                 </div>
                             </Link>
-                        )
-                        })}
+                        ))}
                     </div>
                 </section>
 
