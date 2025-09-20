@@ -49,22 +49,22 @@ function Revenue() {
 
     useEffect(() => {
         const originalContent = {
-            title: "Revenue",
+            title: "Income",
             description: "Track your earnings and profit shares.",
             myProfitTab: "My Profit",
             sharedProfitTab: "Shared Profit",
             myProfitTitle: "My Profit",
-            myProfitDescription: "Revenue from products that are not sponsored.",
+            myProfitDescription: "Income from products that are not sponsored.",
             totalEarnings: "Total Earnings",
             productColumn: "Product",
-            revenueColumn: "Revenue",
+            revenueColumn: "Income",
             sharedProfitTitle: "Shared Profit",
             sharedProfitDescription: "Profit gained from selling sponsored products.",
-            totalSharedRevenue: "Total Shared Revenue",
+            totalSharedRevenue: "Total Shared Income",
             yourShare: "Your Share (80%)",
             productBreakdown: "Product Breakdown",
             sponsoredBy: "Sponsored by Craft Ventures",
-            totalRevenueLabel: "Total Revenue:",
+            totalRevenueLabel: "Total Income:",
             yourProfitLabel: "Your Profit (80%):",
         };
 

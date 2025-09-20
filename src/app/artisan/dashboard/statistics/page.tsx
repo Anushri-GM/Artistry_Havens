@@ -69,7 +69,7 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
         description: "An AI-powered analysis of your product's performance with suggestions for improvement.",
         likes: "Likes",
         shares: "Shares",
-        revenue: "Revenue",
+        revenue: "Income",
         generatedReviewTitle: "Generated AI Review",
         listen: "Listen",
         pause: "Pause",

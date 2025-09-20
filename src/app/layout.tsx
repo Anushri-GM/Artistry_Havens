@@ -58,7 +58,7 @@ const navItems = [
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart },
-  { href: '/artisan/dashboard/revenue', label: 'Revenue', icon: BadgeIndianRupee },
+  { href: '/artisan/dashboard/revenue', label: 'Income', icon: BadgeIndianRupee },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box },
