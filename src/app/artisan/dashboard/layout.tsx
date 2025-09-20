@@ -14,7 +14,7 @@ function ArtisanDashboardLayoutContent({ children }: { children: React.ReactNode
 
   return (
       <div className="flex flex-1 flex-col overflow-x-hidden relative">
-          <main className="overflow-auto p-4 pb-20">{children}</main>
+          <main className="flex-1 overflow-y-auto p-4 pb-20">{children}</main>
            <div className="absolute bottom-4 right-4">
               <Button asChild size="lg" className="rounded-full h-16 w-16 shadow-lg">
                   <Link href={`/artisan/upload?lang=${lang}`}>
