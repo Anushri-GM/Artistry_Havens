@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates a unique image for a given user role.
@@ -26,4 +27,38 @@ const prompts: Record<string, string> = {
               The image should convey trust and partnership.`
 }
 
-const artisanImageDataUri = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAQsA4AMBIgACEQEDEQH/xAAaAAEBAQEBAQEAAAAAAAAAAAAAAQIDBAUG/8QAMBABAQACAQIDBgYCAwEAAAAAAAECEQMSITFBUWEEE3GBkaHwIjKxwdEUFWLR4fFy/8QAFwEBAQEBAAAAAAAAAAAAAAAAAAECA//EABwRAQEBAQEBAQEBAAAAAAAAAAABEQISITHwA//aAAwDAQACEQMRAD8A/R5ce3L7b7l8b/L63d8WPL3v5cW+V5WXTq3h4b5/DZZZe+Hhvk8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gyyy9wA8/Gtsss
+const artisanImageUrl = "https://cool-chocolate-swan0ykuns.edgeone.app/artisan.jpeg";
+
+const generateRoleImageFlow = ai.defineFlow(
+  {
+    name: 'generateRoleImageFlow',
+    inputSchema: GenerateRoleImageInputSchema,
+    outputSchema: GenerateRoleImageOutputSchema,
+  },
+  async (input) => {
+
+    if (input.roleName === 'Artisan') {
+        return { imageDataUri: artisanImageUrl };
+    }
+
+    const prompt = prompts[input.roleName];
+    if (!prompt) {
+        throw new Error(`No prompt defined for role: ${input.roleName}`);
+    }
+
+    const { media } = await ai.generate({
+        model: 'googleai/imagen-4.0-fast-generate-001',
+        prompt: prompt,
+        config: {
+            aspectRatio: "1:1"
+        }
+    });
+    
+    const url = media.url;
+    if (!url) {
+        throw new Error(`Image generation for role '${input.roleName}' failed.`);
+    }
+
+    return { imageDataUri: url };
+  }
+);
