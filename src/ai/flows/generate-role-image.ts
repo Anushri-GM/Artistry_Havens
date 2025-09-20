@@ -27,7 +27,7 @@ const prompts: Record<string, string> = {
               The image should convey trust and partnership.`
 }
 
-const artisanImageUrl = "https://cool-chocolate-swan0ykuns.edgeone.app/artisan.jpeg";
+const artisanImageUrl = "https://image2url.com/images/1758398342370-5ab14d02-0dc5-4db2-a827-b098c96e830e.jpg";
 
 const generateRoleImageFlow = ai.defineFlow(
   {
