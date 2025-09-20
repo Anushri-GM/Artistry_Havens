@@ -29,7 +29,7 @@ const generateRoleImageFlow = ai.defineFlow(
     }
 
     if (input.roleName === 'Buyer') {
-        return { imageDataUri: 'https://i.ibb.co/tD4G1t2/buyer.jpg' };
+        return { imageDataUri: 'https://image2url.com/images/1758400871847-a0e569c3-4fe5-45ac-96d1-b7d5e7f8d277.jpg' };
     }
 
     if (input.roleName === 'Sponsor') {
