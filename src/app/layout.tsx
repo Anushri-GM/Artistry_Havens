@@ -1,5 +1,4 @@
 
-
 'use client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import './globals.css';
@@ -92,6 +91,19 @@ type TranslatedHeaderContent = {
     supportDescriptionPlaceholder: string;
     supportSubmitButton: string;
     supportThanksMessage: string;
+    toasts: {
+        voiceNotSupportedTitle: string;
+        voiceNotSupportedDesc: string;
+        listeningTitle: string;
+        listeningDesc: string;
+        voiceErrorTitle: string;
+        voiceErrorMicDenied: string;
+        voiceErrorGeneric: string;
+        navigatingTitle: string;
+        navigatingDesc: (label: string) => string;
+        commandNotUnderstoodTitle: string;
+        commandNotUnderstoodDesc: (cmd: string) => string;
+    }
 };
 
 
@@ -108,12 +120,14 @@ function PageHeader() {
   const [isLoading, setIsLoading] = useState(true);
 
   const handleVoiceCommand = () => {
+    if (!translatedContent) return;
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SpeechRecognition) {
       toast({
         variant: 'destructive',
-        title: 'Voice Commands Not Supported',
-        description: 'Your browser does not support the Web Speech API.',
+        title: translatedContent.toasts.voiceNotSupportedTitle,
+        description: translatedContent.toasts.voiceNotSupportedDesc,
       });
       return;
     }
@@ -125,7 +139,7 @@ function PageHeader() {
 
     recognition.onstart = () => {
       setIsRecording(true);
-      toast({ title: 'Listening...', description: 'Say a command like "Go to my products".' });
+      toast({ title: translatedContent.toasts.listeningTitle, description: translatedContent.toasts.listeningDesc });
     };
 
     recognition.onend = () => {
@@ -137,8 +151,8 @@ function PageHeader() {
       setIsRecording(false);
       toast({
         variant: 'destructive',
-        title: 'Voice Recognition Error',
-        description: event.error === 'not-allowed' ? 'Microphone access was denied.' : 'An error occurred.',
+        title: translatedContent.toasts.voiceErrorTitle,
+        description: event.error === 'not-allowed' ? translatedContent.toasts.voiceErrorMicDenied : translatedContent.toasts.voiceErrorGeneric,
       });
     };
 
@@ -151,15 +165,15 @@ function PageHeader() {
 
       if (foundNavItem && foundNavItem.href) {
         toast({
-          title: `Navigating...`,
-          description: `Going to ${foundNavItem.label}.`,
+          title: translatedContent.toasts.navigatingTitle,
+          description: translatedContent.toasts.navigatingDesc(foundNavItem.label),
         });
         router.push(`${foundNavItem.href}?lang=${lang}`);
       } else {
         toast({
           variant: 'destructive',
-          title: 'Command Not Understood',
-          description: `Sorry, I didn't recognize the command: "${transcript}"`,
+          title: translatedContent.toasts.commandNotUnderstoodTitle,
+          description: translatedContent.toasts.commandNotUnderstoodDesc(transcript),
         });
       }
     };
@@ -181,7 +195,20 @@ function PageHeader() {
         supportDescriptionLabel: "Description",
         supportDescriptionPlaceholder: "Please describe your issue...",
         supportSubmitButton: "Submit Ticket",
-        supportThanksMessage: "Thanks for your patience. We will notify the support center of your discomfort."
+        supportThanksMessage: "Thanks for your patience. We will notify the support center of your discomfort.",
+        toasts: {
+            voiceNotSupportedTitle: 'Voice Commands Not Supported',
+            voiceNotSupportedDesc: 'Your browser does not support the Web Speech API.',
+            listeningTitle: 'Listening...',
+            listeningDesc: 'Say a command like "Go to my products".',
+            voiceErrorTitle: 'Voice Recognition Error',
+            voiceErrorMicDenied: 'Microphone access was denied.',
+            voiceErrorGeneric: 'An error occurred.',
+            navigatingTitle: 'Navigating...',
+            navigatingDesc: (label: string) => `Going to ${label}.`,
+            commandNotUnderstoodTitle: 'Command Not Understood',
+            commandNotUnderstoodDesc: (cmd: string) => `Sorry, I didn't recognize the command: "${cmd}"`,
+        }
     };
 
     const translate = async () => {
@@ -193,14 +220,66 @@ function PageHeader() {
 
         setIsLoading(true);
         try {
-            const texts = Object.values(originalContent);
-            const translations = await Promise.all(texts.map(t => translateText({ text: t, targetLanguage: lang })));
+            const staticTexts = [
+                originalContent.notificationsTitle,
+                originalContent.notification1,
+                originalContent.notification2,
+                originalContent.notification3,
+                originalContent.supportTitle,
+                originalContent.supportDescription,
+                originalContent.supportSubjectLabel,
+                originalContent.supportSubjectDefault,
+                originalContent.supportDescriptionLabel,
+                originalContent.supportDescriptionPlaceholder,
+                originalContent.supportSubmitButton,
+                originalContent.supportThanksMessage,
+                originalContent.toasts.voiceNotSupportedTitle,
+                originalContent.toasts.voiceNotSupportedDesc,
+                originalContent.toasts.listeningTitle,
+                originalContent.toasts.listeningDesc,
+                originalContent.toasts.voiceErrorTitle,
+                originalContent.toasts.voiceErrorMicDenied,
+                originalContent.toasts.voiceErrorGeneric,
+                originalContent.toasts.navigatingTitle,
+                originalContent.toasts.commandNotUnderstoodTitle,
+            ];
+
+            const translations = await Promise.all(staticTexts.map(t => translateText({ text: t, targetLanguage: lang })));
             
-            const keys = Object.keys(originalContent) as (keyof TranslatedHeaderContent)[];
-            const newContent = keys.reduce((acc, key, index) => {
-                acc[key] = translations[index].translatedText;
-                return acc;
-            }, {} as TranslatedHeaderContent);
+            let i = 0;
+            const newContent: TranslatedHeaderContent = {
+                notificationsTitle: translations[i++].translatedText,
+                notification1: translations[i++].translatedText,
+                notification2: translations[i++].translatedText,
+                notification3: translations[i++].translatedText,
+                supportTitle: translations[i++].translatedText,
+                supportDescription: translations[i++].translatedText,
+                supportSubjectLabel: translations[i++].translatedText,
+                supportSubjectDefault: translations[i++].translatedText,
+                supportDescriptionLabel: translations[i++].translatedText,
+                supportDescriptionPlaceholder: translations[i++].translatedText,
+                supportSubmitButton: translations[i++].translatedText,
+                supportThanksMessage: translations[i++].translatedText,
+                toasts: {
+                    voiceNotSupportedTitle: translations[i++].translatedText,
+                    voiceNotSupportedDesc: translations[i++].translatedText,
+                    listeningTitle: translations[i++].translatedText,
+                    listeningDesc: translations[i++].translatedText,
+                    voiceErrorTitle: translations[i++].translatedText,
+                    voiceErrorMicDenied: translations[i++].translatedText,
+                    voiceErrorGeneric: translations[i++].translatedText,
+                    navigatingTitle: translations[i++].translatedText,
+                    commandNotUnderstoodTitle: translations[i++].translatedText,
+                    navigatingDesc: (label: string) => ``,
+                    commandNotUnderstoodDesc: (cmd: string) => ``,
+                }
+            };
+            
+            const goingToText = await translateText({ text: "Going to", targetLanguage: lang });
+            newContent.toasts.navigatingDesc = (label: string) => `${goingToText.translatedText} ${label}.`;
+
+            const notRecognizedText = await translateText({ text: "Sorry, I didn't recognize the command:", targetLanguage: lang });
+            newContent.toasts.commandNotUnderstoodDesc = (cmd: string) => `${notRecognizedText.translatedText} "${cmd}"`;
 
             setTranslatedContent(newContent);
         } catch (error) {
@@ -307,7 +386,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang') || 'en';
   
-  const showNav = pathname.startsWith('/artisan/dashboard') || pathname === '/artisan/upload';
+  const showNav = !['/artisan/login', '/artisan/category-selection'].includes(pathname) && pathname.startsWith('/artisan');
   
   const [translatedNavItems, setTranslatedNavItems] = useState(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
   const [translatedLogout, setTranslatedLogout] = useState("Logout");
@@ -439,3 +518,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    

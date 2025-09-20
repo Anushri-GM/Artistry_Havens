@@ -25,6 +25,20 @@ type TranslatedContent = {
     signInButton: string;
     signUpPrompt: string;
     signUpLink: string;
+    toasts: {
+        invalidPhoneTitle: string;
+        invalidPhoneDesc: string;
+        otpSentTitle: string;
+        otpSentDesc: (phone: string) => string;
+        invalidOtpTitle: string;
+        invalidOtpDesc: string;
+        sendOtpFirstTitle: string;
+        sendOtpFirstDesc: string;
+        loginSuccessTitle: string;
+        loginSuccessDesc: string;
+        translationErrorTitle: string;
+        translationErrorDesc: string;
+    }
 };
 
 function ArtisanLogin() {
@@ -51,7 +65,21 @@ function ArtisanLogin() {
         otpPlaceholder: "Enter the 5-digit OTP",
         signInButton: "Sign In",
         signUpPrompt: "New to Artistry Havens?",
-        signUpLink: "Sign Up"
+        signUpLink: "Sign Up",
+        toasts: {
+            invalidPhoneTitle: 'Invalid Phone Number',
+            invalidPhoneDesc: 'Please enter a valid 10-digit mobile number.',
+            otpSentTitle: 'OTP Sent',
+            otpSentDesc: (phone: string) => `An OTP has been sent to ${phone}.`,
+            invalidOtpTitle: 'Invalid OTP',
+            invalidOtpDesc: 'Please enter the 5-digit OTP.',
+            sendOtpFirstTitle: 'Send OTP First',
+            sendOtpFirstDesc: 'Please request an OTP before trying to sign in.',
+            loginSuccessTitle: 'Login Successful',
+            loginSuccessDesc: 'Welcome back!',
+            translationErrorTitle: "Translation Error",
+            translationErrorDesc: "Could not translate the page. Falling back to English."
+        }
     };
 
     const translateContent = async () => {
@@ -63,15 +91,56 @@ function ArtisanLogin() {
 
       setIsLoading(true);
       try {
-        const textsToTranslate = Object.values(originalContent);
-        const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
+        const textsToTranslate = [
+            originalContent.title,
+            originalContent.description,
+            originalContent.mobileLabel,
+            originalContent.mobilePlaceholder,
+            originalContent.sendOtpButton,
+            originalContent.otpSentButton,
+            originalContent.otpLabel,
+            originalContent.otpPlaceholder,
+            originalContent.signInButton,
+            originalContent.signUpPrompt,
+            originalContent.signUpLink,
+            ...Object.values(originalContent.toasts).filter(t => typeof t === 'string')
+        ];
+
+        const translationPromises = textsToTranslate.map(text => translateText({ text: text, targetLanguage: lang }));
         const translations = await Promise.all(translationPromises);
         
-        const contentKeys = Object.keys(originalContent) as (keyof TranslatedContent)[];
-        const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
-            acc[key] = translations[index].translatedText;
-            return acc;
-        }, {} as TranslatedContent);
+        let i = 0;
+        const newTranslatedContent: TranslatedContent = {
+            title: translations[i++].translatedText,
+            description: translations[i++].translatedText,
+            mobileLabel: translations[i++].translatedText,
+            mobilePlaceholder: translations[i++].translatedText,
+            sendOtpButton: translations[i++].translatedText,
+            otpSentButton: translations[i++].translatedText,
+            otpLabel: translations[i++].translatedText,
+            otpPlaceholder: translations[i++].translatedText,
+            signInButton: translations[i++].translatedText,
+            signUpPrompt: translations[i++].translatedText,
+            signUpLink: translations[i++].translatedText,
+            toasts: {
+                invalidPhoneTitle: translations[i++].translatedText,
+                invalidPhoneDesc: translations[i++].translatedText,
+                otpSentTitle: translations[i++].translatedText,
+                otpSentDesc: (phone: string) => `${translations[i++].translatedText} ${phone}.`,
+                invalidOtpTitle: translations[i++].translatedText,
+                invalidOtpDesc: translations[i++].translatedText,
+                sendOtpFirstTitle: translations[i++].translatedText,
+                sendOtpFirstDesc: translations[i++].translatedText,
+                loginSuccessTitle: translations[i++].translatedText,
+                loginSuccessDesc: translations[i++].translatedText,
+                translationErrorTitle: translations[i++].translatedText,
+                translationErrorDesc: translations[i++].translatedText,
+            }
+        };
+
+        // Special handling for the function
+        const otpDescTranslation = await translateText({ text: "An OTP has been sent to", targetLanguage: lang });
+        newTranslatedContent.toasts.otpSentDesc = (phone: string) => `${otpDescTranslation.translatedText} ${phone}.`;
 
         setTranslatedContent(newTranslatedContent);
 
@@ -79,8 +148,8 @@ function ArtisanLogin() {
         console.error("Translation failed", error);
         toast({
           variant: "destructive",
-          title: "Translation Error",
-          description: "Could not translate the page. Falling back to English.",
+          title: originalContent.toasts.translationErrorTitle,
+          description: originalContent.toasts.translationErrorDesc,
         });
         setTranslatedContent(originalContent); // Fallback to English
       } finally {
@@ -89,44 +158,46 @@ function ArtisanLogin() {
     };
 
     translateContent();
-  }, [lang, toast]);
+  }, [lang]);
 
   const handleSendOtp = () => {
+    if (!translatedContent) return;
     if (phoneNumber.length !== 10 || !/^\d{10}$/.test(phoneNumber)) {
       toast({
         variant: 'destructive',
-        title: 'Invalid Phone Number',
-        description: 'Please enter a valid 10-digit mobile number.',
+        title: translatedContent.toasts.invalidPhoneTitle,
+        description: translatedContent.toasts.invalidPhoneDesc,
       });
       return;
     }
     toast({
-      title: 'OTP Sent',
-      description: `An OTP has been sent to ${phoneNumber}.`,
+      title: translatedContent.toasts.otpSentTitle,
+      description: translatedContent.toasts.otpSentDesc(phoneNumber),
     });
     setOtpSent(true);
   };
 
   const handleVerifyOtp = () => {
+    if (!translatedContent) return;
     if (otp.length !== 5) {
       toast({
         variant: 'destructive',
-        title: 'Invalid OTP',
-        description: 'Please enter the 5-digit OTP.',
+        title: translatedContent.toasts.invalidOtpTitle,
+        description: translatedContent.toasts.invalidOtpDesc,
       });
       return;
     }
     if (!otpSent) {
       toast({
         variant: 'destructive',
-        title: 'Send OTP First',
-        description: 'Please request an OTP before trying to sign in.',
+        title: translatedContent.toasts.sendOtpFirstTitle,
+        description: translatedContent.toasts.sendOtpFirstDesc,
       });
       return;
     }
     toast({
-      title: 'Login Successful',
-      description: 'Welcome back!',
+      title: translatedContent.toasts.loginSuccessTitle,
+      description: translatedContent.toasts.loginSuccessDesc,
     });
     router.push(`/artisan/category-selection?lang=${lang}`);
   };
@@ -212,3 +283,5 @@ export default function ArtisanLoginPage() {
         </Suspense>
     )
 }
+
+    

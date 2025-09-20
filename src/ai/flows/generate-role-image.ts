@@ -29,16 +29,16 @@ const generateRoleImageFlow = ai.defineFlow(
   async (input) => {
     
     if (input.roleName === 'Artisan') {
-        return { imageDataUri: artisanImageUrl };
+        return { imageDataUri: 'https://cool-chocolate-swan0ykuns.edgeone.app/artisan.jpeg' };
     }
 
     if (input.roleName === 'Buyer') {
-        return { imageDataUri: https://ibb.co/ZRHs7VDp
+        return { imageDataUri: 'https://ibb.co/ZRHs7VDp'
         };
     }
 
     if (input.roleName === 'Sponsor') {
-        return { imageDataUri: sponsorImageUrl };
+        return { imageDataUri: 'https://ibb.co/6JNtQDR0' };
     }
     
     // Fallback for any other role
