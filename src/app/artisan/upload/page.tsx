@@ -1,21 +1,22 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Copy, Download, Eye, Facebook, GalleryHorizontal, Instagram, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft } from 'lucide-react';
+import { Camera, Copy, Download, Eye, Facebook, GalleryHorizontal, Instagram, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, Video, CircleDot, AlertTriangle } from 'lucide-react';
 import { generateProductStory } from '@/ai/flows/generate-product-story';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 const previewImage = PlaceHolderImages.find(p => p.id === "pottery-1");
 
@@ -26,6 +27,72 @@ export default function UploadPage() {
     const [isStoryLoading, setIsStoryLoading] = useState(false);
     const [isSocialLoading, setIsSocialLoading] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+    const [productImage, setProductImage] = useState<string | null>(null);
+
+    // Camera states
+    const [isCameraOpen, setIsCameraOpen] = useState(false);
+    const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+
+
+    useEffect(() => {
+        if (isCameraOpen) {
+            const getCameraPermission = async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    setHasCameraPermission(true);
+
+                    if (videoRef.current) {
+                        videoRef.current.srcObject = stream;
+                    }
+                } catch (error) {
+                    console.error('Error accessing camera:', error);
+                    setHasCameraPermission(false);
+                    toast({
+                        variant: 'destructive',
+                        title: 'Camera Access Denied',
+                        description: 'Please enable camera permissions in your browser settings.',
+                    });
+                }
+            };
+            getCameraPermission();
+        } else {
+            // Stop camera stream when dialog is closed
+            if (videoRef.current && videoRef.current.srcObject) {
+                const stream = videoRef.current.srcObject as MediaStream;
+                stream.getTracks().forEach(track => track.stop());
+                videoRef.current.srcObject = null;
+            }
+        }
+    }, [isCameraOpen, toast]);
+
+    const handleCapture = () => {
+        if (videoRef.current && canvasRef.current) {
+            const video = videoRef.current;
+            const canvas = canvasRef.current;
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const context = canvas.getContext('2d');
+            if(context) {
+                context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+                const dataUrl = canvas.toDataURL('image/png');
+                setProductImage(dataUrl);
+                setIsCameraOpen(false);
+            }
+        }
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setProductImage(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const handleGenerateStory = async () => {
         setIsStoryLoading(true);
@@ -87,15 +154,24 @@ export default function UploadPage() {
             <CardContent className="space-y-6">
                 <div>
                     <Label>Product Images</Label>
-                    <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg">
-                        <div className="text-center">
-                            <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
-                            <p className="mt-2 text-sm text-muted-foreground">Drag & drop or click to upload</p>
-                            <div className="mt-4 flex justify-center gap-4">
-                                <Button variant="outline"><Camera className="mr-2 h-4 w-4" /> Take Photo</Button>
-                                <Button variant="outline"><GalleryHorizontal className="mr-2 h-4 w-4" /> From Gallery</Button>
+                    <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg relative overflow-hidden">
+                        {productImage ? (
+                            <Image src={productImage} alt="Product preview" fill className="object-contain" />
+                        ) : (
+                            <div className="text-center p-4">
+                                <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
+                                <p className="mt-2 text-sm text-muted-foreground">Drag & drop or select an option below</p>
                             </div>
-                        </div>
+                        )}
+                    </div>
+                    <div className="mt-4 flex justify-center gap-4">
+                        <Button variant="outline" onClick={() => setIsCameraOpen(true)}><Camera className="mr-2 h-4 w-4" /> Take Photo</Button>
+                        <Input type="file" id="file-upload" className="hidden" onChange={handleFileChange} accept="image/*" />
+                        <Button variant="outline" asChild>
+                           <Label htmlFor='file-upload' className="cursor-pointer flex items-center">
+                                <GalleryHorizontal className="mr-2 h-4 w-4" /> From Gallery
+                           </Label>
+                        </Button>
                     </div>
                 </div>
                  <div>
@@ -182,11 +258,9 @@ export default function UploadPage() {
                     <DialogDescription>This is how your product will appear to buyers.</DialogDescription>
                 </DialogHeader>
                 <div className="mt-4">
-                    {previewImage && (
-                        <div className="relative h-80 w-full rounded-lg overflow-hidden">
-                            <Image src={previewImage.imageUrl} alt="Preview" fill className="object-cover" />
-                        </div>
-                    )}
+                    <div className="relative h-80 w-full rounded-lg overflow-hidden bg-muted">
+                        <Image src={productImage || previewImage!.imageUrl} alt="Preview" fill className="object-contain" />
+                    </div>
                     <h2 className="font-headline text-2xl mt-4">Azure Clay Vase</h2>
                     <p className="text-lg font-semibold text-primary mt-1">$49.99</p>
                     <h3 className="font-headline text-lg mt-4 font-semibold">Description</h3>
@@ -197,6 +271,32 @@ export default function UploadPage() {
             </DialogContent>
         </Dialog>
 
+        <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Take a Photo</DialogTitle>
+                    <DialogDescription>Center your product in the frame and capture the image.</DialogDescription>
+                </DialogHeader>
+                <div className="relative aspect-video w-full rounded-md bg-muted overflow-hidden">
+                    <video ref={videoRef} className="w-full h-full object-cover" autoPlay playsInline muted />
+                    <canvas ref={canvasRef} className="hidden" />
+                </div>
+                {hasCameraPermission === false && (
+                    <Alert variant="destructive">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>Camera Access Required</AlertTitle>
+                        <AlertDescription>
+                            Please allow camera access in your browser settings to use this feature.
+                        </AlertDescription>
+                    </Alert>
+                )}
+                <DialogFooter>
+                    <Button onClick={handleCapture} disabled={hasCameraPermission !== true}>
+                        <CircleDot className="mr-2 h-4 w-4" /> Capture
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
     </main>
     </div>
