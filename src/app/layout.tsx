@@ -12,6 +12,8 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar';
 import Link from 'next/link';
 import {
@@ -26,18 +28,42 @@ import {
   Send,
   User,
   Bookmark,
+  Bell,
+  HelpCircle,
+  Mic,
 } from 'lucide-react';
 import { ArtistryHavensLogo } from '@/components/icons';
 import { Suspense, useEffect, useState } from 'react';
 import { translateText } from '@/ai/flows/translate-text';
 import { ArtisanProvider } from '@/context/ArtisanContext';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+
 
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart },
-  { href: '/artisan/dashboard/revenue', label: 'Income', icon: BadgeIndianRupee },
+  { href: '/artisan/dashboard/income', label: 'Income', icon: BadgeIndianRupee },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box },
@@ -46,6 +72,160 @@ const navItems = [
   { type: 'divider' },
   { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User },
 ];
+
+type TranslatedHeaderContent = {
+    notificationsTitle: string;
+    notification1: string;
+    notification2: string;
+    notification3: string;
+    supportTitle: string;
+    supportDescription: string;
+    supportSubjectLabel: string;
+    supportSubjectDefault: string;
+    supportDescriptionLabel: string;
+    supportDescriptionPlaceholder: string;
+    supportSubmitButton: string;
+    supportThanksMessage: string;
+};
+
+
+function PageHeader() {
+  const { isMobile, open } = useSidebar();
+  const searchParams = useSearchParams();
+  const lang = searchParams.get('lang') || 'en';
+  
+  const [translatedContent, setTranslatedContent] = useState<TranslatedHeaderContent | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const originalContent = {
+        notificationsTitle: "Notifications",
+        notification1: 'New like on "Terracotta Vase"',
+        notification2: "New order from Anjali P.",
+        notification3: 'Sponsor request from "Craft Ventures"',
+        supportTitle: "Contact Support",
+        supportDescription: "Have an issue? Fill out the form below and we'll get back to you.",
+        supportSubjectLabel: "Subject",
+        supportSubjectDefault: "Issue with payment",
+        supportDescriptionLabel: "Description",
+        supportDescriptionPlaceholder: "Please describe your issue...",
+        supportSubmitButton: "Submit Ticket",
+        supportThanksMessage: "Thanks for your patience. We will notify the support center of your discomfort."
+    };
+
+    const translate = async () => {
+        if (lang === 'en') {
+            setTranslatedContent(originalContent);
+            setIsLoading(false);
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const texts = Object.values(originalContent);
+            const translations = await Promise.all(texts.map(t => translateText({ text: t, targetLanguage: lang })));
+            
+            const keys = Object.keys(originalContent) as (keyof TranslatedHeaderContent)[];
+            const newContent = keys.reduce((acc, key, index) => {
+                acc[key] = translations[index].translatedText;
+                return acc;
+            }, {} as TranslatedHeaderContent);
+
+            setTranslatedContent(newContent);
+        } catch (error) {
+            console.error("Failed to translate header", error);
+            setTranslatedContent(originalContent);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    translate();
+  }, [lang]);
+
+  return (
+    <header className="sticky top-0 z-30 flex h-16 w-full items-center gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
+      {isMobile ? (
+        <div className="flex items-center gap-2">
+          <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+          <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
+        </div>
+      ) : (
+        <div className="flex items-center gap-4">
+          <SidebarTrigger className="h-9 w-9" />
+          {!open && (
+            <>
+              <ArtistryHavensLogo className="h-6 w-6 text-primary" />
+              <h1 className="font-headline text-lg font-bold">Artistry Havens</h1>
+            </>
+          )}
+        </div>
+      )}
+      <div className="flex w-full items-center justify-end gap-1">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Bell className="h-5 w-5" />
+              <span className="sr-only">Notifications</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>{isLoading ? '...' : translatedContent?.notificationsTitle}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>{isLoading ? '...' : translatedContent?.notification1}</DropdownMenuItem>
+            <DropdownMenuItem>{isLoading ? '...' : translatedContent?.notification2}</DropdownMenuItem>
+            <DropdownMenuItem>{isLoading ? '...' : translatedContent?.notification3}</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <HelpCircle className="h-5 w-5" />
+              <span className="sr-only">Support</span>
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>{isLoading ? '...' : translatedContent?.supportTitle}</SheetTitle>
+              <SheetDescription>
+                {isLoading ? '...' : translatedContent?.supportDescription}
+              </SheetDescription>
+            </SheetHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="name" className="text-right">
+                  {isLoading ? '...' : translatedContent?.supportSubjectLabel}
+                </Label>
+                <Input id="name" defaultValue={isLoading ? '...' : translatedContent?.supportSubjectDefault} className="col-span-3" />
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label htmlFor="username" className="text-right">
+                  {isLoading ? '...' : translatedContent?.supportDescriptionLabel}
+                </Label>
+                <Textarea id="username" placeholder={isLoading ? '...' : translatedContent?.supportDescriptionPlaceholder} className="col-span-3" />
+              </div>
+            </div>
+            <Button type="submit" className="w-full">
+              {isLoading ? '...' : translatedContent?.supportSubmitButton}
+            </Button>
+            <p className="mt-4 text-center text-sm text-muted-foreground">
+                {isLoading ? '...' : translatedContent?.supportThanksMessage}
+            </p>
+          </SheetContent>
+        </Sheet>
+
+        <Button
+          variant="ghost"
+          size="icon"
+          className="bg-primary/10 text-primary hover:bg-primary/20"
+        >
+          <Mic className="h-5 w-5" />
+          <span className="sr-only">Voice Command</span>
+        </Button>
+      </div>
+    </header>
+  );
+}
 
 
 function GlobalNav({ children }: { children: React.ReactNode }) {
@@ -56,7 +236,6 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const pathsWithoutNav = ['/', '/language', '/role-selection', '/buyer/login', '/artisan/login', '/sponsor', '/artisan/dashboard', '/artisan/category-selection', '/artisan/upload/preview'];
   const isBuyerPath = pathname.startsWith('/buyer');
   const isUploadPath = pathname === '/artisan/upload';
-  const isDashboardLayout = pathname.startsWith('/artisan/dashboard/');
   
   const [translatedNavItems, setTranslatedNavItems] = useState(navItems);
   const [translatedLogout, setTranslatedLogout] = useState("Logout");
@@ -96,60 +275,60 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
     translateNav();
   }, [lang]);
 
+  const showNav = pathname.startsWith('/artisan/dashboard/');
 
-  if (pathsWithoutNav.includes(pathname) || isBuyerPath || isUploadPath) {
-    if (pathname.startsWith('/buyer/product/')) {
-       return <div className="h-full flex flex-col">{children}</div>;
-    }
-    return <>{children}</>;
+  if (!showNav) {
+      if (pathname.startsWith('/buyer/product/')) {
+        return <div className="h-full flex flex-col">{children}</div>;
+      }
+      return <>{children}</>;
   }
 
-  if (isDashboardLayout) {
-     return (
-        <div className="flex h-full overflow-hidden">
-          <Sidebar collapsible="icon" className="border-r">
-            <SidebarHeader className="flex items-center gap-2 p-2">
-              <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-              <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
-                Artistry Havens
-              </h1>
-            </SidebarHeader>
-            <SidebarContent>
-              <SidebarMenu>
-                {translatedNavItems.map((item, index) =>
-                  item.type === 'divider' ? (
-                    <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
-                  ) : (
-                    <SidebarMenuItem key={item.label}>
-                      <Link href={`${item.href!}?lang=${lang}`}>
-                        <SidebarMenuButton
-                          isActive={pathname === item.href}
-                          tooltip={{ children: item.label, side: 'right' }}
-                        >
-                          <item.icon />
-                          <span>{item.label}</span>
-                        </SidebarMenuButton>
-                      </Link>
-                    </SidebarMenuItem>
-                  )
-                )}
-              </SidebarMenu>
-            </SidebarContent>
-            <SidebarFooter className="flex flex-col gap-2 p-2">
-              <Link href={`/role-selection?lang=${lang}`}>
-                  <SidebarMenuButton>
-                      <LogOut />
-                      <span>{translatedLogout}</span>
-                  </SidebarMenuButton>
-              </Link>
-            </SidebarFooter>
-          </Sidebar>
+  return (
+    <div className="flex h-full overflow-hidden">
+      <Sidebar collapsible="icon" className="border-r">
+        <SidebarHeader className="flex items-center gap-2 p-2">
+          <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+          <h1 className="font-headline text-2xl font-bold group-data-[collapsible=icon]:hidden">
+            Artistry Havens
+          </h1>
+        </SidebarHeader>
+        <SidebarContent>
+          <SidebarMenu>
+            {translatedNavItems.map((item, index) =>
+              item.type === 'divider' ? (
+                <div key={index} className="my-2 h-px bg-border mx-3 group-data-[collapsible=icon]:mx-2" />
+              ) : (
+                <SidebarMenuItem key={item.label}>
+                  <Link href={`${item.href!}?lang=${lang}`}>
+                    <SidebarMenuButton
+                      isActive={pathname === item.href}
+                      tooltip={{ children: item.label, side: 'right' }}
+                    >
+                      <item.icon />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </Link>
+                </SidebarMenuItem>
+              )
+            )}
+          </SidebarMenu>
+        </SidebarContent>
+        <SidebarFooter className="flex flex-col gap-2 p-2">
+          <Link href={`/role-selection?lang=${lang}`}>
+              <SidebarMenuButton>
+                  <LogOut />
+                  <span>{translatedLogout}</span>
+              </SidebarMenuButton>
+          </Link>
+        </SidebarFooter>
+      </Sidebar>
+      <div className="flex flex-1 flex-col overflow-hidden">
+          <PageHeader />
           {children}
-        </div>
-     )
-  }
-  
-  return <>{children}</>;
+      </div>
+    </div>
+  )
 }
 
 
