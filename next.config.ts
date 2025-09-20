@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'ik.imagekit.io',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
   // This is to allow cross-origin requests in the development environment.
