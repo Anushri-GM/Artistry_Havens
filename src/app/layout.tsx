@@ -63,18 +63,18 @@ import { useRouter } from 'next/navigation';
 
 
 const navItems = [
-  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard'] },
-  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products'] },
-  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends'] },
-  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance'] },
-  { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings'] },
-  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners'] },
+  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'मुख', 'ড্যাশবোর্ড', 'హోమ్', 'வீடு', 'گھر'] },
+  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'उत्पाद', 'পণ্য', 'ఉత్పత్తులు', 'பொருட்கள்', 'مصنوعات'] },
+  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'ट्रेंड्स', 'প্রবণতা', 'ట్రెండ్లు', 'போக்குகள்', 'رجحانات'] },
+  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance', 'आंकड़े', 'পরিসংখ্যান', 'గణాంకాలు', 'புள்ளிவிவரங்கள்', 'اعداد و شمار'] },
+  { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings', 'वित्त', 'অর্থ', 'ఆదాయం', 'வருவாய்', 'مالیات'] },
+  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners', 'प्रायोजक', 'পৃষ্ঠপোষক', 'స్పాన్సర్‌లు', 'ஆதரவாளர்கள்', 'کفیل'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders'] },
-  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests'] },
-  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'saved collection', 'bookmarks'] },
+  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders', 'मेरे ऑर्डर', 'আমার আদেশ', 'నా ఆర్డర్లు', 'எனது ஆர்டர்கள்', 'میرے احکامات'] },
+  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests', 'अनुरोध', 'অনুরোধ', 'विनंत्या', 'கோரிக்கைகள்', 'درخواستیں'] },
+  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'collection', 'बुकमार्क', 'সংরক্ষিত', 'సేవ్ చేయబడింది', 'சேமித்தவை', 'محفوظ'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile'] },
+  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile', 'प्रोफ़ाइल', 'প্রোফাইল', 'ప్రొఫైల్', 'சுயவிவரம்', 'پروفائل'] },
 ];
 
 type TranslatedHeaderContent = {
@@ -385,7 +385,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
             </SidebarMenu>
           </SidebarContent>
           <SidebarFooter className="flex flex-col gap-2 p-2">
-            <Link href={`/role-selection?lang=${lang}`}>
+            <Link href={`/language?lang=${lang}`}>
                 <SidebarMenuButton>
                     <LogOut />
                     <span>{translatedLogout}</span>
