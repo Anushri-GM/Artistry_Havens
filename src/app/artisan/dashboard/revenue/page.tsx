@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -33,7 +34,7 @@ type TranslatedContent = {
 };
 
 
-function Revenue() {
+function Finance() {
     const { products } = useArtisan();
     const searchParams = useSearchParams();
     const lang = searchParams.get('lang') || 'en';
@@ -49,7 +50,7 @@ function Revenue() {
 
     useEffect(() => {
         const originalContent = {
-            title: "Income",
+            title: "Finance",
             description: "Track your earnings and profit shares.",
             myProfitTab: "My Profit",
             sharedProfitTab: "Shared Profit",
@@ -229,13 +230,15 @@ function Revenue() {
   );
 }
 
-export default function RevenuePage() {
+export default function FinancePage() {
     return (
         <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
-            <Revenue />
+            <Finance />
         </Suspense>
     )
 }
+    
+
     
 
     

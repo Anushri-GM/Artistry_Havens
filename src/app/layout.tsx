@@ -1,4 +1,5 @@
 
+
 'use client';
 import { usePathname, useSearchParams } from 'next/navigation';
 import './globals.css';
@@ -66,7 +67,7 @@ const navItems = [
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products'] },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends'] },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance'] },
-  { href: '/artisan/dashboard/income', label: 'Income', icon: BadgeIndianRupee, commands: ['income', 'revenue', 'earnings'] },
+  { href: '/artisan/dashboard/finance', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings'] },
   { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners'] },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders'] },
@@ -435,3 +436,5 @@ export default function RootLayout({
     </html>
   );
 }
+
+    
