@@ -25,7 +25,7 @@ const initialRolesData = [
     imageUrl: null as string | null,
     imageHint: "person shopping",
     href: "/buyer",
-    emoji: "🛍️"
+    emoji: "🛒"
   },
   {
     name: "Sponsor",
