@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Copy, Download, Eye, Facebook, GalleryHorizontal, Instagram, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, Video, CircleDot, AlertTriangle } from 'lucide-react';
+import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle } from 'lucide-react';
 import { generateProductStory } from '@/ai/flows/generate-product-story';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
@@ -17,14 +17,21 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { generateProductDetails } from '@/ai/flows/generate-product-details';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const previewImage = PlaceHolderImages.find(p => p.id === "pottery-1");
+const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry"];
 
 export default function UploadPage() {
     const { toast } = useToast();
+    const [productName, setProductName] = useState('');
+    const [productDescription, setProductDescription] = useState('');
     const [productStory, setProductStory] = useState('');
+    const [productCategory, setProductCategory] = useState('');
+
     const [socialContent, setSocialContent] = useState<Record<string, string> | null>(null);
-    const [isStoryLoading, setIsStoryLoading] = useState(false);
+    const [isDetailsLoading, setIsDetailsLoading] = useState(false);
     const [isSocialLoading, setIsSocialLoading] = useState(false);
     const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [productImage, setProductImage] = useState<string | null>(null);
@@ -34,7 +41,6 @@ export default function UploadPage() {
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
 
     useEffect(() => {
         if (isCameraOpen) {
@@ -67,6 +73,38 @@ export default function UploadPage() {
         }
     }, [isCameraOpen, toast]);
 
+    const handleImageChange = (dataUrl: string) => {
+        setProductImage(dataUrl);
+        if (productCategory) {
+            handleGenerateDetails(dataUrl, productCategory);
+        }
+    };
+    
+    const handleCategoryChange = (category: string) => {
+        setProductCategory(category);
+        if (productImage) {
+            handleGenerateDetails(productImage, category);
+        }
+    };
+
+    const handleGenerateDetails = async (imageUri: string, category: string) => {
+        setIsDetailsLoading(true);
+        setProductName('');
+        setProductDescription('');
+        setProductStory('');
+        try {
+            const result = await generateProductDetails({ productImageDataUri: imageUri, category: category });
+            setProductName(result.productName);
+            setProductDescription(result.productDescription);
+            setProductStory(result.productStory);
+        } catch (error) {
+            toast({ variant: 'destructive', title: 'Error', description: 'Failed to generate product details.' });
+        } finally {
+            setIsDetailsLoading(false);
+        }
+    };
+
+
     const handleCapture = () => {
         if (videoRef.current && canvasRef.current) {
             const video = videoRef.current;
@@ -77,7 +115,7 @@ export default function UploadPage() {
             if(context) {
                 context.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
                 const dataUrl = canvas.toDataURL('image/png');
-                setProductImage(dataUrl);
+                handleImageChange(dataUrl);
                 setIsCameraOpen(false);
             }
         }
@@ -88,21 +126,9 @@ export default function UploadPage() {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                setProductImage(reader.result as string);
+                handleImageChange(reader.result as string);
             };
             reader.readAsDataURL(file);
-        }
-    };
-
-    const handleGenerateStory = async () => {
-        setIsStoryLoading(true);
-        try {
-            const result = await generateProductStory({ voiceInput: "I made this vase from local clay, inspired by the rivers near my village. It took me three days to shape and fire, and the glaze reminds me of the monsoon sky." });
-            setProductStory(result.productStory);
-        } catch (error) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Failed to generate product story.' });
-        } finally {
-            setIsStoryLoading(false);
         }
     };
     
@@ -110,9 +136,9 @@ export default function UploadPage() {
         setIsSocialLoading(true);
         try {
             const result = await generateSocialMediaContent({
-                productName: "Azure Clay Vase",
-                productDescription: "A beautiful handmade clay vase with a unique azure glaze, perfect for any home decor.",
-                productStory: productStory || "Handcrafted with passion, this vase tells a story of tradition and nature.",
+                productName: productName || "Handcrafted Product",
+                productDescription: productDescription || "A beautiful handmade item.",
+                productStory: productStory || "Handcrafted with passion, this item tells a story of tradition and nature.",
                 socialMediaPlatforms: ["Instagram", "Facebook", "Twitter(X)"]
             });
             setSocialContent(result.content);
@@ -149,18 +175,24 @@ export default function UploadPage() {
         <Card>
             <CardHeader>
                 <CardTitle className="font-headline text-2xl">Upload Your Product</CardTitle>
-                <CardDescription>Add images and details for your new creation.</CardDescription>
+                <CardDescription>Add an image and category. We'll generate the rest!</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
                 <div>
-                    <Label>Product Images</Label>
+                    <Label>1. Product Image</Label>
                     <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg relative overflow-hidden">
                         {productImage ? (
-                            <Image src={productImage} alt="Product preview" fill className="object-contain" />
+                            <Image src={productImage} alt="Product preview" fill className="object-contain p-2" />
                         ) : (
                             <div className="text-center p-4">
                                 <UploadCloud className="mx-auto h-12 w-12 text-muted-foreground" />
                                 <p className="mt-2 text-sm text-muted-foreground">Drag & drop or select an option below</p>
+                            </div>
+                        )}
+                         {isDetailsLoading && (
+                            <div className="absolute inset-0 bg-background/80 flex flex-col items-center justify-center text-center">
+                                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                <p className="mt-2 text-sm font-medium">Generating details...</p>
                             </div>
                         )}
                     </div>
@@ -174,40 +206,52 @@ export default function UploadPage() {
                         </Button>
                     </div>
                 </div>
-                 <div>
-                    <Label htmlFor="product-name">Product Name</Label>
-                    <Input id="product-name" placeholder="e.g., Handwoven Silk Scarf" />
-                </div>
                 <div>
-                    <Label htmlFor="product-desc">Product Description</Label>
-                    <Textarea id="product-desc" placeholder="Describe your product, its materials, dimensions, etc." />
+                    <Label htmlFor="product-category">2. Product Category</Label>
+                     <Select onValueChange={handleCategoryChange} value={productCategory} disabled={!productImage}>
+                        <SelectTrigger id="product-category">
+                            <SelectValue placeholder="Select a category..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map(c => <SelectItem key={c} value={c}>{c}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
                 </div>
+
+                 <Card className="bg-primary/5">
+                    <CardHeader>
+                        <CardTitle className="font-headline text-xl flex items-center gap-2">
+                            <Sparkles className="text-primary" />
+                           AI-Generated Content
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                         <div>
+                            <Label htmlFor="product-name">Product Name</Label>
+                            <Input id="product-name" placeholder="e.g., Handwoven Silk Scarf" value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
+                        </div>
+                        <div>
+                            <Label htmlFor="product-desc">Product Description</Label>
+                            <Textarea id="product-desc" placeholder="Describe your product, its materials, dimensions, etc." value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>
+                        </div>
+                        <div>
+                            <Label htmlFor="product-story">Product Story</Label>
+                            <Textarea id="product-story" placeholder="The story behind your craft..." value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
+                        </div>
+                    </CardContent>
+                 </Card>
             </CardContent>
         </Card>
 
         <Card>
             <CardHeader>
-                <CardTitle className="font-headline text-2xl flex items-center gap-2">
-                    <Sparkles className="text-primary" />
-                    AI-Powered Content Generation
+                <CardTitle className="font-headline text-xl flex items-center gap-2">
+                    Generate Social Media Posts
                 </CardTitle>
-                <CardDescription>Let AI help you tell your story and market your product.</CardDescription>
+                <CardDescription>Once your details are ready, let AI help market your product.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-                <div>
-                    <Label>Product Story</Label>
-                     <p className="text-sm text-muted-foreground mb-2">Use your voice to tell the story behind your craft. We'll enhance it for you.</p>
-                    <div className="relative">
-                        <Textarea value={productStory} onChange={e => setProductStory(e.target.value)} placeholder="Your generated story will appear here..." rows={5} />
-                    </div>
-                    <Button onClick={handleGenerateStory} disabled={isStoryLoading} className="mt-2">
-                        {isStoryLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Mic className="mr-2 h-4 w-4" />}
-                        Generate with Voice Input
-                    </Button>
-                </div>
                  <div>
-                    <Label>Social Media Posts</Label>
-                    <p className="text-sm text-muted-foreground mb-2">Auto-generate posts for different platforms.</p>
                      {socialContent ? (
                         <Tabs defaultValue="Instagram">
                             <TabsList>
@@ -229,7 +273,7 @@ export default function UploadPage() {
                             ))}
                         </Tabs>
                     ) : (
-                         <Button onClick={handleGenerateSocial} disabled={isSocialLoading} className="mt-2 w-full">
+                         <Button onClick={handleGenerateSocial} disabled={isSocialLoading || !productName} className="mt-2 w-full">
                             {isSocialLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Share2 className="mr-2 h-4 w-4" />}
                             Generate Social Media Content
                         </Button>
@@ -261,10 +305,10 @@ export default function UploadPage() {
                     <div className="relative h-80 w-full rounded-lg overflow-hidden bg-muted">
                         <Image src={productImage || previewImage!.imageUrl} alt="Preview" fill className="object-contain" />
                     </div>
-                    <h2 className="font-headline text-2xl mt-4">Azure Clay Vase</h2>
+                    <h2 className="font-headline text-2xl mt-4">{productName || "Product Name"}</h2>
                     <p className="text-lg font-semibold text-primary mt-1">$49.99</p>
                     <h3 className="font-headline text-lg mt-4 font-semibold">Description</h3>
-                    <p className="text-muted-foreground text-sm">A beautiful handmade clay vase with a unique azure glaze, perfect for any home decor.</p>
+                    <p className="text-muted-foreground text-sm">{productDescription || "Product description will appear here."}</p>
                     <h3 className="font-headline text-lg mt-4 font-semibold">The Story</h3>
                     <p className="text-muted-foreground text-sm italic">{productStory || "Your generated story will appear here."}</p>
                 </div>
