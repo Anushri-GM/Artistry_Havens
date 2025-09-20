@@ -3,7 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { useOrders } from '@/context/OrderContext';
+import { useArtisan } from '@/context/ArtisanContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
@@ -15,7 +15,7 @@ import { useToast } from '@/hooks/use-toast';
 export default function UpdateOrderPage() {
   const { id } = useParams();
   const router = useRouter();
-  const { orders, updateOrderStatus } = useOrders();
+  const { orders, updateOrderStatus } = useArtisan();
   const { toast } = useToast();
   
   const order = orders.find(o => o.id === id);

@@ -1,17 +1,21 @@
 
+'use client';
+
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { BadgeIndianRupee, Users, Percent } from "lucide-react";
-import { mockProducts } from "@/lib/mock-data";
+import { BadgeIndianRupee, Users } from "lucide-react";
+import { useArtisan } from "@/context/ArtisanContext";
 import Image from "next/image";
 
-const myProfitProducts = mockProducts.slice(0, 3);
-const sharedProfitProducts = mockProducts.slice(3, 6);
-
 export default function RevenuePage() {
-    const totalMyProfit = myProfitProducts.reduce((acc, p) => acc + p.revenue, 0);
-    const totalSharedProfit = sharedProfitProducts.reduce((acc, p) => acc + p.revenue, 0);
+    const { products } = useArtisan();
+
+    const myProfitProducts = products.slice(0, 3);
+    const sharedProfitProducts = products.slice(3, 6);
+    
+    const totalMyProfit = myProfitProducts.reduce((acc, p) => acc + (p.revenue || 0), 0);
+    const totalSharedProfit = sharedProfitProducts.reduce((acc, p) => acc + (p.revenue || 0), 0);
 
   return (
     <div className="space-y-8">
@@ -49,7 +53,7 @@ export default function RevenuePage() {
                                 {myProfitProducts.map(product => (
                                     <TableRow key={product.id}>
                                         <TableCell className="font-medium whitespace-normal">{product.name}</TableCell>
-                                        <TableCell className="text-right">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</TableCell>
+                                        <TableCell className="text-right">${(product.revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
@@ -106,11 +110,11 @@ export default function RevenuePage() {
                                             <div className="space-y-2 mt-auto">
                                                  <div className="flex justify-between items-baseline">
                                                     <span className="text-muted-foreground text-xs">Total Revenue:</span>
-                                                    <span className="font-semibold text-sm">${product.revenue.toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                    <span className="font-semibold text-sm">${(product.revenue || 0).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
                                                 </div>
                                                  <div className="flex justify-between items-baseline text-primary">
                                                     <span className="text-xs font-medium">Your Profit (80%):</span>
-                                                    <span className="font-bold text-base">${(product.revenue * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
+                                                    <span className="font-bold text-base">${((product.revenue || 0) * 0.8).toLocaleString('en-US', {minimumFractionDigits: 2})}</span>
                                                 </div>
                                             </div>
                                         </div>

@@ -3,7 +3,7 @@
 
 import * as React from 'react';
 import Image from 'next/image';
-import { mockProducts } from '@/lib/mock-data';
+import { useArtisan } from '@/context/ArtisanContext';
 import {
   Card,
   CardContent,
@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/card';
 
 export default function MyProductsPage() {
+  const { products } = useArtisan();
+  
   return (
     <div className="space-y-8">
       <div>
@@ -23,7 +25,7 @@ export default function MyProductsPage() {
       </div>
 
       <div className="space-y-6">
-        {mockProducts.map((product) => (
+        {products.map((product) => (
           <Card key={product.id} className="overflow-hidden">
              <div className="flex flex-col sm:flex-row gap-4">
                {product.image && (

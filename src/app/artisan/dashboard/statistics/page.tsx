@@ -11,7 +11,9 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from '@/components/ui/chart';
-import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
+import { mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
+import { useArtisan } from '@/context/ArtisanContext';
+import type { Product } from '@/context/ArtisanContext';
 import { Button } from '@/components/ui/button';
 import { Heart, Share2, Bot, Loader2, Sparkles, Volume2, Pause } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
@@ -33,7 +35,6 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-type Product = (typeof mockProducts)[0];
 
 function AiReviewDialog({ product, open, onOpenChange }: { product: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
   const [review, setReview] = useState('');
@@ -57,9 +58,9 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
       const input: ProvideAiReviewInput = {
         productDescription: product.description,
         productStory: product.story,
-        likes: product.likes,
-        shares: product.shares,
-        revenue: product.revenue,
+        likes: product.likes || 0,
+        shares: product.shares || 0,
+        revenue: product.revenue || 0,
         targetedAudience: "Art lovers aged 25-45, home decorators, and gift shoppers.",
       };
       const result = await provideAiReview(input);
@@ -130,15 +131,15 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                 <div className='grid grid-cols-2 gap-4'>
                     <Card>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Likes</CardTitle></CardHeader>
-                        <CardContent><div className="text-xl font-bold">{product.likes.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">{(product.likes || 0).toLocaleString()}</div></CardContent>
                     </Card>
                     <Card>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Shares</CardTitle></CardHeader>
-                        <CardContent><div className="text-xl font-bold">{product.shares.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">{(product.shares || 0).toLocaleString()}</div></CardContent>
                     </Card>
                     <Card className='col-span-2'>
                         <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Revenue</CardTitle></CardHeader>
-                        <CardContent><div className="text-xl font-bold">${product.revenue.toLocaleString()}</div></CardContent>
+                        <CardContent><div className="text-xl font-bold">${(product.revenue || 0).toLocaleString()}</div></CardContent>
                     </Card>
                 </div>
 
@@ -187,6 +188,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
 
 
 export default function StatisticsPage() {
+    const { products } = useArtisan();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
@@ -279,7 +281,7 @@ export default function StatisticsPage() {
       </div>
 
       <div className="space-y-4">
-        {mockProducts.map((product) => (
+        {products.map((product) => (
            <Card key={product.id}>
              <div className="flex flex-row gap-4">
                 {product.image && (
@@ -297,14 +299,14 @@ export default function StatisticsPage() {
                             <p className="text-xs text-muted-foreground">Likes</p>
                             <div className="flex items-center justify-center gap-1 font-bold text-sm">
                                 <Heart className="h-4 w-4 text-pink-500" />
-                                {product.likes.toLocaleString()}
+                                {(product.likes || 0).toLocaleString()}
                             </div>
                         </div>
                         <div className="space-y-1">
                             <p className="text-xs text-muted-foreground">Shares</p>
                             <div className="flex items-center justify-center gap-1 font-bold text-sm">
                                 <Share2 className="h-4 w-4 text-blue-500" />
-                                {product.shares.toLocaleString()}
+                                {(product.shares || 0).toLocaleString()}
                             </div>
                         </div>
                     </div>

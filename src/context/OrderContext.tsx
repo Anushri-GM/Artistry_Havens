@@ -6,15 +6,25 @@ import { mockProducts } from '@/lib/mock-data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 // Define types
-interface Product {
+export interface Product {
   id: string;
   name: string;
   price: string;
+  category: string;
+  description: string;
+  story: string;
   image?: {
     imageUrl: string;
     description: string;
     imageHint: string;
   };
+  likes?: number;
+  shares?: number;
+  rating?: number;
+  reviews?: number;
+  revenue?: number;
+  bought?: number;
+  artisan?: string;
 }
 
 export type OrderStatus = 'Processing' | 'Shipped' | 'Delivered';
@@ -38,9 +48,11 @@ export interface OrderRequest {
   isAiRequest: boolean;
 }
 
-interface OrderContextType {
+interface ArtisanContextType {
+  products: Product[];
   orders: Order[];
   requests: OrderRequest[];
+  addProduct: (product: Product) => void;
   acceptRequest: (requestId: string) => void;
   denyRequest: (requestId: string) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
@@ -79,12 +91,17 @@ const initialRequests: OrderRequest[] = [
 
 
 // Create Context
-const OrderContext = createContext<OrderContextType | undefined>(undefined);
+const ArtisanContext = createContext<ArtisanContextType | undefined>(undefined);
 
 // Create Provider
-export const OrderProvider = ({ children }: { children: ReactNode }) => {
+export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
+  const [products, setProducts] = useState<Product[]>(mockProducts);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [requests, setRequests] = useState<OrderRequest[]>(initialRequests);
+
+  const addProduct = (product: Product) => {
+    setProducts(prevProducts => [product, ...prevProducts]);
+  };
 
   const acceptRequest = (requestId: string) => {
     const request = requests.find(r => r.id === requestId);
@@ -95,6 +112,9 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
         id: `prod-${Date.now()}`,
         name: request.isAiRequest ? `Custom Craft for ${request.buyer}`: `Custom ${request.description.substring(0,20)}...`,
         price: '99.99', // Example price
+        category: 'Custom',
+        description: request.description,
+        story: 'A custom creation based on a buyer request.',
         image: request.image ? {
             imageUrl: request.image.imageUrl,
             description: request.description,
@@ -130,17 +150,17 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <OrderContext.Provider value={{ orders, requests, acceptRequest, denyRequest, updateOrderStatus }}>
+    <ArtisanContext.Provider value={{ products, orders, requests, addProduct, acceptRequest, denyRequest, updateOrderStatus }}>
       {children}
-    </OrderContext.Provider>
+    </ArtisanContext.Provider>
   );
 };
 
 // Create custom hook
-export const useOrders = () => {
-  const context = useContext(OrderContext);
+export const useArtisan = () => {
+  const context = useContext(ArtisanContext);
   if (context === undefined) {
-    throw new Error('useOrders must be used within an OrderProvider');
+    throw new Error('useArtisan must be used within an ArtisanProvider');
   }
   return context;
 };

@@ -4,10 +4,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { useOrders } from "@/context/OrderContext";
+import { useArtisan } from "@/context/ArtisanContext";
 import Link from "next/link";
 import { format } from 'date-fns';
-import type { Order } from "@/context/OrderContext";
+import type { Order } from "@/context/ArtisanContext";
 
 function OrderList({ title, orders }: { title: string, orders: Order[] }) {
     if (orders.length === 0) {
@@ -70,7 +70,7 @@ function OrderList({ title, orders }: { title: string, orders: Order[] }) {
 }
 
 export default function MyOrdersPage() {
-  const { orders } = useOrders();
+  const { orders } = useArtisan();
 
   const processingOrders = orders.filter(o => o.status === 'Processing');
   const shippedOrders = orders.filter(o => o.status === 'Shipped');

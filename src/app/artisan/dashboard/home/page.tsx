@@ -3,7 +3,8 @@
 
 import * as React from 'react';
 import { ProductCard } from "@/components/product-card";
-import { mockProducts } from "@/lib/mock-data";
+import { useArtisan } from "@/context/ArtisanContext";
+import type { Product } from '@/context/ArtisanContext';
 import {
   Accordion,
   AccordionContent,
@@ -11,18 +12,20 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-// Group products by category
-const groupedByCategory = mockProducts.reduce((acc, product) => {
-  const category = product.category;
-  if (!acc[category]) {
-    acc[category] = [];
-  }
-  acc[category].push(product);
-  return acc;
-}, {} as Record<string, typeof mockProducts>);
-
 
 export default function ArtisanHomePage() {
+  const { products } = useArtisan();
+
+  // Group products by category
+  const groupedByCategory = products.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+  }, {} as Record<string, Product[]>);
+
 
   return (
     <div className="space-y-8">

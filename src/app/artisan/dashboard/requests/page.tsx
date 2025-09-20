@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Check, ThumbsDown, Wand2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import { useOrders } from "@/context/OrderContext";
+import { useArtisan } from "@/context/ArtisanContext";
 
 export default function OrderRequestsPage() {
-  const { requests, acceptRequest, denyRequest } = useOrders();
+  const { requests, acceptRequest, denyRequest } = useArtisan();
 
   return (
     <div className="space-y-8">

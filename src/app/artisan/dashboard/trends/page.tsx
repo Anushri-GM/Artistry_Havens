@@ -4,11 +4,12 @@ import * as React from 'react';
 import Autoplay from 'embla-carousel-autoplay';
 import { TrendProductCard } from "@/components/trend-product-card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import { mockProducts } from "@/lib/mock-data";
+import { useArtisan } from "@/context/ArtisanContext";
 
 export default function TrendsPage() {
-    const frequentlyBought = [...mockProducts].sort((a, b) => b.reviews - a.reviews);
-    const bestsellers = [...mockProducts].sort((a, b) => b.revenue - a.revenue);
+    const { products } = useArtisan();
+    const frequentlyBought = [...products].sort((a, b) => (b.reviews || 0) - (a.reviews || 0));
+    const bestsellers = [...products].sort((a, b) => (b.revenue || 0) - (a.revenue || 0));
 
     const autoplayPluginLTR = React.useRef(
         Autoplay({ delay: 5000, stopOnInteraction: true, playOnInit: true })

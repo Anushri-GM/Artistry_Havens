@@ -13,13 +13,14 @@ import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import Image from 'next/image';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { generateProductDetails } from '@/ai/flows/generate-product-details';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { translateText } from '@/ai/flows/translate-text';
+import { useArtisan } from '@/context/ArtisanContext';
+import type { Product } from '@/context/ArtisanContext';
 
 const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
 
@@ -67,6 +68,7 @@ function Upload() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const lang = searchParams.get('lang') || 'en';
+    const { addProduct } = useArtisan();
 
     const [productName, setProductName] = useState('');
     const [productDescription, setProductDescription] = useState('');
@@ -76,6 +78,7 @@ function Upload() {
     const [socialContent, setSocialContent] = useState<Record<string, string> | null>(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
     const [isSocialLoading, setIsSocialLoading] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const [productImage, setProductImage] = useState<string | null>(null);
 
     // Camera states
@@ -355,6 +358,53 @@ function Upload() {
         router.push(`/artisan/upload/preview?lang=${lang}`);
     };
 
+    const handleUpload = () => {
+        if (!productImage || !productName || !productDescription || !productStory || !productCategory) {
+            toast({
+                variant: 'destructive',
+                title: 'Missing Information',
+                description: 'Please ensure all product details are filled out before uploading.',
+            });
+            return;
+        }
+
+        setIsUploading(true);
+
+        const newProduct: Product = {
+            id: `prod-${Date.now()}`,
+            name: productName,
+            description: productDescription,
+            story: productStory,
+            category: productCategory,
+            price: (Math.random() * 100 + 20).toFixed(2), // Random price for example
+            image: {
+                imageUrl: productImage,
+                description: productName,
+                imageHint: `${productCategory} ${productName.split(' ').slice(0, 2).join(' ')}`,
+            },
+            likes: 0,
+            shares: 0,
+            rating: 0,
+            reviews: 0,
+            revenue: 0,
+            bought: 0,
+            artisan: "Rohan Joshi" // Assuming current user
+        };
+
+        addProduct(newProduct);
+        
+        toast({
+            title: 'Upload Successful!',
+            description: `"${productName}" has been added to your products.`,
+        });
+
+        // Simulate network delay then redirect
+        setTimeout(() => {
+            setIsUploading(false);
+            router.push(`/artisan/dashboard/my-products?lang=${lang}`);
+        }, 1000);
+    };
+
 
     if (isTranslating || !translatedContent) {
         return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
@@ -502,7 +552,10 @@ function Upload() {
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
                     <Button onClick={handlePreview} variant="outline" size="lg"><Eye className="mr-2 h-4 w-4" /> {translatedContent.previewButton}</Button>
-                    <Button size="lg"><UploadCloud className="mr-2 h-4 w-4" /> {translatedContent.uploadButton}</Button>
+                    <Button onClick={handleUpload} disabled={isUploading} size="lg">
+                        {isUploading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <UploadCloud className="mr-2 h-4 w-4" />}
+                        {translatedContent.uploadButton}
+                    </Button>
                 </CardContent>
             </Card>
         </div>
