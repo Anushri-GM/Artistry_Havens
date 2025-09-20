@@ -419,35 +419,31 @@ function Statistics() {
       <div className="space-y-4">
         {products.map((product) => (
            <Card key={product.id}>
-             <div className="flex flex-row gap-4">
+             <div className="flex flex-row items-center gap-4 p-4">
                 {product.image && (
-                 <div className="w-1/3 p-4 flex-shrink-0">
-                     <div className="relative aspect-square w-full rounded-lg overflow-hidden border">
-                         <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain" />
-                     </div>
+                 <div className="relative w-24 h-24 flex-shrink-0">
+                     <Image src={product.image.imageUrl} alt={product.name} fill className="object-contain rounded-md" />
                  </div>
                )}
-               <div className="flex-1 flex flex-col">
-                 <CardHeader className="flex-1 pb-2">
-                    <CardTitle className="font-headline font-semibold text-base">{translatedContent.productNames[product.id] || product.name}</CardTitle>
-                    <div className="grid grid-cols-2 gap-4 text-center pt-2">
-                        <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground">{translatedContent.likes}</p>
-                            <div className="flex items-center justify-center gap-1 font-bold text-sm">
-                                <Heart className="h-4 w-4 text-pink-500" />
-                                {(product.likes || 0).toLocaleString()}
-                            </div>
-                        </div>
-                        <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground">{translatedContent.shares}</p>
-                            <div className="flex items-center justify-center gap-1 font-bold text-sm">
-                                <Share2 className="h-4 w-4 text-blue-500" />
-                                {(product.shares || 0).toLocaleString()}
-                            </div>
-                        </div>
-                    </div>
-                 </CardHeader>
-                 <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
+               <div className="flex-1 flex flex-col gap-2">
+                  <CardTitle className="font-headline font-semibold text-base">{translatedContent.productNames[product.id] || product.name}</CardTitle>
+                  <div className="grid grid-cols-2 gap-4 text-center">
+                      <div className="space-y-1">
+                          <p className="text-xs text-muted-foreground">{translatedContent.likes}</p>
+                          <div className="flex items-center justify-center gap-1 font-bold text-sm">
+                              <Heart className="h-4 w-4 text-pink-500" />
+                              {(product.likes || 0).toLocaleString()}
+                          </div>
+                      </div>
+                      <div className="space-y-1">
+                          <p className="text-xs text-muted-foreground">{translatedContent.shares}</p>
+                          <div className="flex items-center justify-center gap-1 font-bold text-sm">
+                              <Share2 className="h-4 w-4 text-blue-500" />
+                              {(product.shares || 0).toLocaleString()}
+                          </div>
+                      </div>
+                  </div>
+                 <CardFooter className="flex justify-end gap-2 p-0 pt-2">
                       <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
                         <Bot className="mr-2 h-4 w-4" />
                         {translatedContent.review}

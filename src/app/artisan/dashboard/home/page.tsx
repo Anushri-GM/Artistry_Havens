@@ -107,7 +107,7 @@ function ArtisanHome() {
                         {translatedContent?.categories[category] || category}
                     </AccordionTrigger>
                     <AccordionContent>
-                        <div className="p-6 pt-0 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <div className="p-6 pt-0 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             {productsInCategory.map(product => <ProductCard key={product.id} product={product} />)}
                         </div>
                     </AccordionContent>

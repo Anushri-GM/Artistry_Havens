@@ -37,12 +37,12 @@ export function TrendProductCard({ product }: TrendProductCardProps) {
   return (
     <Card className="overflow-hidden">
       {product.image && (
-        <div className="relative w-full aspect-[3/4]">
+        <div className="relative w-full aspect-[4/3]">
           <Image
             src={product.image.imageUrl}
             alt={product.image.description}
             fill
-            className="object-contain"
+            className="object-cover"
             data-ai-hint={product.image.imageHint}
           />
         </div>
