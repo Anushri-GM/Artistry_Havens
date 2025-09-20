@@ -74,16 +74,10 @@ export default function UploadPage() {
 
     const handleImageChange = (dataUrl: string) => {
         setProductImage(dataUrl);
-        if (productCategory) {
-            handleGenerateDetails(dataUrl, productCategory);
-        }
     };
     
     const handleCategoryChange = (category: string) => {
         setProductCategory(category);
-        if (productImage) {
-            handleGenerateDetails(productImage, category);
-        }
     };
 
     const handleGenerateDetails = async (imageUri: string, category: string) => {
@@ -105,6 +99,12 @@ export default function UploadPage() {
             setIsDetailsLoading(false);
         }
     };
+
+    useEffect(() => {
+        if (productImage && productCategory) {
+            handleGenerateDetails(productImage, productCategory);
+        }
+    }, [productImage, productCategory]);
 
 
     const handleCapture = () => {
