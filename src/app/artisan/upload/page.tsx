@@ -19,7 +19,7 @@ import { generateProductDetails } from '@/ai/flows/generate-product-details';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { translateText } from '@/ai/flows/translate-text';
-import { useArtisan } from '@/context/ArtisanContext';
+import { ArtisanProvider, useArtisan } from '@/context/ArtisanContext';
 import type { Product } from '@/context/ArtisanContext';
 
 const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
@@ -597,7 +597,9 @@ function Upload() {
 export default function UploadPage() {
     return (
         <Suspense fallback={<div className="flex min-h-screen items-center justify-center">Loading...</div>}>
-            <Upload />
+            <ArtisanProvider>
+                <Upload />
+            </ArtisanProvider>
         </Suspense>
     )
 }
