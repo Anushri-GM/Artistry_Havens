@@ -25,7 +25,7 @@ const generateRoleImageFlow = ai.defineFlow(
   async (input) => {
     
     if (input.roleName === 'Artisan') {
-        return { imageDataUri: 'https://cool-chocolate-swan0ykuns.edgeone.app/artisan.jpeg' };
+        return { imageDataUri: 'https://image2url.com/images/1758398342370-5ab14d02-0dc5-4db2-a827-b098c96e830e.jpg' };
     }
 
     if (input.roleName === 'Buyer') {

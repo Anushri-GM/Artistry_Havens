@@ -37,12 +37,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'ik.imagekit.io',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
         hostname: 'cool-chocolate-swan0ykuns.edgeone.app',
         port: '',
         pathname: '/**',
