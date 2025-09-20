@@ -19,6 +19,7 @@ const productDetailsPrompt = ai.definePrompt({
     name: 'productDetailsPrompt',
     input: { schema: GenerateProductDetailsInputSchema },
     output: { schema: GenerateProductDetailsOutputSchema },
+    model: googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT }),
     prompt: `You are an expert product marketer for an online marketplace for artisans. 
     
     Given the image of a new product and its category, generate a compelling product name, description, and story.
@@ -38,10 +39,7 @@ const generateProductDetailsFlow = ai.defineFlow(
     outputSchema: GenerateProductDetailsOutputSchema,
   },
   async (input) => {
-    // Explicitly use Vertex AI for this flow.
-    const llm = googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT });
-
-    const { output } = await productDetailsPrompt({input, model: llm});
+    const { output } = await productDetailsPrompt(input);
     if (!output) {
         throw new Error("Failed to generate product details.");
     }
