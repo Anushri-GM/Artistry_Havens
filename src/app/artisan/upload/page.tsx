@@ -149,15 +149,16 @@ function Upload() {
 
             setIsTranslating(true);
             try {
+                const baseContent = { ...originalContent };
                 const textsToTranslate = [
-                    ...Object.values(originalContent),
+                    ...Object.values(baseContent),
                     ...categories
                 ];
 
                 const translationPromises = textsToTranslate.map(text => translateText({ text, targetLanguage: lang }));
                 const translations = await Promise.all(translationPromises);
                 
-                const contentKeys = Object.keys(originalContent) as (keyof typeof originalContent)[];
+                const contentKeys = Object.keys(baseContent) as (keyof typeof originalContent)[];
                 const newTranslatedContent = contentKeys.reduce((acc, key, index) => {
                     (acc as any)[key] = translations[index].translatedText;
                     return acc;
@@ -622,5 +623,7 @@ export default function UploadPage() {
         </Suspense>
     )
 }
+
+    
 
     
