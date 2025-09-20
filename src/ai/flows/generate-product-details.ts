@@ -52,7 +52,7 @@ const generateProductDetailsFlow = ai.defineFlow(
     if (input.targetLanguage !== 'en') {
         const [translatedName, translatedDescription, translatedStory] = await Promise.all([
             translateText({ text: output.productName, targetLanguage: input.targetLanguage }),
-            translateText({ text: output.productDescription, targetLanguage: input.targeLanguage }),
+            translateText({ text: output.productDescription, targetLanguage: input.targetLanguage }),
             translateText({ text: output.productStory, targetLanguage: input.targetLanguage })
         ]);
 
