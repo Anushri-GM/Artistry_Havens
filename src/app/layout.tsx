@@ -72,14 +72,12 @@ function PageHeader() {
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between gap-2 border-b bg-background/80 px-4 backdrop-blur-sm">
         <div className="flex items-center gap-2">
             <SidebarTrigger className="h-9 w-9" />
-             {!isMobile && !open && <ArtistryHavensLogo className="h-8 w-8 text-primary" />}
-        </div>
-
-        <div className="flex flex-1 justify-center">
-            <div className="flex items-center gap-2">
-                <ArtistryHavensLogo className="h-8 w-8 text-primary" />
-                <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
-            </div>
+             {!isMobile && !open && (
+                <div className="flex items-center gap-2">
+                    <ArtistryHavensLogo className="h-8 w-8 text-primary" />
+                    <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
+                </div>
+             )}
         </div>
 
         <div className="flex items-center justify-end gap-1">
