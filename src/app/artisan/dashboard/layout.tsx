@@ -18,7 +18,6 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { ArtisanProvider } from '@/context/ArtisanContext';
 
 function PageHeader() {
   const { isMobile, open } = useSidebar();
@@ -97,8 +96,8 @@ function PageHeader() {
 
 export default function ArtisanDashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ArtisanProvider>
+    <>
         {children}
-    </ArtisanProvider>
+    </>
   );
 }

@@ -51,6 +51,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Suspense, useEffect, useState } from 'react';
 import { translateText } from '@/ai/flows/translate-text';
+import { ArtisanProvider } from '@/context/ArtisanContext';
 
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home },
@@ -248,7 +249,9 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
 
 function RootLayoutContent({ children }: { children: React.ReactNode }) {
     return (
-        <GlobalNav>{children}</GlobalNav>
+        <ArtisanProvider>
+            <GlobalNav>{children}</GlobalNav>
+        </ArtisanProvider>
     )
 }
 
