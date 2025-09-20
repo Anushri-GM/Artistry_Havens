@@ -18,10 +18,9 @@ import Link from 'next/link';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { generateProductDetails } from '@/ai/flows/generate-product-details';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { translateText } from '@/ai/flows/translate-text';
 
-const previewImage = PlaceHolderImages.find(p => p.id === "pottery-1");
 const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
 
 type TranslatedContent = {
@@ -65,6 +64,7 @@ type TranslatedContent = {
 
 function Upload() {
     const { toast } = useToast();
+    const router = useRouter();
     const searchParams = useSearchParams();
     const lang = searchParams.get('lang') || 'en';
 
@@ -76,7 +76,6 @@ function Upload() {
     const [socialContent, setSocialContent] = useState<Record<string, string> | null>(null);
     const [isDetailsLoading, setIsDetailsLoading] = useState(false);
     const [isSocialLoading, setIsSocialLoading] = useState(false);
-    const [isPreviewOpen, setIsPreviewOpen] = useState(false);
     const [productImage, setProductImage] = useState<string | null>(null);
 
     // Camera states
@@ -343,6 +342,19 @@ function Upload() {
         }
     };
 
+    const handlePreview = () => {
+        const previewData = {
+            productName,
+            productDescription,
+            productStory,
+            productCategory,
+            productImage,
+            price: '49.99' // Example price, you might want to add a field for this
+        };
+        sessionStorage.setItem('productPreview', JSON.stringify(previewData));
+        router.push(`/artisan/upload/preview?lang=${lang}`);
+    };
+
 
     if (isTranslating || !translatedContent) {
         return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
@@ -489,31 +501,11 @@ function Upload() {
                     <CardTitle className="font-headline">{translatedContent.actionsTitle}</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col gap-4">
-                    <Button onClick={() => setIsPreviewOpen(true)} variant="outline" size="lg"><Eye className="mr-2 h-4 w-4" /> {translatedContent.previewButton}</Button>
+                    <Button onClick={handlePreview} variant="outline" size="lg"><Eye className="mr-2 h-4 w-4" /> {translatedContent.previewButton}</Button>
                     <Button size="lg"><UploadCloud className="mr-2 h-4 w-4" /> {translatedContent.uploadButton}</Button>
                 </CardContent>
             </Card>
         </div>
-
-        <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
-                <DialogContent className="max-w-2xl">
-                    <DialogHeader>
-                        <DialogTitle className="font-headline">{translatedContent.previewDialogTitle}</DialogTitle>
-                        <DialogDescription>{translatedContent.previewDialogDescription}</DialogDescription>
-                    </DialogHeader>
-                    <div className="mt-4">
-                        <div className="relative h-80 w-full rounded-lg overflow-hidden bg-muted">
-                            <Image src={productImage || previewImage!.imageUrl} alt="Preview" fill className="object-contain" />
-                        </div>
-                        <h2 className="font-headline text-2xl mt-4">{productName || translatedContent.previewProductNamePlaceholder}</h2>
-                        <p className="text-lg font-semibold text-primary mt-1">$49.99</p>
-                        <h3 className="font-headline text-lg mt-4 font-semibold">Description</h3>
-                        <p className="text-muted-foreground text-sm">{productDescription || translatedContent.previewDescriptionPlaceholder}</p>
-                        <h3 className="font-headline text-lg mt-4 font-semibold">The Story</h3>
-                        <p className="text-sm text-muted-foreground italic">{productStory || translatedContent.previewStoryPlaceholder}</p>
-                    </div>
-                </DialogContent>
-            </Dialog>
 
             <Dialog open={isCameraOpen} onOpenChange={setIsCameraOpen}>
                 <DialogContent>
@@ -556,5 +548,3 @@ export default function UploadPage() {
         </Suspense>
     )
 }
-
-    
