@@ -5,7 +5,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Paintbrush, Hammer, CircleDotDashed, Gem, Scissors, Hand, CheckCircle } from "lucide-react";
+import { Paintbrush, Hammer, CircleDotDashed, Gem, Scissors, Hand, CheckCircle, Anvil } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { translateText } from "@/ai/flows/translate-text";
 
@@ -16,6 +16,7 @@ const categories = [
     { name: "Sculptures", icon: <Hand className="h-10 w-10 text-primary" /> },
     { name: "Textiles", icon: <Scissors className="h-10 w-10 text-primary" /> },
     { name: "Jewelry", icon: <Gem className="h-10 w-10 text-primary" /> },
+    { name: "Metalwork", icon: <Anvil className="h-10 w-10 text-primary" /> },
 ];
 
 type TranslatedContent = {
