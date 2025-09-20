@@ -119,7 +119,7 @@ function Upload() {
             socialTitle: "Generate Social Media Posts",
             socialDescription: "Once your details are ready, let AI help market your product.",
             generateSocialButton: "Generate Social Media Content",
-            actionsTitle: "Actions",
+actionsTitle: "Actions",
             previewButton: "Preview",
             uploadButton: "Upload Product",
             previewDialogTitle: "Post Preview",
@@ -603,3 +603,5 @@ export default function UploadPage() {
         </Suspense>
     )
 }
+
+    
