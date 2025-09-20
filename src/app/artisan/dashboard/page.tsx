@@ -78,10 +78,10 @@ function ArtisanDashboard() {
                 </div>
                 <div className="grid grid-cols-1 gap-6 w-full max-w-md">
                     <Link href={`/artisan/upload?lang=${lang}`}>
-                        <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-accent/10 via-background to-background">
+                        <Card className="group cursor-pointer overflow-hidden text-center transition-all duration-300 hover:shadow-lg hover:-translate-y-1 bg-gradient-to-br from-destructive/10 via-background to-background">
                             <CardHeader>
                                 <div className="flex justify-center">
-                                    <Upload className="w-12 h-12 text-accent" />
+                                    <Upload className="w-12 h-12 text-destructive" />
                                 </div>
                             </CardHeader>
                             <CardContent className="p-4">
