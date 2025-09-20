@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Generates a unique image for a given user role.
@@ -15,11 +16,6 @@ export async function generateRoleImage(
   return generateRoleImageFlow(input);
 }
 
-
-const artisanImageUrl = "https://image2url.com/images/1758398342370-5ab14d02-0dc5-4db2-a827-b098c96e830e.jpg";
-const buyerImageUrl = "https://picsum.photos/seed/buyer-role/400/400";
-const sponsorImageUrl = "https://picsum.photos/seed/sponsor-role/400/400";
-
 const generateRoleImageFlow = ai.defineFlow(
   {
     name: 'generateRoleImageFlow',
@@ -33,12 +29,11 @@ const generateRoleImageFlow = ai.defineFlow(
     }
 
     if (input.roleName === 'Buyer') {
-        return { imageDataUri: 'https://ibb.co/ZRHs7VDp'
-        };
+        return { imageDataUri: 'https://i.ibb.co/tD4G1t2/buyer.jpg' };
     }
 
     if (input.roleName === 'Sponsor') {
-        return { imageDataUri: 'https://ibb.co/6JNtQDR0' };
+        return { imageDataUri: 'https://i.ibb.co/C6dCYw3/sponsor.jpg' };
     }
     
     // Fallback for any other role

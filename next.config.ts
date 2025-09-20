@@ -24,7 +24,7 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
       {
-        protocol: 'https',
+        protocol: 'https,
         hostname: 'picsum.photos',
         port: '',
         pathname: '/**',
@@ -50,6 +50,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'image2url.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ibb.co',
         port: '',
         pathname: '/**',
       },
