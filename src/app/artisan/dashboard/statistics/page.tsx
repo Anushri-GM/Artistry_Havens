@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { CartesianGrid, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import {
   ChartContainer,
@@ -23,6 +23,8 @@ import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { textToSpeech } from '@/ai/flows/text-to-speech';
+import { useSearchParams } from 'next/navigation';
+import { translateText } from '@/ai/flows/translate-text';
 
 const chartConfig = {
   likes: {
@@ -36,13 +38,70 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 
-function AiReviewDialog({ product, open, onOpenChange }: { product: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
+type TranslatedDialogContent = {
+    title: string;
+    description: string;
+    likes: string;
+    shares: string;
+    revenue: string;
+    generatedReviewTitle: string;
+    listen: string;
+    pause: string;
+    regenerate: string;
+    showReview: string;
+    placeholder: string;
+    error: string;
+    synthesizing: string;
+};
+
+function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Product | null; open: boolean; onOpenChange: (open: boolean) => void, lang: string }) {
   const [review, setReview] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [translatedContent, setTranslatedContent] = useState<TranslatedDialogContent | null>(null);
+
+  useEffect(() => {
+    const originalContent = {
+        title: "AI Review for: ",
+        description: "An AI-powered analysis of your product's performance with suggestions for improvement.",
+        likes: "Likes",
+        shares: "Shares",
+        revenue: "Revenue",
+        generatedReviewTitle: "Generated AI Review",
+        listen: "Listen",
+        pause: "Pause",
+        regenerate: "Regenerate",
+        showReview: "Show AI Review",
+        placeholder: "Click the button to generate an AI performance review.",
+        error: "Sorry, we couldn't generate a review at this time. Please try again later.",
+        synthesizing: "Synthesizing...",
+    };
+
+    const translate = async () => {
+        if (lang === 'en' || !product) {
+            setTranslatedContent(originalContent);
+            return;
+        }
+
+        try {
+            const texts = Object.values(originalContent);
+            const translations = await Promise.all(texts.map(text => translateText({ text, targetLanguage: lang })));
+            const keys = Object.keys(originalContent) as (keyof TranslatedDialogContent)[];
+            const newContent = keys.reduce((acc, key, index) => {
+                acc[key] = translations[index].translatedText;
+                return acc;
+            }, {} as TranslatedDialogContent);
+            setTranslatedContent(newContent);
+        } catch (error) {
+            console.error("Failed to translate AI Review Dialog", error);
+            setTranslatedContent(originalContent);
+        }
+    };
+    translate();
+  }, [lang, product]);
 
 
   const handleGenerateReview = async () => {
@@ -67,7 +126,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
       setReview(result.review);
     } catch (error) {
       console.error('Failed to generate AI review:', error);
-      setReview('Sorry, we couldn\'t generate a review at this time. Please try again later.');
+      setReview(translatedContent?.error || 'Sorry, we couldn\'t generate a review at this time. Please try again later.');
     } finally {
       setIsLoading(false);
     }
@@ -109,15 +168,15 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
       setIsPlaying(!isPlaying);
   }
   
-  if (!product) return null;
+  if (!product || !translatedContent) return null;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md p-0 overflow-hidden flex flex-col h-[90vh]">
         <DialogHeader className="p-6 pb-2">
-          <DialogTitle className="font-headline text-xl">AI Review for: {product.name}</DialogTitle>
+          <DialogTitle className="font-headline text-xl">{translatedContent.title}{product.name}</DialogTitle>
           <DialogDescription>
-            An AI-powered analysis of your product's performance with suggestions for improvement.
+            {translatedContent.description}
           </DialogDescription>
         </DialogHeader>
         <ScrollArea className="flex-1">
@@ -130,15 +189,15 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                 )}
                 <div className='grid grid-cols-2 gap-4'>
                     <Card>
-                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Likes</CardTitle></CardHeader>
+                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">{translatedContent.likes}</CardTitle></CardHeader>
                         <CardContent><div className="text-xl font-bold">{(product.likes || 0).toLocaleString()}</div></CardContent>
                     </Card>
                     <Card>
-                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Shares</CardTitle></CardHeader>
+                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">{translatedContent.shares}</CardTitle></CardHeader>
                         <CardContent><div className="text-xl font-bold">{(product.shares || 0).toLocaleString()}</div></CardContent>
                     </Card>
                     <Card className='col-span-2'>
-                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">Revenue</CardTitle></CardHeader>
+                        <CardHeader className="pb-2"><CardTitle className="text-sm font-medium">{translatedContent.revenue}</CardTitle></CardHeader>
                         <CardContent><div className="text-xl font-bold">₹{(product.revenue || 0).toLocaleString('en-IN')}</div></CardContent>
                     </Card>
                 </div>
@@ -146,11 +205,11 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
             </div>
             <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                    <h3 className='font-semibold font-headline'>Generated AI Review</h3>
+                    <h3 className='font-semibold font-headline'>{translatedContent.generatedReviewTitle}</h3>
                     {review && (
                         <Button onClick={isSynthesizing ? togglePlay : handleTextToSpeech} variant="ghost" size="sm" disabled={isSynthesizing}>
                             {isSynthesizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (isPlaying ? <Pause className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />)}
-                            {isPlaying ? "Pause" : "Listen"}
+                            {isSynthesizing ? translatedContent.synthesizing : (isPlaying ? translatedContent.pause : translatedContent.listen)}
                         </Button>
                     )}
                 </div>
@@ -168,7 +227,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                             ) : (
                                 <div className="flex flex-col items-center justify-center h-full text-center p-4">
                                     <Sparkles className="h-8 w-8 text-primary/50 mb-2"/>
-                                    <p className="text-sm text-muted-foreground">Click the button to generate an AI performance review.</p>
+                                    <p className="text-sm text-muted-foreground">{translatedContent.placeholder}</p>
                                 </div>
                             )}
                         </ScrollArea>
@@ -176,7 +235,7 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
                 </Card>
                 <Button onClick={handleGenerateReview} disabled={isLoading} className="w-full">
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Bot className="mr-2 h-4 w-4" />}
-                    {review ? 'Regenerate' : 'Show AI Review'}
+                    {review ? translatedContent.regenerate : translatedContent.showReview}
                 </Button>
             </div>
         </div>
@@ -187,28 +246,105 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
 }
 
 
-export default function StatisticsPage() {
+type TranslatedPageContent = {
+    title: string;
+    description: string;
+    weekly: string;
+    monthly: string;
+    yearly: string;
+    breakdownTitle: string;
+    breakdownDescription: string;
+    likes: string;
+    shares: string;
+    review: string;
+    productNames: Record<string, string>;
+};
+
+function Statistics() {
     const { products } = useArtisan();
     const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const searchParams = useSearchParams();
+    const lang = searchParams.get('lang') || 'en';
+
+    const [translatedContent, setTranslatedContent] = useState<TranslatedPageContent | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const originalContent = {
+            title: "Performance Overview",
+            description: "Likes and sales for all your products.",
+            weekly: "Weekly",
+            monthly: "Monthly",
+            yearly: "Yearly",
+            breakdownTitle: "Product Breakdown",
+            breakdownDescription: "Individual performance metrics for each product.",
+            likes: "Likes",
+            shares: "Shares",
+            review: "Review",
+        };
+
+        const translate = async () => {
+            if (lang === 'en') {
+                const productNames = products.reduce((acc, p) => ({...acc, [p.id]: p.name}), {});
+                setTranslatedContent({ ...originalContent, productNames });
+                setIsLoading(false);
+                return;
+            }
+
+            setIsLoading(true);
+            try {
+                const textsToTranslate = [
+                    ...Object.values(originalContent),
+                    ...products.map(p => p.name)
+                ];
+                
+                const translations = await Promise.all(textsToTranslate.map(text => translateText({ text, targetLanguage: lang })));
+                
+                const baseContentKeys = Object.keys(originalContent) as (keyof typeof originalContent)[];
+                const newContent: any = {};
+                baseContentKeys.forEach((key, index) => {
+                    newContent[key] = translations[index].translatedText;
+                });
+                
+                newContent.productNames = products.reduce((acc, p, index) => {
+                    acc[p.id] = translations[baseContentKeys.length + index].translatedText;
+                    return acc;
+                }, {} as Record<string, string>);
+                
+                setTranslatedContent(newContent);
+            } catch (error) {
+                console.error("Failed to translate stats page", error);
+                const productNames = products.reduce((acc, p) => ({...acc, [p.id]: p.name}), {});
+                setTranslatedContent({ ...originalContent, productNames });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        translate();
+    }, [lang, products]);
 
     const handleShowReview = (product: Product) => {
         setSelectedProduct(product);
         setIsDialogOpen(true);
     };
 
+    if (isLoading || !translatedContent) {
+        return <div className="flex h-full items-center justify-center">Loading...</div>
+    }
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-3xl font-bold font-headline">Performance Overview</h1>
-        <p className="text-muted-foreground">Likes and sales for all your products.</p>
+        <h1 className="text-3xl font-bold font-headline">{translatedContent.title}</h1>
+        <p className="text-muted-foreground">{translatedContent.description}</p>
       </div>
 
       <Tabs defaultValue="monthly">
         <TabsList>
-          <TabsTrigger value="weekly">Weekly</TabsTrigger>
-          <TabsTrigger value="monthly">Monthly</TabsTrigger>
-          <TabsTrigger value="yearly">Yearly</TabsTrigger>
+          <TabsTrigger value="weekly">{translatedContent.weekly}</TabsTrigger>
+          <TabsTrigger value="monthly">{translatedContent.monthly}</TabsTrigger>
+          <TabsTrigger value="yearly">{translatedContent.yearly}</TabsTrigger>
         </TabsList>
         <TabsContent value="weekly">
           <Card>
@@ -276,8 +412,8 @@ export default function StatisticsPage() {
       </Tabs>
       
       <div>
-        <h2 className="text-2xl font-bold font-headline">Product Breakdown</h2>
-        <p className="text-muted-foreground">Individual performance metrics for each product.</p>
+        <h2 className="text-2xl font-bold font-headline">{translatedContent.breakdownTitle}</h2>
+        <p className="text-muted-foreground">{translatedContent.breakdownDescription}</p>
       </div>
 
       <div className="space-y-4">
@@ -293,17 +429,17 @@ export default function StatisticsPage() {
                )}
                <div className="flex-1 flex flex-col">
                  <CardHeader className="flex-1 pb-2">
-                    <CardTitle className="font-headline font-semibold text-base">{product.name}</CardTitle>
+                    <CardTitle className="font-headline font-semibold text-base">{translatedContent.productNames[product.id] || product.name}</CardTitle>
                     <div className="grid grid-cols-2 gap-4 text-center pt-2">
                         <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground">Likes</p>
+                            <p className="text-xs text-muted-foreground">{translatedContent.likes}</p>
                             <div className="flex items-center justify-center gap-1 font-bold text-sm">
                                 <Heart className="h-4 w-4 text-pink-500" />
                                 {(product.likes || 0).toLocaleString()}
                             </div>
                         </div>
                         <div className="space-y-1">
-                            <p className="text-xs text-muted-foreground">Shares</p>
+                            <p className="text-xs text-muted-foreground">{translatedContent.shares}</p>
                             <div className="flex items-center justify-center gap-1 font-bold text-sm">
                                 <Share2 className="h-4 w-4 text-blue-500" />
                                 {(product.shares || 0).toLocaleString()}
@@ -314,7 +450,7 @@ export default function StatisticsPage() {
                  <CardFooter className="flex justify-end gap-2 bg-background/50 p-4 pt-2">
                       <Button variant="outline" size="sm" onClick={() => handleShowReview(product)}>
                         <Bot className="mr-2 h-4 w-4" />
-                        Review
+                        {translatedContent.review}
                       </Button>
                  </CardFooter>
                </div>
@@ -323,9 +459,17 @@ export default function StatisticsPage() {
         ))}
       </div>
 
-      <AiReviewDialog product={selectedProduct} open={isDialogOpen} onOpenChange={setIsDialogOpen} />
+      <AiReviewDialog product={selectedProduct} open={isDialogOpen} onOpenChange={setIsDialogOpen} lang={lang} />
     </div>
   );
+}
+
+export default function StatisticsPage() {
+    return (
+        <Suspense fallback={<div className="flex h-full items-center justify-center">Loading...</div>}>
+            <Statistics />
+        </Suspense>
+    )
 }
 
     
