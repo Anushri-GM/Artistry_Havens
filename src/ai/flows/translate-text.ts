@@ -30,7 +30,7 @@ const translateTextPrompt = ai.definePrompt({
   name: 'translateTextPrompt',
   input: {schema: TranslateTextInputSchema},
   output: {schema: TranslateTextOutputSchema},
-  prompt: `Translate the following text to {{{targetLanguage}}}. Do not translate the app name 'Artistry Havens'.
+  prompt: `Translate the following text to {{{targetLanguage}}}. The exact phrase 'Artistry Havens' must not be translated.
 
 Text: {{{text}}}
 `,
