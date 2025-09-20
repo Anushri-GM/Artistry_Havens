@@ -9,3 +9,4 @@ import '@/ai/flows/provide-ai-review.ts';
 import '@/ai/flows/generate-custom-design.ts';
 import '@/ai/flows/translate-text.ts';
 import '@/ai/flows/generate-product-details.ts';
+import '@/ai/flows/text-to-speech.ts';

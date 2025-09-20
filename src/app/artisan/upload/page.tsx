@@ -7,11 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle } from 'lucide-react';
+import { Camera, Copy, Eye, Facebook, GalleryHorizontal, Loader2, Mic, Twitter, UploadCloud, Sparkles, Share2, ArrowLeft, CircleDot, AlertTriangle, MicOff } from 'lucide-react';
 import { generateSocialMediaContent } from '@/ai/flows/generate-social-media-content';
 import { useToast } from '@/hooks/use-toast';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import Link from 'next/link';
@@ -84,6 +84,11 @@ function Upload() {
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean | null>(null);
     const videoRef = useRef<HTMLVideoElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    // STT States
+    const [isRecording, setIsRecording] = useState(false);
+    const recognitionRef = useRef<SpeechRecognition | null>(null);
+
 
     const [translatedContent, setTranslatedContent] = useState<TranslatedContent | null>(null);
     const [isTranslating, setIsTranslating] = useState(false);
@@ -285,6 +290,60 @@ function Upload() {
         toast({ title: "Copied to clipboard!" });
     }
 
+    const toggleRecording = async () => {
+        if (isRecording) {
+            recognitionRef.current?.stop();
+            setIsRecording(false);
+            return;
+        }
+
+        try {
+             // Request microphone permission
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                toast({ variant: 'destructive', title: 'Not Supported', description: 'Speech recognition is not supported in this browser.' });
+                return;
+            }
+
+            recognitionRef.current = new SpeechRecognition();
+            recognitionRef.current.lang = lang;
+            recognitionRef.current.continuous = true;
+            recognitionRef.current.interimResults = true;
+
+            recognitionRef.current.onstart = () => {
+                setIsRecording(true);
+                toast({ title: "Listening...", description: "Start speaking your product story." });
+            };
+
+            recognitionRef.current.onend = () => {
+                setIsRecording(false);
+                toast({ title: "Stopped Listening." });
+            };
+
+            recognitionRef.current.onerror = (event) => {
+                console.error("Speech recognition error", event.error);
+                toast({ variant: 'destructive', title: 'Recognition Error', description: event.error });
+            };
+
+            recognitionRef.current.onresult = (event) => {
+                const transcript = Array.from(event.results)
+                    .map(result => result[0])
+                    .map(result => result.transcript)
+                    .join('');
+                
+                setProductStory(transcript);
+            };
+
+            recognitionRef.current.start();
+
+        } catch(err) {
+             toast({ variant: 'destructive', title: 'Permission Denied', description: 'Microphone access was denied. Please allow it in your browser settings.' });
+        }
+    };
+
+
     if (isTranslating || !translatedContent) {
         return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
     }
@@ -370,7 +429,13 @@ function Upload() {
                                 <Textarea id="product-desc" placeholder={translatedContent.descriptionPlaceholder} value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>
                             </div>
                             <div>
-                                <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
+                                 <div className="flex items-center justify-between mb-2">
+                                    <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
+                                    <Button variant="ghost" size="icon" className="h-7 w-7" onClick={toggleRecording}>
+                                        {isRecording ? <MicOff className="text-destructive" /> : <Mic />}
+                                        <span className="sr-only">{isRecording ? 'Stop recording' : 'Start recording'}</span>
+                                    </Button>
+                                </div>
                                 <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
                             </div>
                         </CardContent>
@@ -491,5 +556,3 @@ export default function UploadPage() {
         </Suspense>
     )
 }
-
-    

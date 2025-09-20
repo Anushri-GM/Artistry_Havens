@@ -13,13 +13,14 @@ import {
 } from '@/components/ui/chart';
 import { mockProducts, mockStatsData, mockWeeklyStatsData, mockYearlyStatsData } from '@/lib/mock-data';
 import { Button } from '@/components/ui/button';
-import { Heart, Share2, Bot, Loader2, Sparkles } from 'lucide-react';
+import { Heart, Share2, Bot, Loader2, Sparkles, Volume2, Pause } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { provideAiReview, ProvideAiReviewInput } from '@/ai/flows/provide-ai-review';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import Image from 'next/image';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { textToSpeech } from '@/ai/flows/text-to-speech';
 
 const chartConfig = {
   likes: {
@@ -37,11 +38,21 @@ type Product = (typeof mockProducts)[0];
 function AiReviewDialog({ product, open, onOpenChange }: { product: Product | null; open: boolean; onOpenChange: (open: boolean) => void }) {
   const [review, setReview] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSynthesizing, setIsSynthesizing] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
 
   const handleGenerateReview = async () => {
     if (!product) return;
     setIsLoading(true);
     setReview('');
+    setAudioUrl(null);
+    if(audio) {
+      audio.pause();
+      setIsPlaying(false);
+    }
     try {
       const input: ProvideAiReviewInput = {
         productDescription: product.description,
@@ -60,6 +71,42 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
       setIsLoading(false);
     }
   };
+
+  const handleTextToSpeech = async () => {
+      if(!review) return;
+
+      setIsSynthesizing(true);
+      if(audio) {
+        audio.pause();
+        setIsPlaying(false);
+      }
+      setAudioUrl(null);
+
+      try {
+          const result = await textToSpeech({ text: review });
+          setAudioUrl(result.audioDataUri);
+          const newAudio = new Audio(result.audioDataUri);
+          setAudio(newAudio);
+          newAudio.play();
+          setIsPlaying(true);
+          newAudio.onended = () => setIsPlaying(false);
+
+      } catch(error) {
+          console.error("Failed to synthesize speech:", error);
+      } finally {
+          setIsSynthesizing(false);
+      }
+  }
+
+  const togglePlay = () => {
+      if(!audio) return;
+      if(isPlaying) {
+          audio.pause();
+      } else {
+          audio.play();
+      }
+      setIsPlaying(!isPlaying);
+  }
   
   if (!product) return null;
 
@@ -97,7 +144,15 @@ function AiReviewDialog({ product, open, onOpenChange }: { product: Product | nu
 
             </div>
             <div className="space-y-4">
-                <h3 className='font-semibold font-headline'>Generated AI Review</h3>
+                <div className="flex justify-between items-center">
+                    <h3 className='font-semibold font-headline'>Generated AI Review</h3>
+                    {review && (
+                        <Button onClick={isSynthesizing ? togglePlay : handleTextToSpeech} variant="ghost" size="sm" disabled={isSynthesizing}>
+                            {isSynthesizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (isPlaying ? <Pause className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />)}
+                            {isPlaying ? "Pause" : "Listen"}
+                        </Button>
+                    )}
+                </div>
                 <Card className="bg-primary/5">
                     <CardContent className="p-4">
                         <ScrollArea className="h-[180px] w-full">
@@ -270,9 +325,3 @@ export default function StatisticsPage() {
     </div>
   );
 }
-
-    
-
-    
-
-    
