@@ -89,29 +89,7 @@ export default function ProductDetailPage() {
   }
 
   return (
-    <div className="flex flex-col h-full">
-      <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
-          <div className="container mx-auto flex h-16 items-center justify-between p-4">
-          <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                  <ArrowLeft />
-              </Button>
-              <h1 className="font-headline text-xl font-bold truncate">{product.name}</h1>
-          </div>
-          <div className="flex items-center gap-1">
-              <Button variant="ghost" size="icon" onClick={handleLike}>
-                  <Heart />
-              </Button>
-              <Button variant="ghost" size="icon">
-                  <ShoppingBag />
-              </Button>
-              <Button variant="ghost" size="icon" className="bg-primary/10 text-primary hover:bg-primary/20">
-                  <Mic className="h-5 w-5" />
-                  <span className="sr-only">Voice Command</span>
-              </Button>
-          </div>
-          </div>
-      </header>
+    <>
       <main className="flex-1 overflow-y-auto">
           <div>
               {image && (
@@ -231,8 +209,6 @@ export default function ProductDetailPage() {
               <ShoppingBag className="mr-2 h-4 w-4" /> Add to Cart
           </Button>
       </footer>
-    </div>
+    </>
   )
 }
-
-    

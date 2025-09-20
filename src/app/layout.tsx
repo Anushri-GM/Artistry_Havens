@@ -307,7 +307,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang') || 'en';
   
-  const showNav = pathname.startsWith('/artisan/dashboard/');
+  const showNav = pathname.startsWith('/artisan/');
   
   const [translatedNavItems, setTranslatedNavItems] = useState(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
   const [translatedLogout, setTranslatedLogout] = useState("Logout");
@@ -348,7 +348,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   }, [lang]);
 
   if (!showNav) {
-      if (pathname.startsWith('/buyer/product/') || pathname === '/artisan/upload/preview') {
+      if (pathname.startsWith('/buyer/product/')) {
         return <div className="h-full flex flex-col">{children}</div>;
       }
       return <>{children}</>;
@@ -394,8 +394,8 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
           </SidebarFooter>
         </Sidebar>
         <div className="flex flex-1 flex-col overflow-hidden">
+            <PageHeader />
             <main className="flex-1 overflow-y-auto">
-                <PageHeader />
                 {children}
             </main>
         </div>

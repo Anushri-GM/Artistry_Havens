@@ -65,24 +65,6 @@ export default function PreviewPage() {
 
     return (
         <div className="flex flex-col h-full">
-            <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-sm">
-                <div className="container mx-auto flex h-16 items-center justify-between p-4">
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="icon" onClick={() => router.back()}>
-                            <ArrowLeft />
-                        </Button>
-                        <h1 className="font-headline text-xl font-bold truncate">Product Preview</h1>
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon">
-                            <Heart />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                            <ShoppingBag />
-                        </Button>
-                    </div>
-                </div>
-            </header>
             <main className="flex-1 overflow-y-auto">
                 <div>
                     {productImage && (
