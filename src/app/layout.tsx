@@ -66,11 +66,11 @@ import { useRouter } from 'next/navigation';
 const navItems = [
   { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'मुख', 'ড্যাশবোর্ড', 'హోమ్', 'வீடு', 'گھر'] },
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'उत्पाद', 'পণ্য', 'ఉత్పత్తులు', 'பொருட்கள்', 'مصنوعات'] },
-  { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'upload product', 'अपलोड', 'আপলোড', 'అప్లోడ్', 'பதிவேற்று', 'اپ لوڈ'] },
+  { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'अपलोड', 'আপলোড', 'అప్లోడ్', 'பதிவேற்று', 'اپ لوڈ'] },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'ट्रेंड्स', 'প্রবণতা', 'ట్రెండ్లు', 'போக்குகள்', 'رجحانات'] },
   { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance', 'आंकड़े', 'পরিসংখ্যান', 'గణాంకాలు', 'புள்ளிவிவரங்கள்', 'اعداد و شمار'] },
   { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings', 'वित्त', 'অর্থ', 'ఆదాయం', 'வருவாய்', 'مالیات'] },
-  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners', 'प्रायोजक', 'পৃষ্ঠপোষক', 'స్పాన్సర్‌లు', 'ஆதரவாளர்கள்', 'کفیل'] },
+  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners', 'प्रायोजक', 'পৃষ্ঠপোষক', 'స్పాన్సర్‌లు', 'ఆதரவாளர்கள்', 'کفیل'] },
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders', 'मेरे ऑर्डर', 'আমার আদেশ', 'నా ఆర్డర్లు', 'எனது ஆர்டர்கள்', 'میرے احکامات'] },
   { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests', 'अनुरोध', 'অনুরোধ', 'विनंत्या', 'கோரிக்கைகள்', 'درخواستیں'] },
@@ -307,7 +307,7 @@ function GlobalNav({ children }: { children: React.ReactNode }) {
   const searchParams = useSearchParams();
   const lang = searchParams.get('lang') || 'en';
   
-  const showNav = pathname.startsWith('/artisan/');
+  const showNav = pathname.startsWith('/artisan/dashboard') || pathname === '/artisan/upload';
   
   const [translatedNavItems, setTranslatedNavItems] = useState(navItems.map(item => item.type === 'divider' ? item : { ...item, label: item.label! } ));
   const [translatedLogout, setTranslatedLogout] = useState("Logout");

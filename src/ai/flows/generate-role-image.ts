@@ -33,7 +33,8 @@ const generateRoleImageFlow = ai.defineFlow(
     }
 
     if (input.roleName === 'Buyer') {
-        return { imageDataUri: buyerImageUrl };
+        return { imageDataUri: https://ibb.co/ZRHs7VDp
+        };
     }
 
     if (input.roleName === 'Sponsor') {
