@@ -23,6 +23,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  // Ensure likes and shares are numbers, defaulting to 0 if not present.
   const likes = product.likes ?? 0;
   const shares = product.shares ?? 0;
 
@@ -46,11 +47,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Heart className="h-3 w-3" />
-            <span>{(product.likes ?? 0).toLocaleString()}</span>
+            <span>{likes.toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-1">
             <Share2 className="h-3 w-3" />
-            <span>{(product.shares ?? 0).toLocaleString()}</span>
+            <span>{shares.toLocaleString()}</span>
           </div>
         </div>
       </CardContent>
