@@ -393,61 +393,6 @@ function Upload() {
         toast({ title: translatedContent.toasts.copied });
     }
 
-    const toggleRecording = async () => {
-        if (!translatedContent) return;
-
-        if (isRecording) {
-            recognitionRef.current?.stop();
-            setIsRecording(false);
-            return;
-        }
-
-        try {
-             // Request microphone permission
-            await navigator.mediaDevices.getUserMedia({ audio: true });
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                toast({ variant: 'destructive', title: translatedContent.micNotSupportedTitle, description: translatedContent.micNotSupportedDescription });
-                return;
-            }
-
-            recognitionRef.current = new SpeechRecognition();
-            recognitionRef.current.lang = lang;
-            recognitionRef.current.continuous = true;
-            recognitionRef.current.interimResults = true;
-
-            recognitionRef.current.onstart = () => {
-                setIsRecording(true);
-                toast({ title: translatedContent.listeningToastTitle, description: translatedContent.listeningToastDescription });
-            };
-
-            recognitionRef.current.onend = () => {
-                setIsRecording(false);
-                toast({ title: translatedContent.stoppedListeningToastTitle });
-            };
-
-            recognitionRef.current.onerror = (event) => {
-                console.error("Speech recognition error", event.error);
-                toast({ variant: 'destructive', title: translatedContent.micErrorTitle, description: event.error });
-            };
-
-            recognitionRef.current.onresult = (event) => {
-                const transcript = Array.from(event.results)
-                    .map(result => result[0])
-                    .map(result => result.transcript)
-                    .join('');
-                
-                setProductStory(transcript);
-            };
-
-            recognitionRef.current.start();
-
-        } catch(err) {
-             toast({ variant: 'destructive', title: translatedContent.micPermissionDeniedTitle, description: translatedContent.micPermissionDeniedDescription });
-        }
-    };
-
     const handlePreview = () => {
         const previewData = {
             productName,
@@ -604,6 +549,7 @@ function Upload() {
                                 value={productPrice} 
                                 onChange={e => setProductPrice(e.target.value)} 
                                 className="pl-8"
+                                disabled={isDetailsLoading}
                             />
                             <div className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">
                                 <BadgeIndianRupee className="h-5 w-5" />
@@ -714,3 +660,5 @@ export default function UploadPage() {
         </Suspense>
     )
 }
+
+    
