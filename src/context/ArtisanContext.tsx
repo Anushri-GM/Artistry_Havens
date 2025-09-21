@@ -114,7 +114,13 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
             return prevSaved;
         }
         alreadySaved = false;
-        return [productToSave, ...prevSaved];
+        // Ensure likes and shares are numbers
+        const newSavedProduct = {
+            ...productToSave,
+            likes: productToSave.likes ?? 0,
+            shares: productToSave.shares ?? 0,
+        };
+        return [newSavedProduct, ...prevSaved];
     });
     return !alreadySaved;
   }
@@ -180,5 +186,3 @@ export const useArtisan = () => {
   }
   return context;
 };
-
-    
