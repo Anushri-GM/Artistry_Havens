@@ -23,12 +23,18 @@ const generateCategoryIconFlow = ai.defineFlow(
     outputSchema: GenerateCategoryIconOutputSchema,
   },
   async (input) => {
+    
+    const prompt = `Generate a visually appealing, abstract icon that represents the artisan craft category of '${input.categoryName}'.
+The icon should be simple, modern, and easily recognizable.
+It should be suitable for a web application interface, displayed on a clean, neutral-colored, flat background.
+Do not include any text or words in the image.
+The style should be a graphic illustration, not a photograph.
+Focus on a single, strong visual metaphor for the category.
+The image must be square.`;
+
     const { media } = await ai.generate({
         model: 'googleai/imagen-4.0-fast-generate-001',
-        prompt: `Generate a high-quality, realistic photograph of a beautiful artisan product from the category: '${input.categoryName}'.
-        The product should be displayed on a clean, neutral-colored background, suitable for a product showcase in a web application.
-        The image should look professional and appealing, like a photograph taken for a high-end online store.
-        Do not include any text or words in the image.`,
+        prompt: prompt,
          config: {
             aspectRatio: "1:1"
         }
