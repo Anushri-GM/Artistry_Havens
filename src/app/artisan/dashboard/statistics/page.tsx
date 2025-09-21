@@ -68,7 +68,6 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
     if (!open) {
       if (audioRef.current) {
         audioRef.current.pause();
-        audioRef.current.src = "";
         audioRef.current = null;
       }
       setIsPlaying(false);
@@ -124,6 +123,7 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
     setAudioUrl(null);
     if(audioRef.current) {
       audioRef.current.pause();
+      audioRef.current = null;
       setIsPlaying(false);
     }
     try {
@@ -147,11 +147,12 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
   };
 
   const handleTextToSpeech = async () => {
-      if(!review) return;
+      if(!review || isSynthesizing) return;
 
       setIsSynthesizing(true);
       if(audioRef.current) {
         audioRef.current.pause();
+        audioRef.current = null;
         setIsPlaying(false);
       }
       setAudioUrl(null);
@@ -161,8 +162,11 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
           setAudioUrl(result.audioDataUri);
           const newAudio = new Audio(result.audioDataUri);
           audioRef.current = newAudio;
-          newAudio.play();
-          setIsPlaying(true);
+          
+          newAudio.addEventListener('canplaythrough', () => {
+            newAudio.play();
+            setIsPlaying(true);
+          });
           newAudio.onended = () => setIsPlaying(false);
 
       } catch(error) {
@@ -481,3 +485,5 @@ export default function StatisticsPage() {
         </Suspense>
     )
 }
+
+    
