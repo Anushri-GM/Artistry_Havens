@@ -10,43 +10,43 @@
     {
       "id": "pottery-1",
       "description": "A beautifully crafted pottery vase.",
-      "imageUrl": "https://images.unsplash.com/photo-1578749556568-bc3c1e52f50e?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/3kCg4P6/pottery-1.png",
       "imageHint": "pottery vase"
     },
     {
       "id": "woodwork-1",
       "description": "An intricate wooden sculpture of an elephant.",
-      "imageUrl": "https://images.unsplash.com/photo-1618512496248-a07fe835ce95?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/C2J753V/woodwork-1.png",
       "imageHint": "wood elephant"
     },
     {
       "id": "jewelry-1",
       "description": "A handmade silver necklace with a turquoise stone.",
-      "imageUrl": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/fHwB9hD/jewelry-1.png",
       "imageHint": "silver necklace"
     },
     {
       "id": "textiles-1",
       "description": "A colorful handwoven textile.",
-      "imageUrl": "https://images.unsplash.com/photo-1620755938474-f2596245c593?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/N2Cqj2D/textiles-1.png",
       "imageHint": "woven textile"
     },
     {
       "id": "paintings-1",
       "description": "An abstract painting with vibrant colors.",
-      "imageUrl": "https://images.unsplash.com/photo-1547891654-e66ed711b934?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/fNsm7Sg/paintings-1.png",
       "imageHint": "abstract painting"
     },
     {
       "id": "metalwork-1",
       "description": "A decorative metalwork wall hanging.",
-      "imageUrl": "https://images.unsplash.com/photo-1519962140156-9b97d130a84d?q=80&w=400",
+      "imageUrl": "https://i.ibb.co/hDwBvCD/metalwork-1.png",
       "imageHint": "metal wall-art"
     },
     {
       "id": "avatar-1",
       "description": "Avatar for an artisan.",
-      "imageUrl": "https://picsum.photos/seed/avatar1/200/200",
+      "imageUrl": "https://i.ibb.co/2SPn2wR/avatar-1.png",
       "imageHint": "woman portrait"
     },
     {
