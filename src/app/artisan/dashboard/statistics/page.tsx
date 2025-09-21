@@ -1,7 +1,7 @@
 
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import { CartesianGrid, XAxis, YAxis, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import {
   ChartContainer,
@@ -59,9 +59,22 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
   const [isLoading, setIsLoading] = useState(false);
   const [isSynthesizing, setIsSynthesizing] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const [audio, setAudio] = useState<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [translatedContent, setTranslatedContent] = useState<TranslatedDialogContent | null>(null);
+
+  // When the dialog is closed, stop and release the audio
+  useEffect(() => {
+    if (!open) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+        audioRef.current = null;
+      }
+      setIsPlaying(false);
+      setAudioUrl(null);
+    }
+  }, [open]);
 
   useEffect(() => {
     const originalContent = {
@@ -109,8 +122,8 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
     setIsLoading(true);
     setReview('');
     setAudioUrl(null);
-    if(audio) {
-      audio.pause();
+    if(audioRef.current) {
+      audioRef.current.pause();
       setIsPlaying(false);
     }
     try {
@@ -137,8 +150,8 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
       if(!review) return;
 
       setIsSynthesizing(true);
-      if(audio) {
-        audio.pause();
+      if(audioRef.current) {
+        audioRef.current.pause();
         setIsPlaying(false);
       }
       setAudioUrl(null);
@@ -147,7 +160,7 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
           const result = await textToSpeech({ text: review });
           setAudioUrl(result.audioDataUri);
           const newAudio = new Audio(result.audioDataUri);
-          setAudio(newAudio);
+          audioRef.current = newAudio;
           newAudio.play();
           setIsPlaying(true);
           newAudio.onended = () => setIsPlaying(false);
@@ -160,11 +173,11 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
   }
 
   const togglePlay = () => {
-      if(!audio) return;
+      if(!audioRef.current) return;
       if(isPlaying) {
-          audio.pause();
+          audioRef.current.pause();
       } else {
-          audio.play();
+          audioRef.current.play();
       }
       setIsPlaying(!isPlaying);
   }
@@ -208,7 +221,7 @@ function AiReviewDialog({ product, open, onOpenChange, lang }: { product: Produc
                 <div className="flex justify-between items-center">
                     <h3 className='font-semibold font-headline'>{translatedContent.generatedReviewTitle}</h3>
                     {review && (
-                        <Button onClick={isSynthesizing ? togglePlay : handleTextToSpeech} variant="ghost" size="sm" disabled={isSynthesizing}>
+                        <Button onClick={audioUrl ? togglePlay : handleTextToSpeech} variant="ghost" size="sm" disabled={isSynthesizing}>
                             {isSynthesizing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : (isPlaying ? <Pause className="mr-2 h-4 w-4" /> : <Volume2 className="mr-2 h-4 w-4" />)}
                             {isSynthesizing ? translatedContent.synthesizing : (isPlaying ? translatedContent.pause : translatedContent.listen)}
                         </Button>
@@ -468,5 +481,3 @@ export default function StatisticsPage() {
         </Suspense>
     )
 }
-
-    

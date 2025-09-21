@@ -73,14 +73,14 @@ const textToSpeechFlow = ai.defineFlow(
       prompt: input.text,
     });
     
-    if (!media) {
+    if (!media?.url) {
       throw new Error('No media returned from the TTS model.');
     }
     
-    const audioBuffer = Buffer.from(
-      media.url.substring(media.url.indexOf(',') + 1),
-      'base64'
-    );
+    // The media URL is a data URI: "data:audio/pcm;base64,..."
+    // We need to extract the base64 part.
+    const base64Data = media.url.substring(media.url.indexOf(',') + 1);
+    const audioBuffer = Buffer.from(base64Data, 'base64');
     
     const wavBase64 = await toWav(audioBuffer);
     
