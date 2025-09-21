@@ -217,7 +217,7 @@ function PageHeader() {
             voiceNotSupportedTitle: 'Voice Commands Not Supported',
             voiceNotSupportedDesc: 'Your browser does not support the Web Speech API.',
             listeningTitle: 'Listening...',
-            listeningDesc: 'Say a command like "Go to my products".',
+            listeningDesc: 'Say a command like "My products" or "Finance".',
             voiceErrorTitle: 'Voice Recognition Error',
             voiceErrorMicDenied: 'Microphone access was denied.',
             voiceErrorGeneric: 'An error occurred.',
