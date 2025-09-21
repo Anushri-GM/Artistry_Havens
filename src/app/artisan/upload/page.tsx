@@ -588,16 +588,7 @@ function Upload() {
                                 <Textarea id="product-desc" placeholder={translatedContent.descriptionPlaceholder} value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>
                             </div>
                             <div>
-                                 <div className="flex items-center justify-between mb-2">
-                                    <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
-                                    <div className="flex items-center gap-2">
-                                        {isRecording && <span className="text-xs text-destructive animate-pulse">{translatedContent.listeningToastTitle}</span>}
-                                        <Button variant="ghost" size="icon" className={cn("h-7 w-7", isRecording && "text-destructive animate-pulse")} onClick={toggleRecording}>
-                                            {isRecording ? <MicOff /> : <Mic />}
-                                            <span className="sr-only">{isRecording ? 'Stop recording' : 'Start recording'}</span>
-                                        </Button>
-                                    </div>
-                                </div>
+                                <Label htmlFor="product-story">{translatedContent.storyLabel}</Label>
                                 <Textarea id="product-story" placeholder={translatedContent.storyPlaceholder} value={productStory} onChange={e => setProductStory(e.target.value)} disabled={isDetailsLoading} rows={4} />
                             </div>
                         </CardContent>
