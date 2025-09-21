@@ -52,10 +52,12 @@ interface ArtisanContextType {
   products: Product[];
   orders: Order[];
   requests: OrderRequest[];
+  savedProducts: Product[];
   addProduct: (product: Product) => void;
   acceptRequest: (requestId: string) => void;
   denyRequest: (requestId: string) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
+  saveProduct: (product: Product) => boolean; // Returns true if saved, false if already saved
 }
 
 // Initial Data
@@ -98,10 +100,24 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>(mockProducts);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [requests, setRequests] = useState<OrderRequest[]>(initialRequests);
+  const [savedProducts, setSavedProducts] = useState<Product[]>(mockProducts.slice(0, 5));
 
   const addProduct = (product: Product) => {
     setProducts(prevProducts => [product, ...prevProducts]);
   };
+
+  const saveProduct = (productToSave: Product) => {
+    let alreadySaved = false;
+    setSavedProducts(prevSaved => {
+        if (prevSaved.some(p => p.id === productToSave.id)) {
+            alreadySaved = true;
+            return prevSaved;
+        }
+        alreadySaved = false;
+        return [productToSave, ...prevSaved];
+    });
+    return !alreadySaved;
+  }
 
   const acceptRequest = (requestId: string) => {
     const request = requests.find(r => r.id === requestId);
@@ -150,7 +166,7 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ArtisanContext.Provider value={{ products, orders, requests, addProduct, acceptRequest, denyRequest, updateOrderStatus }}>
+    <ArtisanContext.Provider value={{ products, orders, requests, savedProducts, addProduct, acceptRequest, denyRequest, updateOrderStatus, saveProduct }}>
       {children}
     </ArtisanContext.Provider>
   );

@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Button } from "@/components/ui/button";
 import { Heart, Share2, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useArtisan } from "@/context/ArtisanContext";
 
 type Product = {
   id: string;
@@ -27,12 +28,22 @@ interface TrendProductCardProps {
 
 export function TrendProductCard({ product }: TrendProductCardProps) {
   const { toast } = useToast();
+  const { saveProduct } = useArtisan();
 
   const handleSave = () => {
-    toast({
-      title: "Saved!",
-      description: `"${product.name}" has been added to your saved collection.`,
-    });
+    const wasSaved = saveProduct(product);
+    if (wasSaved) {
+        toast({
+          title: "Saved!",
+          description: `"${product.name}" has been added to your saved collection.`,
+        });
+    } else {
+         toast({
+            variant: "default",
+            title: "Already Saved",
+            description: `"${product.name}" is already in your collection.`,
+        });
+    }
   };
 
   return (
