@@ -47,7 +47,6 @@ export default function SponsorPage() {
               <ArtistryHavensLogo className="h-8 w-8" />
               <h1 className="font-headline text-xl font-bold">Artistry Havens</h1>
             </div>
-            <Button variant="secondary" asChild><Link href="/sponsor/login">Login</Link></Button>
           </div>
         </header>
         
@@ -66,14 +65,11 @@ export default function SponsorPage() {
             <div className="absolute inset-0 bg-primary/70" />
             <div className="relative z-10 max-w-4xl px-4">
               <h1 className="font-headline text-3xl font-extrabold tracking-tight">
-                Become a Patron of the Arts
+                Welcome, Sponsor!
               </h1>
               <p className="mt-6 text-lg text-primary-foreground/80">
                 Invest in culture, empower creators, and share in the success of India's finest artisans.
               </p>
-              <Button size="lg" className="mt-8 bg-accent text-accent-foreground hover:bg-accent/90" asChild>
-                <Link href="/sponsor/login">Start Sponsoring Today</Link>
-              </Button>
             </div>
           </section>
 
@@ -122,7 +118,7 @@ export default function SponsorPage() {
                             <p className="text-sm text-muted-foreground">by {product.artisan}</p>
                           </CardHeader>
                           <CardContent>
-                            <Button className="w-full" asChild><Link href="/sponsor/login">Sponsor</Link></Button>
+                            <Button className="w-full">View Artisan</Button>
                           </CardContent>
                         </Card>
                       ))}
@@ -133,17 +129,6 @@ export default function SponsorPage() {
             </div>
           </section>
 
-          <section className="bg-primary text-primary-foreground py-20">
-              <div className="container mx-auto text-center">
-                  <h2 className="font-headline text-3xl font-bold">Ready to Make an Impact?</h2>
-                  <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-foreground/80">
-                    Join our exclusive network of sponsors and start your journey of patronage.
-                  </p>
-                  <Button size="lg" variant="secondary" className="mt-8" asChild>
-                      <Link href="/sponsor/login">Create a Sponsor Account</Link>
-                  </Button>
-              </div>
-          </section>
         </main>
 
         <footer className="border-t">
