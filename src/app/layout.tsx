@@ -63,7 +63,7 @@ import { useRouter } from 'next/navigation';
 
 
 const navItems = [
-  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'main', 'start'] },
+  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'main', 'start', 'visit my page'] },
   { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'items', 'creations'] },
   { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'add product', 'new item'] },
   { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'popular'] },
