@@ -29,11 +29,11 @@ const generateRoleImageFlow = ai.defineFlow(
     }
 
     if (input.roleName === 'Buyer') {
-        return { imageDataUri: 'https://image2url.com/images/1758400871847-a0e569c3-4fe5-45ac-96d1-b7d5e7f8d277.jpg' };
+        return { imageDataUri: 'https://image2url.com/images/1758455871777-6eaf44fb-b711-47ed-9d1e-58c268a2b846.jpg' };
     }
 
     if (input.roleName === 'Sponsor') {
-        return { imageDataUri: 'https://image2url.com/images/1758401063292-30299c67-5204-450a-a703-d7b295bb07fb.jpg' };
+        return { imageDataUri: 'https://image2url.com/images/1758455912057-4fd0798d-a4ca-4ccc-b1f7-763a728495d8.jpg' };
     }
     
     // Fallback for any other role
