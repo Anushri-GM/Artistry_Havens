@@ -73,7 +73,7 @@ const navItems = [
   { type: 'divider' },
   { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders', 'sales'] },
   { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests', 'custom orders'] },
-  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'collection', 'favorites', 'bookmarks'] },
+  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'collection', 'favorites', 'bookmarks', 'saved products', 'saved items'] },
   { type: 'divider' },
   { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile', 'account'] },
 ];
@@ -539,3 +539,4 @@ export default function RootLayout({
     
 
     
+
