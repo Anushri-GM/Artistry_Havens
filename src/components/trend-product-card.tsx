@@ -7,20 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Heart, Share2, Bookmark } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useArtisan } from "@/context/ArtisanContext";
+import type { Product } from "@/context/ArtisanContext";
 
-type Product = {
-  id: string;
-  name: string;
-  price: string;
-  image?: {
-    imageUrl: string;
-    description: string;
-    imageHint: string;
-  };
-  likes?: number;
-  shares?: number;
-  translatedName?: string;
-}
 
 interface TrendProductCardProps {
   product: Product;
@@ -34,14 +22,14 @@ export function TrendProductCard({ product }: TrendProductCardProps) {
     const wasSaved = saveProduct(product);
     if (wasSaved) {
         toast({
-          title: "Saved!",
-          description: `"${product.name}" has been added to your saved collection.`,
+          title: "Saved to Moodboard!",
+          description: `"${product.name}" has been added to your moodboard.`,
         });
     } else {
          toast({
             variant: "default",
             title: "Already Saved",
-            description: `"${product.name}" is already in your collection.`,
+            description: `"${product.name}" is already in your moodboard.`,
         });
     }
   };

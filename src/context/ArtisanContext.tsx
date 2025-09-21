@@ -27,6 +27,10 @@ export interface Product {
   artisan?: string;
 }
 
+export interface SavedProduct extends Product {
+    note?: string;
+}
+
 export type OrderStatus = 'Processing' | 'Shipped' | 'Delivered';
 
 export interface Order {
@@ -52,12 +56,14 @@ interface ArtisanContextType {
   products: Product[];
   orders: Order[];
   requests: OrderRequest[];
-  savedProducts: Product[];
+  savedProducts: SavedProduct[];
   addProduct: (product: Product) => void;
   acceptRequest: (requestId: string) => void;
   denyRequest: (requestId: string) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
   saveProduct: (product: Product) => boolean; // Returns true if saved, false if already saved
+  removeSavedProduct: (productId: string) => void;
+  updateSavedProductNote: (productId: string, note: string) => void;
 }
 
 // Initial Data
@@ -100,7 +106,7 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>(mockProducts);
   const [orders, setOrders] = useState<Order[]>(initialOrders);
   const [requests, setRequests] = useState<OrderRequest[]>(initialRequests);
-  const [savedProducts, setSavedProducts] = useState<Product[]>(mockProducts.slice(0, 5));
+  const [savedProducts, setSavedProducts] = useState<SavedProduct[]>(mockProducts.slice(0, 5).map(p => ({...p, note: `This ${p.name} has a beautiful finish. I could try a similar style.`})));
 
   const addProduct = (product: Product) => {
     setProducts(prevProducts => [product, ...prevProducts]);
@@ -114,22 +120,29 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
             return prevSaved;
         }
         alreadySaved = false;
-        // Ensure likes and shares are numbers
-        const newSavedProduct = {
+        const newSavedProduct: SavedProduct = {
             ...productToSave,
             likes: productToSave.likes ?? 0,
             shares: productToSave.shares ?? 0,
+            note: '', // Initialize with an empty note
         };
         return [newSavedProduct, ...prevSaved];
     });
     return !alreadySaved;
   }
+  
+  const removeSavedProduct = (productId: string) => {
+    setSavedProducts(prev => prev.filter(p => p.id !== productId));
+  };
+  
+  const updateSavedProductNote = (productId: string, note: string) => {
+      setSavedProducts(prev => prev.map(p => p.id === productId ? { ...p, note } : p));
+  };
 
   const acceptRequest = (requestId: string) => {
     const request = requests.find(r => r.id === requestId);
     if (!request) return;
 
-    // Create a new product or find a matching one for the order
     const productForOrder: Product = {
         id: `prod-${Date.now()}`,
         name: request.isAiRequest ? `Custom Craft for ${request.buyer}`: `Custom ${request.description.substring(0,20)}...`,
@@ -172,7 +185,7 @@ export const ArtisanProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <ArtisanContext.Provider value={{ products, orders, requests, savedProducts, addProduct, acceptRequest, denyRequest, updateOrderStatus, saveProduct }}>
+    <ArtisanContext.Provider value={{ products, orders, requests, savedProducts, addProduct, acceptRequest, denyRequest, updateOrderStatus, saveProduct, removeSavedProduct, updateSavedProductNote }}>
       {children}
     </ArtisanContext.Provider>
   );
