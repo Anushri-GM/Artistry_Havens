@@ -1,4 +1,5 @@
 
+'use client';
 import Image from "next/image";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Button } from "@/components/ui/button";
@@ -118,7 +119,9 @@ export default function SponsorPage() {
                             <p className="text-sm text-muted-foreground">by {product.artisan}</p>
                           </CardHeader>
                           <CardContent>
-                            <Button className="w-full">View Artisan</Button>
+                            <Button className="w-full" asChild>
+                              <Link href={`/sponsor/product/${product.id}`}>View Artisan</Link>
+                            </Button>
                           </CardContent>
                         </Card>
                       ))}
