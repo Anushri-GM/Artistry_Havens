@@ -98,9 +98,6 @@ function ProductCard({ product }: { product: TranslatedProduct }) {
 
 function CustomizationDialog() {
     const { toast } = useToast();
-    const searchParams = useSearchParams();
-    const lang = searchParams.get('lang') || 'en';
-
     const [prompt, setPrompt] = useState("");
     const [category, setCategory] = useState("");
     const [referenceImage, setReferenceImage] = useState<File | null>(null);
@@ -108,45 +105,6 @@ function CustomizationDialog() {
     const [generatedMockup, setGeneratedMockup] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isSubmitted, setIsSubmitted] = useState(false);
-    const [translatedContent, setTranslatedContent] = React.useState<any>(null);
-
-    React.useEffect(() => {
-        const original = {
-            dialogTitle: "Design Your Custom Craft",
-            dialogDescription: "Describe your vision, and we'll generate a mockup for an artisan to create.",
-            visionLabel: "Describe your vision",
-            visionPlaceholder: "e.g., 'A wooden chess set...'",
-            categoryLabel: "Choose a category",
-            categoryPlaceholder: "Select an artisan category...",
-            uploadLabel: "Upload a reference image (optional)",
-            chooseFile: "Choose File",
-            generateButton: "Generate Mockup",
-            generatingButton: "Generating your vision...",
-            mockupLabel: "AI-Generated Mockup",
-            mockupPlaceholder: "Your generated mockup will appear here.",
-            sendRequestButton: "Send Request to Artisan",
-            requestSentTitle: "Request Sent!",
-            requestSentDescription: "An artisan from the {category} category has been notified. They will review your request and get in touch soon.",
-            toastMissingTitle: "Missing Information",
-            toastMissingDesc: "Please provide a description and select a category.",
-            toastFailedTitle: "Generation Failed",
-            toastFailedDesc: "Could not generate a mockup. Please try again.",
-        };
-        const translate = async () => {
-            if (lang === 'en') {
-                setTranslatedContent(original);
-                return;
-            }
-            const texts = Object.values(original);
-            const translations = await Promise.all(texts.map(t => translateText({ text: t, targetLanguage: lang })));
-            const newContent: any = {};
-            Object.keys(original).forEach((key, i) => {
-                newContent[key] = translations[i].translatedText;
-            });
-            setTranslatedContent(newContent);
-        };
-        translate();
-    }, [lang]);
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -160,8 +118,8 @@ function CustomizationDialog() {
         if (!prompt || !category) {
             toast({
                 variant: "destructive",
-                title: translatedContent.toastMissingTitle,
-                description: translatedContent.toastMissingDesc,
+                title: "Missing Information",
+                description: "Please provide a description and select a category.",
             });
             return;
         }
@@ -190,52 +148,48 @@ function CustomizationDialog() {
             console.error("Failed to generate custom design:", error);
             toast({
                 variant: "destructive",
-                title: translatedContent.toastFailedTitle,
-                description: translatedContent.toastFailedDesc,
+                title: "Generation Failed",
+                description: "Could not generate a mockup. Please try again.",
             });
         } finally {
             setIsLoading(false);
         }
     };
-
+    
     const handleSubmitRequest = () => {
         setIsSubmitted(true);
         toast({
-            title: translatedContent.requestSentTitle,
-            description: translatedContent.requestSentDescription.replace('{category}', category),
+            title: "Request Sent!",
+            description: `An artisan from the ${category} category has been notified. They will review your request and get in touch soon.`,
         });
     };
-
-    if (!translatedContent) {
-        return <div className="p-6"><Skeleton className="h-64 w-full" /></div>;
-    }
 
     return (
         <DialogContent className="max-w-md p-0 overflow-hidden h-[90vh] flex flex-col">
             <DialogHeader className="p-6 pb-4">
-                <DialogTitle className="font-headline text-xl">{translatedContent.dialogTitle}</DialogTitle>
+                <DialogTitle className="font-headline text-xl">Design Your Custom Craft</DialogTitle>
                 <DialogDescription>
-                    {translatedContent.dialogDescription}
+                    Describe your vision, and we'll generate a mockup for an artisan to create.
                 </DialogDescription>
             </DialogHeader>
             <div className="flex-1 overflow-auto">
                  <div className="space-y-6 p-6">
                     <div className="space-y-4">
                         <div>
-                            <Label htmlFor="description">{translatedContent.visionLabel}</Label>
+                            <Label htmlFor="description">Describe your vision</Label>
                             <Textarea 
                                 id="description" 
-                                placeholder={translatedContent.visionPlaceholder} 
+                                placeholder="e.g., 'A wooden chess set with a traditional Rajasthani design, using rosewood and ivory inlay.'" 
                                 rows={3}
                                 value={prompt}
                                 onChange={e => setPrompt(e.target.value)}
                             />
                         </div>
                         <div>
-                            <Label htmlFor="category">{translatedContent.categoryLabel}</Label>
+                            <Label htmlFor="category">Choose a category</Label>
                             <Select onValueChange={setCategory} value={category}>
                                 <SelectTrigger>
-                                    <SelectValue placeholder={translatedContent.categoryPlaceholder} />
+                                    <SelectValue placeholder="Select an artisan category..." />
                                 </SelectTrigger>
                                 <SelectContent>
                                     {initialCategories.map(c => <SelectItem key={c.name} value={c.name}>{c.name}</SelectItem>)}
@@ -243,12 +197,12 @@ function CustomizationDialog() {
                             </Select>
                         </div>
                         <div>
-                            <Label htmlFor="reference-image">{translatedContent.uploadLabel}</Label>
+                            <Label htmlFor="reference-image">Upload a reference image (optional)</Label>
                             <div className="mt-2 flex items-center gap-4">
                                 <Input id="reference-image" type="file" className="hidden" onChange={handleImageUpload} accept="image/*"/>
                                 <Button asChild variant="outline" size="sm">
                                     <label htmlFor="reference-image" className="cursor-pointer">
-                                        <Upload className="mr-2 h-4 w-4" /> {translatedContent.chooseFile}
+                                        <Upload className="mr-2 h-4 w-4" /> Choose File
                                     </label>
                                 </Button>
                                 {referenceImageUrl && <Image src={referenceImageUrl} alt="Reference" width={32} height={32} className="rounded-md object-cover" />}
@@ -256,28 +210,28 @@ function CustomizationDialog() {
                         </div>
                         <Button onClick={handleGenerate} disabled={isLoading || !prompt || !category} className="w-full">
                             {isLoading ? <Loader2 className="animate-spin mr-2" /> : <Wand2 className="mr-2" />}
-                            {isLoading ? translatedContent.generatingButton : translatedContent.generateButton}
+                            {isLoading ? "Generating your vision..." : "Generate Mockup"}
                         </Button>
                     </div>
                     <div className="space-y-2">
-                        <Label>{translatedContent.mockupLabel}</Label>
+                        <Label>AI-Generated Mockup</Label>
                         <div className="relative aspect-square w-full rounded-lg bg-muted flex items-center justify-center border border-dashed">
                             {isLoading ? (
                                 <div className="text-center text-muted-foreground p-4">
                                     <Loader2 className="h-6 w-6 animate-spin mx-auto mb-2" />
-                                    <p className="text-sm">{translatedContent.generatingButton}</p>
+                                    <p className="text-sm">Generating your vision...</p>
                                 </div>
                             ) : generatedMockup ? (
                                 <Image src={generatedMockup} alt="AI Generated Mockup" fill className="object-contain rounded-lg p-2" />
                             ) : (
                                 <div className="text-center text-muted-foreground p-4">
                                     <Wand2 className="h-6 w-6 mx-auto mb-2" />
-                                    <p className="text-sm">{translatedContent.mockupPlaceholder}</p>
+                                    <p className="text-sm">Your generated mockup will appear here.</p>
                                 </div>
                             )}
                         </div>
                         <Button onClick={handleSubmitRequest} disabled={!generatedMockup || isSubmitted} className="w-full">
-                            {isSubmitted ? <><CheckCircle className="mr-2" /> {translatedContent.requestSentTitle}</> : translatedContent.sendRequestButton}
+                            {isSubmitted ? <><CheckCircle className="mr-2" /> Request Sent!</> : "Send Request to Artisan"}
                         </Button>
                     </div>
                 </div>
@@ -486,4 +440,6 @@ function BuyerPageWithSuspense() {
 }
 
 export default BuyerPageWithSuspense;
+    
+
     
