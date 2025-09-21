@@ -325,12 +325,14 @@ function Upload() {
         setProductDescription('');
         setProductStory('');
         setProductCategory('');
+        setProductPrice('');
         try {
             const result = await generateProductDetails({ productImageDataUri: productImage, targetLanguage: lang });
             if (!productName) setProductName(result.productName); // Only set if it was empty
             setProductDescription(result.productDescription);
             setProductStory(result.productStory);
             setProductCategory(result.predictedCategory);
+            setProductPrice(result.suggestedPrice);
             toast({ title: translatedContent.toasts.detailsSuccessTitle, description: translatedContent.toasts.detailsSuccessDesc });
         } catch (error) {
             console.error("Failed to generate product details:", error);
