@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Share2, MoreHorizontal } from "lucide-react";
+import { Heart, Share2 } from "lucide-react";
 
 type Product = {
   id: string;
