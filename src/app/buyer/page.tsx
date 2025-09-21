@@ -200,22 +200,14 @@ function CustomizationDialog() {
 
     const handleSubmitRequest = () => {
         setIsSubmitted(true);
+        toast({
+            title: translatedContent.requestSentTitle,
+            description: translatedContent.requestSentDescription.replace('{category}', category),
+        });
     };
 
     if (!translatedContent) {
         return <div className="p-6"><Skeleton className="h-64 w-full" /></div>;
-    }
-
-    if (isSubmitted) {
-        return (
-            <div className="text-center py-8 px-4">
-                <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold font-headline">{translatedContent.requestSentTitle}</h3>
-                <p className="text-muted-foreground mt-2 text-sm">
-                    {translatedContent.requestSentDescription.replace('{category}', category)}
-                </p>
-            </div>
-        )
     }
 
     return (
@@ -284,7 +276,9 @@ function CustomizationDialog() {
                                 </div>
                             )}
                         </div>
-                        <Button onClick={handleSubmitRequest} disabled={!generatedMockup} className="w-full">{translatedContent.sendRequestButton}</Button>
+                        <Button onClick={handleSubmitRequest} disabled={!generatedMockup || isSubmitted} className="w-full">
+                            {isSubmitted ? <><CheckCircle className="mr-2" /> {translatedContent.requestSentTitle}</> : translatedContent.sendRequestButton}
+                        </Button>
                     </div>
                 </div>
             </div>
