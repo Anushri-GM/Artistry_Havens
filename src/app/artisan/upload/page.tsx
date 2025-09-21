@@ -557,14 +557,16 @@ function Upload() {
                                 </div>
                             )}
                         </div>
-                        <div className="mt-4 grid grid-cols-3 gap-2">
-                             <Button variant="outline" onClick={() => setIsCameraOpen(true)}><Camera className="mr-2 h-4 w-4" /> {translatedContent.cameraButton}</Button>
+                        <div className="mt-4 grid grid-cols-1 gap-4">
+                            <Button variant="outline" onClick={() => setIsCameraOpen(true)}><Camera className="mr-2 h-4 w-4" /> {translatedContent.cameraButton}</Button>
+                            
                             <Input type="file" id="file-upload" className="hidden" onChange={handleFileChange} accept="image/*" />
                             <Button variant="outline" asChild>
-                            <Label htmlFor='file-upload' className="cursor-pointer flex items-center">
+                                <Label htmlFor='file-upload' className="cursor-pointer flex items-center justify-center">
                                     <GalleryHorizontal className="mr-2 h-4 w-4" /> {translatedContent.galleryButton}
-                            </Label>
+                                </Label>
                             </Button>
+                            
                             <Button variant="outline" onClick={handleGenerateImage} disabled={isImageLoading || !productName || !productCategory}>
                                 {isImageLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
                                 {translatedContent.generateImageButton}
@@ -728,5 +730,3 @@ export default function UploadPage() {
         </Suspense>
     )
 }
-
-    
