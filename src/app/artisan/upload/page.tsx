@@ -132,14 +132,14 @@ function Upload() {
         const originalContent = {
             headerTitle: "Upload Product",
             uploadTitle: "Upload Your Product",
-            uploadDescription: "Add an image and category to get started.",
+            uploadDescription: "Add an image to get started with AI.",
             imageLabel: "1. Product Image",
             imagePlaceholder: "Drag & drop, select an option, or generate with AI",
             cameraButton: "Take Photo",
             galleryButton: "From Gallery",
             generateImageButton: "Generate with AI",
             categoryLabel: "2. Product Category",
-            categoryPlaceholder: "Select a category...",
+            categoryPlaceholder: "AI will suggest a category",
             aiTitle: "AI-Generated Content",
             aiDescription: "Generate product details with the power of AI.",
             generateDetailsButton: "Generate Details with AI",
@@ -179,7 +179,7 @@ function Upload() {
                 cameraAccessDeniedTitle: 'Camera Access Denied',
                 cameraAccessDeniedDesc: 'Please enable camera permissions in your browser settings.',
                 detailsErrorTitle: 'Error',
-                detailsErrorDesc: 'Please provide an image and category first.',
+                detailsErrorDesc: 'Please provide an image first.',
                 imageGenErrorTitle: 'Image Generation Error',
                 imageGenErrorDesc: 'Please provide a product name and category first.',
                 detailsSuccessTitle: 'Success!',
@@ -314,7 +314,7 @@ function Upload() {
 
     const handleGenerateDetails = async () => {
         if (!translatedContent) return;
-        if (!productImage || !productCategory) {
+        if (!productImage) {
             toast({ variant: 'destructive', title: translatedContent.toasts.detailsErrorTitle, description: translatedContent.toasts.detailsErrorDesc });
             return;
         }
@@ -324,11 +324,13 @@ function Upload() {
         if (!productName) setProductName('');
         setProductDescription('');
         setProductStory('');
+        setProductCategory('');
         try {
-            const result = await generateProductDetails({ productImageDataUri: productImage, category: productCategory, targetLanguage: lang });
+            const result = await generateProductDetails({ productImageDataUri: productImage, targetLanguage: lang });
             if (!productName) setProductName(result.productName); // Only set if it was empty
             setProductDescription(result.productDescription);
             setProductStory(result.productStory);
+            setProductCategory(result.predictedCategory);
             toast({ title: translatedContent.toasts.detailsSuccessTitle, description: translatedContent.toasts.detailsSuccessDesc });
         } catch (error) {
             console.error("Failed to generate product details:", error);
@@ -520,26 +522,6 @@ function Upload() {
                     <CardDescription>{translatedContent.uploadDescription}</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                    <Card className="bg-primary/5">
-                         <CardContent className="p-4 space-y-4">
-                            <div>
-                                <Label htmlFor="product-name">{translatedContent.nameLabel}</Label>
-                                <Input id="product-name" placeholder={translatedContent.namePlaceholder} value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
-                            </div>
-                             <div>
-                                <Label htmlFor="product-category">{translatedContent.categoryLabel}</Label>
-                                <Select onValueChange={handleCategoryChange} value={productCategory}>
-                                    <SelectTrigger id="product-category">
-                                        <SelectValue placeholder={translatedContent.categoryPlaceholder} />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {categories.map(c => <SelectItem key={c} value={c}>{translatedContent.categoryNames[c]}</SelectItem>)}
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                         </CardContent>
-                    </Card>
-
                     <div>
                         <Label>{translatedContent.imageLabel}</Label>
                         <div className="mt-2 flex justify-center items-center w-full h-48 border-2 border-dashed rounded-lg relative overflow-hidden">
@@ -566,15 +548,9 @@ function Upload() {
                                     <GalleryHorizontal className="mr-2 h-4 w-4" /> {translatedContent.galleryButton}
                                 </Label>
                             </Button>
-                            
-                            <Button variant="outline" onClick={handleGenerateImage} disabled={isImageLoading || !productName || !productCategory}>
-                                {isImageLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
-                                {translatedContent.generateImageButton}
-                            </Button>
                         </div>
                     </div>
                     
-
                     <Card className="bg-primary/5">
                         <CardHeader>
                             <CardTitle className="font-headline text-xl flex items-center gap-2">
@@ -585,11 +561,26 @@ function Upload() {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
-                            <Button onClick={handleGenerateDetails} disabled={isDetailsLoading || !productImage || !productCategory} className="w-full">
+                            <Button onClick={handleGenerateDetails} disabled={isDetailsLoading || !productImage} className="w-full">
                             {isDetailsLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
                             {translatedContent.generateDetailsButton}
                             </Button>
+
+                            <div>
+                                <Label htmlFor="product-name">{translatedContent.nameLabel}</Label>
+                                <Input id="product-name" placeholder={translatedContent.namePlaceholder} value={productName} onChange={e => setProductName(e.target.value)} disabled={isDetailsLoading}/>
+                            </div>
                            
+                             <div>
+                                <Label htmlFor="product-category">{translatedContent.categoryLabel}</Label>
+                                <Input id="product-category" placeholder={translatedContent.categoryPlaceholder} value={productCategory} onChange={e => setProductCategory(e.target.value)} disabled={isDetailsLoading}/>
+                            </div>
+                            
+                            <Button variant="outline" onClick={handleGenerateImage} disabled={isImageLoading || !productName || !productCategory} className="w-full">
+                                {isImageLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Wand2 className="mr-2 h-4 w-4" />}
+                                {translatedContent.generateImageButton}
+                            </Button>
+
                             <div>
                                 <Label htmlFor="product-desc">{translatedContent.descriptionLabel}</Label>
                                 <Textarea id="product-desc" placeholder={translatedContent.descriptionPlaceholder} value={productDescription} onChange={e => setProductDescription(e.target.value)} disabled={isDetailsLoading} rows={4}/>

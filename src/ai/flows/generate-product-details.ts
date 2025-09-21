@@ -1,7 +1,7 @@
 
 'use server';
 /**
- * @fileOverview Generates product details (name, description, story) from an image.
+ * @fileOverview Generates product details (name, description, story, category) from an image.
  *
  * - generateProductDetails - A function that handles the product detail generation.
  */
@@ -10,6 +10,8 @@ import {ai} from '@/ai/genkit';
 import { GenerateProductDetailsInput, GenerateProductDetailsInputSchema, GenerateProductDetailsOutput, GenerateProductDetailsOutputSchema } from '@/ai/types/generate-product-details-types';
 import { googleAI } from '@genkit-ai/googleai';
 import { translateText } from './translate-text';
+
+const categories = ["Woodwork", "Pottery", "Paintings", "Sculptures", "Textiles", "Jewelry", "Metalwork"];
 
 export async function generateProductDetails(input: GenerateProductDetailsInput): Promise<GenerateProductDetailsOutput> {
   return generateProductDetailsFlow(input);
@@ -22,15 +24,13 @@ const productDetailsPrompt = ai.definePrompt({
     model: googleAI.model('gemini-1.5-flash'),
     prompt: `You are an expert product marketer for an online marketplace for artisans. 
     
-    Given the image of a new product and its category, generate a compelling product name, a detailed product description, and an engaging product story in English.
-
-    The tone should be evocative, highlighting the craftsmanship and uniqueness of the item.
+    Given the image of a new product, generate a compelling product name, a detailed product description, an engaging product story, and predict its category in English.
 
     - The product name should be creative and descriptive.
     - The product description should detail the materials, dimensions (if inferrable), and potential uses. It should be a maximum of 175 words.
     - The product story should create an emotional connection to the artisan and the craft.
+    - The predictedCategory must be one of the following exact values: ${categories.join(', ')}.
 
-    Category: {{{category}}}
     Product Image: {{media url=productImageDataUri}}
     `,
 });
@@ -60,11 +60,10 @@ const generateProductDetailsFlow = ai.defineFlow(
             productName: translatedName.translatedText,
             productDescription: translatedDescription.translatedText,
             productStory: translatedStory.translatedText,
+            predictedCategory: output.predictedCategory, // Category is not translated
         };
     }
     
     return output;
   }
 );
-
-    
