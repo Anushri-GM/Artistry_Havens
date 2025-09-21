@@ -43,11 +43,11 @@ export function ProductCard({ product }: ProductCardProps) {
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
             <Heart className="h-3 w-3" />
-            <span>{product.likes?.toLocaleString() ?? 0}</span>
+            <span>{(product.likes ?? 0).toLocaleString()}</span>
           </div>
           <div className="flex items-center gap-1">
             <Share2 className="h-3 w-3" />
-            <span>{product.shares?.toLocaleString() ?? 0}</span>
+            <span>{(product.shares ?? 0).toLocaleString()}</span>
           </div>
         </div>
       </CardContent>
