@@ -332,7 +332,6 @@ function Upload() {
             setProductDescription(result.productDescription);
             setProductStory(result.productStory);
             setProductCategory(result.predictedCategory);
-            setProductPrice(result.suggestedPrice);
             toast({ title: translatedContent.toasts.detailsSuccessTitle, description: translatedContent.toasts.detailsSuccessDesc });
         } catch (error) {
             console.error("Failed to generate product details:", error);
@@ -660,5 +659,3 @@ export default function UploadPage() {
         </Suspense>
     )
 }
-
-    

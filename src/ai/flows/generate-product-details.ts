@@ -1,7 +1,7 @@
 
 'use server';
 /**
- * @fileOverview Generates product details (name, description, story, category, price) from an image.
+ * @fileOverview Generates product details (name, description, story, category) from an image.
  *
  * - generateProductDetails - A function that handles the product detail generation.
  */
@@ -24,13 +24,12 @@ const productDetailsPrompt = ai.definePrompt({
     model: googleAI.model('gemini-1.5-flash'),
     prompt: `You are an expert product marketer for an online marketplace for artisans. 
     
-    Given the image of a new product, generate a compelling product name, a detailed product description, an engaging product story, predict its category, and suggest a competitive price in Indian Rupees (₹) in English.
+    Given the image of a new product, generate a compelling product name, a detailed product description, an engaging product story, and predict its category in English.
 
     - The product name should be creative and descriptive.
     - The product description should detail the materials, dimensions (if inferrable), and potential uses. It should be a maximum of 175 words.
     - The product story should create an emotional connection to the artisan and the craft.
     - The predictedCategory must be one of the following exact values: ${categories.join(', ')}.
-    - The suggestedPrice should be a string representing a numeric value (e.g., "1299.99"), without any currency symbols.
 
     Product Image: {{media url=productImageDataUri}}
     `,
@@ -62,7 +61,6 @@ const generateProductDetailsFlow = ai.defineFlow(
             productDescription: translatedDescription.translatedText,
             productStory: translatedStory.translatedText,
             predictedCategory: output.predictedCategory, // Category is not translated
-            suggestedPrice: output.suggestedPrice, // Price is not translated
         };
     }
     
