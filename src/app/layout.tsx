@@ -63,19 +63,19 @@ import { useRouter } from 'next/navigation';
 
 
 const navItems = [
-  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'main', 'start', 'मुख', 'ড্যাশবোর্ড', 'హోమ్', 'வீடு', 'گھر'] },
-  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'items', 'creations', 'उत्पाद', 'পণ্য', 'ఉత్పత్తులు', 'பொருட்கள்', 'مصنوعات'] },
-  { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'add product', 'new item', 'अपलोड', 'আপলোড', 'అప్లోడ్', 'பதிவேற்று', 'اپ لوڈ'] },
-  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'popular', 'ट्रेंड्स', 'প্রবণতা', 'ట్రెండ్లు', 'போக்குகள்', 'رجحانات'] },
-  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance', 'analytics', 'आंकड़े', 'পরিসংখ্যান', 'గణాంకాలు', 'புள்ளிவிவரங்கள்', 'اعداد و شمار'] },
-  { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings', 'money', 'वित्त', 'অর্থ', 'ఆదాయం', 'வருவாய்', 'مالیات'] },
-  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners', 'sponsorships', 'प्रायोजक', 'পৃষ্ঠপোষক', 'స్పాన్సర్‌లు', 'ఆதரவாளர்கள்', 'کفیل'] },
+  { href: '/artisan/dashboard/home', label: 'Home', icon: Home, commands: ['home', 'dashboard', 'main', 'start'] },
+  { href: '/artisan/dashboard/my-products', label: 'My Products', icon: Palette, commands: ['my products', 'products', 'items', 'creations'] },
+  { href: '/artisan/upload', label: 'Upload Product', icon: Upload, commands: ['upload', 'add product', 'new item'] },
+  { href: '/artisan/dashboard/trends', label: 'Trends', icon: AreaChart, commands: ['trends', 'popular'] },
+  { href: '/artisan/dashboard/statistics', label: 'Statistics', icon: BarChart, commands: ['statistics', 'stats', 'performance', 'analytics'] },
+  { href: '/artisan/dashboard/revenue', label: 'Finance', icon: BadgeIndianRupee, commands: ['finance', 'income', 'revenue', 'earnings', 'money'] },
+  { href: '/artisan/dashboard/sponsors', label: 'Sponsors', icon: Handshake, commands: ['sponsors', 'partners', 'sponsorships'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders', 'sales', 'मेरे ऑर्डर', 'আমার আদেশ', 'నా ఆర్డర్లు', 'எனது ஆர்டர்கள்', 'میرے احکامات'] },
-  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests', 'custom orders', 'अनुरोध', 'অনুরোধ', 'विनंत्या', 'கோரிக்கைகள்', 'درخواستیں'] },
-  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'collection', 'favorites', 'bookmarks', 'बुकमार्क', 'সংরক্ষিত', 'సేవ్ చేయబడింది', 'சேமித்தவை', 'محفوظ'] },
+  { href: '/artisan/dashboard/orders', label: 'My Orders', icon: Box, commands: ['my orders', 'orders', 'sales'] },
+  { href: '/artisan/dashboard/requests', label: 'Order Requests', icon: Send, commands: ['order requests', 'requests', 'custom orders'] },
+  { href: '/artisan/dashboard/saved', label: 'Saved Collection', icon: Bookmark, commands: ['saved', 'collection', 'favorites', 'bookmarks'] },
   { type: 'divider' },
-  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile', 'account', 'प्रोफ़ाइल', 'প্রোফাইল', 'ప్రొఫైల్', 'சுயவிவரம்', 'پروفائل'] },
+  { href: '/artisan/dashboard/profile', label: 'My Profile', icon: User, commands: ['my profile', 'profile', 'account'] },
 ];
 
 type TranslatedHeaderContent = {
@@ -156,11 +156,28 @@ function PageHeader() {
       });
     };
 
-    recognition.onresult = (event) => {
+    recognition.onresult = async (event) => {
       const transcript = event.results[0][0].transcript.toLowerCase().trim();
       
+      let command = transcript;
+      // If the language is not English, translate the command to English first.
+      if (lang !== 'en') {
+        try {
+            const translationResult = await translateText({ text: transcript, targetLanguage: 'en' });
+            command = translationResult.translatedText.toLowerCase().trim();
+        } catch (error) {
+            console.error("Translation to English failed:", error);
+            toast({
+                variant: 'destructive',
+                title: 'Translation Error',
+                description: 'Could not translate command to English.',
+            });
+            return;
+        }
+      }
+
       const foundNavItem = navItems.find(item => 
-        item.type !== 'divider' && item.commands && item.commands.some(cmd => transcript.includes(cmd))
+        item.type !== 'divider' && item.commands && item.commands.some(cmd => command.includes(cmd))
       );
 
       if (foundNavItem && foundNavItem.href) {
@@ -518,5 +535,7 @@ export default function RootLayout({
     </html>
   );
 }
+
+    
 
     
