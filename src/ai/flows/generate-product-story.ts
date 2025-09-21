@@ -44,7 +44,7 @@ const generateProductStoryFlow = ai.defineFlow(
   async input => {
     
     // Explicitly use Vertex AI for this flow.
-    const llm = googleAI.model('gemini-1.5-flash-vertex', { projectId: process.env.GOOGLE_CLOUD_PROJECT });
+    const llm = googleAI.model('gemini-1.5-flash-vertex');
 
     const { output } = await ai.generate({
       model: llm,
