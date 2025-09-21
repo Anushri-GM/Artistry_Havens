@@ -15,6 +15,7 @@ type Product = {
   };
   likes?: number;
   shares?: number;
+  translatedName?: string;
 }
 
 interface ProductCardProps {
@@ -36,7 +37,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </div>
       )}
       <CardHeader className="p-2">
-        <CardTitle className="font-headline text-sm leading-tight">{product.name}</CardTitle>
+        <CardTitle className="font-headline text-sm leading-tight">{product.translatedName || product.name}</CardTitle>
       </CardHeader>
       <CardContent className="p-2 pt-0">
         <div className="flex items-center justify-between text-xs text-muted-foreground">
