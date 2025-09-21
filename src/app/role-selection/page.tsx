@@ -32,7 +32,7 @@ const initialRolesData = [
     description: "I want to support artisans",
     imageUrl: null as string | null,
     imageHint: "patron art",
-    href: "/sponsor",
+    href: "/sponsor/login",
     emoji: "❤️"
   },
 ];
