@@ -176,10 +176,10 @@ function UpdateOrder() {
                     )}
                     <div className='flex-1'>
                         <CardTitle className="font-headline text-xl">{translatedContent.productName}</CardTitle>
-                        <CardDescription className="pt-2 text-sm">
+                        <div className="pt-2 text-sm text-muted-foreground">
                             <p><strong>{translatedContent.buyerLabel}:</strong> {order.buyer}</p>
                             <p><strong>{translatedContent.quantityLabel}:</strong> {order.quantity}</p>
-                        </CardDescription>
+                        </div>
                     </div>
                 </div>
             </CardHeader>
