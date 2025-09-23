@@ -21,7 +21,6 @@ const productDetailsPrompt = ai.definePrompt({
     name: 'productDetailsPrompt',
     input: { schema: GenerateProductDetailsInputSchema },
     output: { schema: GenerateProductDetailsOutputSchema },
-    model: googleAI.model('gemini-1.5-flash'),
     prompt: `You are an expert product marketer for an online marketplace for artisans. 
     
     Given the image of a new product, generate a compelling product name, a detailed product description, an engaging product story, and predict its category in English.
